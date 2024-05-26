@@ -54,6 +54,9 @@
 </div>
 
 <script>
+
+let user_name = "User (TODO do podania przez usera na poprzedniej stronie)";
+
 respect_bots_messages = { 
   2:["Ania", "Cześć!"],
 6:["Kasia", "Hej"],
@@ -104,6 +107,9 @@ let submitButton = document.querySelector("#send_btn")
 
 submitButton.addEventListener("click", weightBalancer);
 
+var seconds_to_respond = -1;
+
+
 function weightBalancer() {
     const weightsForLeftAndRightSides = document.getElementById("msg_field").value;
     document.getElementById("msg_field").value = "";
@@ -114,17 +120,17 @@ function weightBalancer() {
     if (hour.lengt < 2) hour = "0" + hour;
     if (min.length < 2) min = "0" + min;
 
-    
-
     let new_message = `
     <div class="container darker">
-            <span alt="Avatar" class="right" style="width:100%;">User (TODO do podania przez usera na poprzedniej stronie)</span>
+            <span alt="Avatar" class="right" style="width:100%;">` + user_name + `</span>
               <p>` + weightsForLeftAndRightSides + `</p>
               <span class="time-left">` + hour + ":" + min + `</span>
           </div>
     `;
 
     document.getElementById("chatroom").innerHTML += new_message;
+
+    seconds_to_respond = 5;
 }
 
 let chatroom = document.getElementById("chatroom");
@@ -133,6 +139,7 @@ var seconds = 0;
 
 function incrementSeconds() {
     seconds += 1;
+    if (seconds >= 0) seconds_to_respond--;
 
     const date = new Date();
     let hour = date.getHours().toString();
@@ -154,6 +161,20 @@ function incrementSeconds() {
 
       window.scrollTo(0, document.body.scrollHeight);
 
+    }
+
+    if (seconds_to_respond == 0) {
+      let new_message = `
+      <div class="container">
+              <span alt="Avatar" class="right" style="width:100%;">` + "Ania" + `</span>
+                <p>` + "O cześć " + user_name + "! Fajnie napisałeś <3" + `</p>
+                <span class="time-left">` + hour + ":" + min + `</span>
+            </div>
+      `;
+
+      chatroom.innerHTML += new_message;
+
+      window.scrollTo(0, document.body.scrollHeight);
     }
 }
 
