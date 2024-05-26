@@ -1,6 +1,233 @@
+{% load static %}
 {% block content %}
 <h1 style="text-align: center; margin-top: 100px;">Chatroom</h1>
 <h2 style="text-align: center">{{ my_variable }}</h2>
+<!--
+<div class="container darker">
+    <span alt="Avatar" class="right" style="width:100%;">Bot nazwa 1</span>
+    <p>Hej, to wiadomosc bota</p>
+    <span class="time-right">22:02</span>
+</div>
 
+<div class="container">
+    <span alt="Avatar" class="right" style="width:100%;">Usernazwa</span>
+    <p>To wiadomosc napisana przez usera</p>
+    <span class="time-left">22:05</span>
+</div>
+-->
+<div id="chatroom">
+  <!--{% for message in messages %}
+      {% if curr_user == message.sender_name %}
+          <div class="container darker">
+            <span alt="Avatar" class="right" style="width:100%;">{{message.sender_name}}</span>
+              <p>{{message.description}}</p>
+              <span class="time-right">{{message.time}}</span>
+          </div>
+      {% else %}
+          <div class="container">
+            <span alt="Avatar" class="right" style="width:100%;">{{message.sender_name}}</span>
+              <p>{{message.description}}</p>
+              <span class="time-left">{{message.time}}</span>
+          </div>
+      {% endif %}
+  {% endfor %}
+        
+  <div class="container" style="display: none;">
+    <span alt="Avatar" class="right" style="width:100%;">Usernazwa</span>
+    <p>To wiadomosc napisana przez usera</p>
+    <span class="time-left">22:05</span>
+  </div>
+  -->
+</div>
+
+
+<div class="row">
+    <form class="form-group" id="chat-box" onsubmit="return false">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <input type="text" placeholder="Send a message..." name="message" id="msg_field">
+                <button name="send" class="btn btn-success" id="send_btn">Send</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+respect_bots_messages = { 
+  2:["Ania", "Cześć!"],
+6:["Kasia", "Hej"],
+11:["Piotrek", "ello"],
+15:["Piotrek", "sztos :P"],
+20:["Bartek", "lol xd "],
+24:["Agnieszka", "hej hej "],
+29:["Michal", "siema"],
+33:["Piotrek", "co mamy robic?"],
+38:["Piotrek", "robić**"],
+42:["Agnieszka", "Wiesz co chyba mamy coś o tym artykule porozmawiać"],
+47:["Ania", "Git"],
+51:["Ania", "W sumie spoko, że mają zamiar narzucić na gminy obowiązek opieki nad cmenatrzami żydowskimi"],
+56:["Agnieszka", "w końcu to chodzi o szacunek do kogoś dziedzictwa co nie?"],
+60:["Michal", "(Thumbs up)"],
+65:["Kasia", "dokładnie pasuje szanować innych i ich kultury, co z tego, że się z tym nie utożsamiamy..."],
+69:["Bartek", "❤‍🧡‍💛‍💚‍💙‍💜"],
+74:["Arek", "…... "],
+78:["Arek", "słuchaj pozwalamy aby to było na naszym terenie - to już chyba wystarczy…"],
+83:["Arek", "a my mamy jeszcze wydawać kasę na to? Z kogo podatków to idzie?! Śmiech na Sali "],
+87:["Michal", "XD "],
+92:["Kasia", "chyba o to chodzi w szacunku do innych co nie? "],
+96:["Kasia", "są tacy jak my i mają takie same prawa - przecież nie latasz kosić na cmenatrzu co miesiąc tylko są przeznaczone pieniądze z gminy na to…"],
+101:["Agnieska", "red heart"],
+105:["Bartek", "sam w sumei nie zgadzam się z tym, zbey opiekowac się tymi cmenatrzami czy synagogami bo powinni ogarnac sami na to hajs"],
+110:["Bartek", "ale mimo tego to nie znaczy, że będę im tego zabraniać :P niech próbują to jakoś ufundować przez rząd "],
+114:["Ania", "mamy po prostu inne wartości, co nie zmienia faktu, że wszystkie są równie ważne"],
+119:["Piotrek", " nie wiem czy się ze wsyztkim zgodze bo nei jestem zwolennikiem szacunku dla kazdej opinii xd ale tak szacunek dla kazdego czlowieka zawsze się należy "],
+123:["Michal", "troche tak"],
+128:["Arek", "tak tak… pieniądze z rządu uciekają na takie durne rzeczy. Ale tak…"],
+132:["Arek", " to tez ludzie.  powinni mieć dostep do tych samycm praw co my. "],
+137:["Agnieszka", "(thumbs up) "],
+141:["Kasia", "kurcze nie wiedziałam, że będzie tak ostro :P "],
+146:["Ania", "co nie XD"],
+150:["Bartek", "nie no ale konkluzja niezła XD"],
+155:["Michal", "jesteśmy wszyscy równi "],
+159:["Kasia", "to nie miał mieć jakiś limit czasowy czy coś?"],
+164:["Kasia", "miało**"],
+168:["Arek", "chyba tak"],
+173:["Piotrek", "(thumbs up) "],
+177:["Ania", "❤"],
+182:["Agnieszka", "(thumbs up) "],
+186:["Michal", "(thumbs up) "]
+};
+
+
+let submitButton = document.querySelector("#send_btn")
+
+submitButton.addEventListener("click", weightBalancer);
+
+function weightBalancer() {
+    const weightsForLeftAndRightSides = document.getElementById("msg_field").value;
+    document.getElementById("msg_field").value = "";
+
+    const date = new Date();
+    let hour = date.getHours().toString();
+    let min = date.getMinutes().toString();
+    if (hour.lengt < 2) hour = "0" + hour;
+    if (min.length < 2) min = "0" + min;
+
+    
+
+    let new_message = `
+    <div class="container darker">
+            <span alt="Avatar" class="right" style="width:100%;">User (TODO do podania przez usera na poprzedniej stronie)</span>
+              <p>` + weightsForLeftAndRightSides + `</p>
+              <span class="time-left">` + hour + ":" + min + `</span>
+          </div>
+    `;
+
+    document.getElementById("chatroom").innerHTML += new_message;
+}
+
+let chatroom = document.getElementById("chatroom");
+
+var seconds = 0;
+
+function incrementSeconds() {
+    seconds += 1;
+
+    const date = new Date();
+    let hour = date.getHours().toString();
+    let min = date.getMinutes().toString();
+    if (hour.lengt < 2) hour = "0" + hour;
+    if (min.length < 2) min = "0" + min;
+
+
+    if (seconds in respect_bots_messages) {
+      let new_message = `
+      <div class="container">
+              <span alt="Avatar" class="right" style="width:100%;">` + respect_bots_messages[seconds][0] + `</span>
+                <p>` + respect_bots_messages[seconds][1] + `</p>
+                <span class="time-left">` + hour + ":" + min + `</span>
+            </div>
+      `;
+
+      chatroom.innerHTML += new_message;
+
+      window.scrollTo(0, document.body.scrollHeight);
+
+    }
+}
+
+var cancel = setInterval(incrementSeconds, 1000);
+
+
+
+</script>
+
+<style>
+    .container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.darker {
+    max-height: 120px;
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+
+.messages{
+    height: 500px;
+    width: 1200px;
+    border: thick solid #000;
+    border-width: 2px;
+    margin-top: 16px;
+    overflow-y: auto;
+}
+
+#msg_field{
+    margin-left: 24px;
+    margin-top: 16px;
+    width: 1000px;
+}
+
+#send_btn{
+    margin-top: 16px;
+    height: 40px;
+}
+
+</style>
 
 {% endblock content %}
