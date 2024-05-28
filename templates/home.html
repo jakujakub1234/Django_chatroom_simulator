@@ -1,40 +1,18 @@
 
 {% block content %}
-<h1 style="text-align: center; margin-top: 100px;">Poczekaj na przydzielenie do chatroomu</h1>
-<h2 id="wait_time" style="text-align: center;">Czas oczekiwania: </h1>
+<h1 style="text-align: center; margin-top: 100px;">Chatroom badania</h1>
+<h2 style="text-align: center;">Podaj swój nick i dołącz do lobby</h2>
 
-<div style="text-align: center;" id='seconds-counter'>Czas oczekiwania: 0 sekund</div>
+<div class="input-group mb-3" style="text-align: center; margin-top: 100px;">
+    <div class="input-group-prepend">
+        <input type="text" placeholder="Podaj nick..." name="nick" id="nick">
+        <button type="submit" name="send" class="btn btn-success" id="send_btn">Dołącz do lobby</button>
+    </div>
+</div>
 
-<script>
-var seconds = 0;
-var wait_time = Math.floor(Math.random() * 40) + 10;
-
-var el = document.getElementById('seconds-counter');
-
-document.getElementById('wait_time').innerText = "Czas do dołączenie do chatroomu: " + wait_time + " sekund (tylko do testów)";
-
-function incrementSeconds() {
-    seconds += 1;
-
-    var seconds_text = " sekund";
-
-    if (seconds == 1) {
-        seconds_text = " sekunda";
-    }
-    else if (seconds < 5) {
-        seconds_text = " sekundy";
-    }
-
-    el.innerText = "Czas oczekiwania: " + seconds + seconds_text;
-
-    if (seconds > wait_time) {
-        window.location.href = "{% url 'about' %}";
-    }
-}
-
-var cancel = setInterval(incrementSeconds, 1000);
-</script>
-
-<a style="text-align: center;" href="{% url 'about' %}">Pomiń oczekiwania (tylko do testów)</a>
-
+<form action="/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Zatwierdź">
+</form>
 {% endblock content %}

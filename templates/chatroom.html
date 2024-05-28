@@ -1,7 +1,7 @@
 {% load static %}
 {% block content %}
 <h1 style="text-align: center; margin-top: 100px;">Chatroom</h1>
-<h2 style="text-align: center">{{ my_variable }}</h2>
+<h2 style="text-align: center">IP usera: {{ visitor_ip }}</h2>
 <!--
 <div class="container darker">
     <span alt="Avatar" class="right" style="width:100%;">Bot nazwa 1</span>
@@ -47,7 +47,7 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <input type="text" placeholder="Send a message..." name="message" id="msg_field">
-                <button name="send" class="btn btn-success" id="send_btn">Send</button>
+                <button name="send" class="btn btn-success" id="send_btn">Wyślij</button>
             </div>
         </div>
     </form>

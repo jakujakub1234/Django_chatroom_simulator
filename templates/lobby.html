@@ -1,0 +1,39 @@
+{% block content %}
+<h1 style="text-align: center; margin-top: 100px;">Witaj {{ nick }}, poczekaj na przydzielenie do chatroomu</h1>
+<h2 id="wait_time" style="text-align: center;">Czas oczekiwania: </h1>
+
+<div style="text-align: center;" id='seconds-counter'>Czas oczekiwania: 0 sekund</div>
+
+<script>
+var seconds = 0;
+var wait_time = Math.floor(Math.random() * 40) + 10;
+
+var el = document.getElementById('seconds-counter');
+
+document.getElementById('wait_time').innerText = "Czas do dołączenie do chatroomu: " + wait_time + " sekund (tylko do testów)";
+
+function incrementSeconds() {
+    seconds += 1;
+
+    var seconds_text = " sekund";
+
+    if (seconds == 1) {
+        seconds_text = " sekunda";
+    }
+    else if (seconds < 5) {
+        seconds_text = " sekundy";
+    }
+
+    el.innerText = "Czas oczekiwania: " + seconds + seconds_text;
+
+    if (seconds > wait_time) {
+        window.location.href = "{% url 'chatroom' %}";
+    }
+}
+
+var cancel = setInterval(incrementSeconds, 1000);
+</script>
+
+<a style="text-align: center;" href="{% url 'chatroom' %}">Pomiń oczekiwania (tylko do testów)</a>
+
+{% endblock content %}
