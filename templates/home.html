@@ -1,18 +1,13 @@
 
 {% block content %}
+
 <h1 style="text-align: center; margin-top: 100px;">Chatroom badania</h1>
 <h2 style="text-align: center;">Podaj swój nick i dołącz do lobby</h2>
 
-<div class="input-group mb-3" style="text-align: center; margin-top: 100px;">
-    <div class="input-group-prepend">
-        <input type="text" placeholder="Podaj nick..." name="nick" id="nick">
-        <button type="submit" name="send" class="btn btn-success" id="send_btn">Dołącz do lobby</button>
-    </div>
-</div>
-
-<form action="/" method="post">
+<form action="/" method="post" style="text-align: center; margin-top: 50px;">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Zatwierdź">
 </form>
+
 {% endblock content %}

@@ -27,10 +27,12 @@ class HomePageView(TemplateView):
 class LobbyPageView(TemplateView):
     template_name = "lobby.html"
 
-    def post(self, request, **kwargs):
-        form = HomeForm(request.POST)
+    def get_context_data(self, *args, **kwargs):
+        context = super(LobbyPageView, self).get_context_data(*args,**kwargs)
+        #context['visitor_ip'] = self.get_client_ip(self.request)
+        context['nick'] = self.request.session['nick']
 
-        return render(request, 'lobby.html', {"nick", request.session['nick']})
+        return context
 
 class ChatroomPageView(TemplateView):  
     template_name = "chatroom.html"
@@ -46,7 +48,7 @@ class ChatroomPageView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ChatroomPageView, self).get_context_data(*args,**kwargs)
         context['visitor_ip'] = self.get_client_ip(self.request)
-        context['nick'] = request.session['nick']
+        context['nick'] = self.request.session['nick']
 
         return context
 

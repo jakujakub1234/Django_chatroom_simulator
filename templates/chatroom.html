@@ -55,7 +55,7 @@
 
 <script>
 
-let user_name = "User (TODO do podania przez usera na poprzedniej stronie)";
+let user_name = "{{ nick }}";
 
 respect_bots_messages = { 
   2:["Ania", "Cześć!"],
@@ -122,8 +122,8 @@ function weightBalancer() {
 
     let new_message = `
     <div class="container darker">
-            <span alt="Avatar" class="right" style="width:100%;">` + user_name + `</span>
-              <p>` + weightsForLeftAndRightSides + `</p>
+            <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>
+              <p style="font-size: large;">` + weightsForLeftAndRightSides + `</p>
               <span class="time-left">` + hour + ":" + min + `</span>
           </div>
     `;
@@ -151,8 +151,8 @@ function incrementSeconds() {
     if (seconds in respect_bots_messages) {
       let new_message = `
       <div class="container">
-              <span alt="Avatar" class="right" style="width:100%;">` + respect_bots_messages[seconds][0] + `</span>
-                <p>` + respect_bots_messages[seconds][1] + `</p>
+              <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + respect_bots_messages[seconds][0] + `</span>
+                <p style="font-size: large;">` + respect_bots_messages[seconds][1] + `</p>
                 <span class="time-left">` + hour + ":" + min + `</span>
             </div>
       `;
