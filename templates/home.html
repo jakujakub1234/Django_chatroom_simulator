@@ -2,12 +2,20 @@
 {% block content %}
 
 <h1 style="text-align: center; margin-top: 100px;">Chatroom badania</h1>
-<h2 style="text-align: center;">Podaj swój nick i dołącz do lobby</h2>
+<h2 style="text-align: center;">Podaj swój nick i kod z Qualtricsa, żeby dołączyć do lobby</h2>
+<h3 style="text-align: center;">(Akceptowany kod z Qualtricsa to 12)</h3>
+
 
 <form action="/" method="post" style="text-align: center; margin-top: 50px;">
     {% csrf_token %}
-    {{ form }}
+    {{ form.as_p }}
     <input type="submit" value="Zatwierdź">
 </form>
+
+<style>
+    .errorlist {
+        color: red;
+    }
+</style>
 
 {% endblock content %}
