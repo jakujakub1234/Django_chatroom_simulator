@@ -138,6 +138,7 @@ function weightBalancer() {
     document.getElementById("msg_field").value = "";
 
     const date = new Date();
+    
     let hour = date.getHours().toString();
     let min = date.getMinutes().toString();
     if (hour.lengt < 2) hour = "0" + hour;
@@ -172,10 +173,35 @@ function weightBalancer() {
 
 let chatroom = document.getElementById("chatroom");
 
-var seconds = 0;
+var start_timestamp = parseInt("{{ start_timestamp }}");
+var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
 var seconds_counter = document.getElementById('seconds-counter');
+/*
+for (let i = 0; i < seconds; i++) {
+    const date = new Date();
+    let hour = date.getHours().toString();
+    let min = date.getMinutes().toString();
+    if (hour.length < 2) hour = "0" + hour;
+    if (min.length < 2) min = "0" + min;
 
+
+    if (i in respect_bots_messages) {
+      let new_message = `
+      <div class="container" style="width: 50%; background-color: ` + colors[respect_bots_messages[i][0]] + `">
+              <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + respect_bots_messages[i][0] + `</span>
+                <p style="font-size: large;">` + respect_bots_messages[i][1] + `</p>
+                <span class="time-left">` + hour + ":" + min + `</span>
+            </div>
+      `;
+
+      chatroom.innerHTML += new_message;
+
+      window.scrollTo(0, document.body.scrollHeight);
+
+    }
+}
+*/
 function incrementSeconds() {
     seconds += 1;
     if (seconds_to_respond >= 0) seconds_to_respond--;
@@ -183,7 +209,7 @@ function incrementSeconds() {
     const date = new Date();
     let hour = date.getHours().toString();
     let min = date.getMinutes().toString();
-    if (hour.lengt < 2) hour = "0" + hour;
+    if (hour.length < 2) hour = "0" + hour;
     if (min.length < 2) min = "0" + min;
 
 

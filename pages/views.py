@@ -4,12 +4,32 @@ from django.http import HttpResponseRedirect
 from .forms import HomeForm
 from .models import Nicks
 from .models import Messages
+from .utils import lobby_time, chatroom_time
+
+from datetime import datetime
 
 class HomePageView(TemplateView):
     template_name = "home.html"
 
     def get(self, request):
         form = HomeForm()
+
+        if 1 > 2:
+            for key in list(request.session.keys()):
+                if not key.startswith("_"): # skip keys set by the django system
+                    del request.session[key]
+
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
+
+            if survey_time > lobby_time + chatroom_time:
+                return HttpResponseRedirect("end_chat")
+
+            if survey_time > lobby_time:
+                return HttpResponseRedirect("chatroom")
+
+            if survey_time > 1:
+                return HttpResponseRedirect("lobby")
 
         return render(request, "home.html", {"form": form})
 
@@ -23,6 +43,7 @@ class HomePageView(TemplateView):
                 request.session['nick'] = "Uczestnik badania"
 
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
+            request.session['start_timestamp'] = datetime.now().timestamp()
     
             return HttpResponseRedirect("/lobby/")
 
@@ -36,11 +57,24 @@ class LobbyPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
+
+            if survey_time > lobby_time + chatroom_time:
+                return HttpResponseRedirect("../end_chat")
+
+            if survey_time > lobby_time:
+                return HttpResponseRedirect("../chatroom")
+
+            #if survey_time > 1:
+            #    return HttpResponseRedirect("../lobby")
+
         return super(LobbyPageView, self).get(request)
 
     def get_context_data(self, *args, **kwargs):            
         context = super(LobbyPageView, self).get_context_data(*args,**kwargs)        
         context['nick'] = self.request.session['nick']
+        context['start_timestamp'] = self.request.session['start_timestamp']
 
         return context
 
@@ -52,20 +86,25 @@ class ChatroomPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        return super(ChatroomPageView, self).get(request)
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
+            if survey_time > lobby_time + chatroom_time:
+                return HttpResponseRedirect("../end_chat")
+
+            #if survey_time > lobby_time:
+            #    return HttpResponseRedirect("../chatroom")
+
+            if survey_time < lobby_time:
+                return HttpResponseRedirect("../lobby")
+
+        return super(ChatroomPageView, self).get(request)
 
     def get_context_data(self, *args, **kwargs):
         context = super(ChatroomPageView, self).get_context_data(*args,**kwargs)
-        #context['visitor_ip'] = self.get_client_ip(self.request)
         context['nick'] = self.request.session['nick']
+
+        context['start_timestamp'] = self.request.session['start_timestamp'] + lobby_time
 
         return context
 
@@ -76,6 +115,18 @@ class EndChatPageView(TemplateView):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
+
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
+
+            #if survey_time > lobby_time + chatroom_time:
+            #    return HttpResponseRedirect("../end_chat")
+
+            if survey_time < lobby_time + chatroom_time:
+                return HttpResponseRedirect("../chatroom")
+
+            if survey_time < lobby_time:
+                return HttpResponseRedirect("../lobby")
 
         return super(EndChatPageView, self).get(request)
 
