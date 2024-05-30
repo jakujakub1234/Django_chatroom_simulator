@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .forms import HomeForm
 from .models import Nicks
+from .models import Messages
 
 class HomePageView(TemplateView):
     template_name = "home.html"
@@ -17,6 +18,10 @@ class HomePageView(TemplateView):
 
         if form.is_valid():
             request.session['nick'] = form.cleaned_data['nick']
+
+            if form.cleaned_data['nick'] == "":
+                request.session['nick'] = "Uczestnik badania"
+
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
     
             return HttpResponseRedirect("/lobby/")
@@ -64,11 +69,36 @@ class ChatroomPageView(TemplateView):
 
         return context
 
+class EndChatPageView(TemplateView):
+    template_name = "end_chat.html"
+
+    def get(self, request):
+        if 'key' not in request.session or request.session['key'] == "":
+            form = HomeForm()
+            return render(request, 'home.html', {'form':form})
+
+        return super(EndChatPageView, self).get(request)
+
 class AjaxPageView(TemplateView):  
     def post(self, request, **kwargs):
         form = HomeForm()
         
-        nick = Nicks(qualtrics_id='1234', nick=request.POST.get('nick'))
-        nick.save()
+        # TODO wylaczenie bazy
+        return render(request, 'home.html', {'form':form})
+        
+        if request.POST.get('action') == "nick":
+            nick = Nicks(qualtrics_id='1234', nick=request.POST.get('nick'))
+            nick.save()
+        
+
+        if request.POST.get('action') == "message":
+            messages = Messages(
+                qualtrics_id = '1234',
+                message = request.POST.get('message'),
+                message_time = request.POST.get('message_time')
+            )
+            
+            messages.save()
+        
 
         return render(request, 'home.html', {'form':form})

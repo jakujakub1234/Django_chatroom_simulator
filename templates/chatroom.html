@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+
 {% load static %}
 {% block content %}
 <h1 style="text-align: center; margin-top: 100px;">Chatroom</h1>
@@ -53,12 +55,14 @@
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <input type="text" placeholder="Send a message..." name="message" id="msg_field">
+                <input type="text" placeholder="Send a message..." name="message" id="msg_field" maxlength="1000">
                 <button name="send" class="btn btn-success" id="send_btn">Wyślij</button>
             </div>
         </div>
     </form>
 </div>
+
+<div style="text-align: center;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 
@@ -111,6 +115,16 @@ respect_bots_messages = {
   186:["Michal", "(thumbs up) "]
 };
 
+let colors = {
+  "Ania": "aquamarine",
+  "Kasia": "beige",
+  "Piotrek": "cornsilk",
+  "Agnieszka": "darkseagreen",
+  "Michal": "powderblue",
+  "Arek": "thistle",
+  "Bartek": "tan",
+}
+
 
 let submitButton = document.querySelector("#send_btn")
 
@@ -130,7 +144,7 @@ function weightBalancer() {
     if (min.length < 2) min = "0" + min;
 
     let new_message = `
-    <div class="container darker">
+    <div class="container darker" style="width: 50%; margin-left: auto; background-color: floralwhite;">
             <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>
               <p style="font-size: large;">` + weightsForLeftAndRightSides + `</p>
               <span class="time-left">` + hour + ":" + min + `</span>
@@ -140,15 +154,31 @@ function weightBalancer() {
     document.getElementById("chatroom").innerHTML += new_message;
 
     seconds_to_respond = 5;
+
+    $.ajax({
+        type: "POST",
+        url: "../ajax/",   
+        data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              action: "message",
+              message: weightsForLeftAndRightSides,
+              message_time: seconds
+            },
+        success:  function(response){
+               //alert(response);
+           }
+    });
 }
 
 let chatroom = document.getElementById("chatroom");
 
 var seconds = 0;
 
+var seconds_counter = document.getElementById('seconds-counter');
+
 function incrementSeconds() {
     seconds += 1;
-    if (seconds >= 0) seconds_to_respond--;
+    if (seconds_to_respond >= 0) seconds_to_respond--;
 
     const date = new Date();
     let hour = date.getHours().toString();
@@ -159,7 +189,7 @@ function incrementSeconds() {
 
     if (seconds in respect_bots_messages) {
       let new_message = `
-      <div class="container">
+      <div class="container" style="width: 50%; background-color: ` + colors[respect_bots_messages[seconds][0]] + `">
               <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + respect_bots_messages[seconds][0] + `</span>
                 <p style="font-size: large;">` + respect_bots_messages[seconds][1] + `</p>
                 <span class="time-left">` + hour + ":" + min + `</span>
@@ -174,7 +204,7 @@ function incrementSeconds() {
 
     if (seconds_to_respond == 0) {
       let new_message = `
-      <div class="container">
+      <div class="container" style="width: 50%; background-color: ` + colors["Ania"] + `">
               <span alt="Avatar" class="right" style="width:100%;">` + "Ania" + `</span>
                 <p>` + "O cześć " + user_name + "! Fajnie napisałeś <3" + `</p>
                 <span class="time-left">` + hour + ":" + min + `</span>
@@ -190,19 +220,62 @@ function incrementSeconds() {
       $.ajax({
         type: "POST",
         url: "../ajax/",   
-        data: {csrfmiddlewaretoken: '{{ csrf_token }}',
-              nick: user_name},
+        data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              action: "nick",
+              nick: user_name
+            },
         success:  function(response){
                //alert(response);
            }
     });
 
     }
+
+    var time_to_left_chat = 240 - seconds;
+
+    var new_time = "Czas do zakończenia czatu: "
+    var minutes_to_end = Math.floor(time_to_left_chat / 60);
+    var seconds_to_end = time_to_left_chat % 60;
+
+    if (minutes_to_end > 0) {
+      var minutes_text = " minut";
+
+      if (minutes_to_end == 1) {
+        minutes_text = " minuta";
+      }
+      else if (minutes_to_end < 5) {
+        minutes_text = " minuty";
+      }
+
+      new_time += minutes_to_end + " " + minutes_text;
+    }
+
+    if (seconds_to_end > 0) {
+      var seconds_text = " sekund";
+
+      if (seconds_to_end == 1) {
+        seconds_text = " sekunda";
+      }
+      else if (seconds_to_end < 5) {
+        seconds_text = " sekundy";
+      }
+
+      if (minutes_to_end > 0) {
+        new_time += " i ";
+      }
+
+      new_time += seconds_to_end + " " +  seconds_text;
+    }
+
+    if (time_to_left_chat < 0) {
+      window.location.href = "{% url 'end_chat' %}";
+    }
+
+    seconds_counter.innerText = new_time;
 }
 
 var cancel = setInterval(incrementSeconds, 1000);
-
-
 
 </script>
 
@@ -312,11 +385,13 @@ var cancel = setInterval(incrementSeconds, 1000);
 .time-right {
   float: right;
   color: #aaa;
+
 }
 
 .time-left {
   float: left;
-  color: #999;
+  color: #000000;
+  font-family: cursive;
 }
 
 .messages{
