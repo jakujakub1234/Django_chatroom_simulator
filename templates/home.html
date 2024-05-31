@@ -15,13 +15,35 @@
 <form action="/" method="post" style="text-align: center; margin-top: 50px;">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Zatwierdź">
+    <input type="submit" value="Zatwierdź" class="btn-submit">
 </form>
 
 <style>
     .errorlist {
         color: red;
     }
+
+.btn-submit {
+    width: 10%;
+    height: 50px;
+    border: none;
+    border-radius: 4pt;
+    box-shadow: 0px 4px 4px 0px rgb(0 0 0 / 30%);
+    outline-color: transparent;
+    font-size: larger;
+    margin-top: 2%;
+  }
+
+.form-input {
+    background: aliceblue;
+    border: none;
+    border-radius: 2pt;
+    box-shadow: 0 0 0 1pt white;
+    outline-color: transparent;
+
+    text-indent: 1%;
+    font-size: 18px;
+  }
 </style>
 
 {% endblock content %}

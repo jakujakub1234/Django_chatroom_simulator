@@ -19,7 +19,7 @@ class HomePageView(TemplateView):
                 if not key.startswith("_"): # skip keys set by the django system
                     del request.session[key]
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -57,7 +57,7 @@ class LobbyPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -86,7 +86,7 @@ class ChatroomPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -116,7 +116,7 @@ class EndChatPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             #if survey_time > lobby_time + chatroom_time:

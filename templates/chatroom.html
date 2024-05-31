@@ -44,8 +44,9 @@
 
 <div class="col-3" style="margin: auto;">
   <div class="snippet" data-title="dot-pulse" style="margin: auto;">
-    <div class="stage" style="margin: auto;">
-      <div class="dot-pulse" style="margin: auto;"></div>
+    <div id="stage" class="stage" style="margin: auto; margin-top: 2%;  display: none;">
+      <span id="user-writing" class="user_writing" style="margin-left: 2%;">Piotrek pisze</span>
+      <span class="dot-pulse" style="margin-left: 3%; display: inline-block;"></span>
     </div>
   </div>
 </div>
@@ -55,7 +56,7 @@
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <input type="text" placeholder="Send a message..." name="message" id="msg_field" maxlength="1000">
+                <input type="text" placeholder="Napisz wiadomość..." name="message" id="msg_field" maxlength="1000">
                 <button name="send" class="btn btn-success" id="send_btn">Wyślij</button>
             </div>
         </div>
@@ -118,7 +119,7 @@ respect_bots_messages = {
 let colors = {
   "Ania": "aquamarine",
   "Kasia": "beige",
-  "Piotrek": "cornsilk",
+  "Piotrek": "silver",
   "Agnieszka": "darkseagreen",
   "Michal": "powderblue",
   "Arek": "thistle",
@@ -128,13 +129,13 @@ let colors = {
 
 let submitButton = document.querySelector("#send_btn")
 
-submitButton.addEventListener("click", weightBalancer);
+submitButton.addEventListener("click", sendUserMessage);
 
 var seconds_to_respond = -1;
 
 
-function weightBalancer() {
-    const weightsForLeftAndRightSides = document.getElementById("msg_field").value;
+function sendUserMessage() {
+    const user_message = document.getElementById("msg_field").value;
     document.getElementById("msg_field").value = "";
 
     const date = new Date();
@@ -145,9 +146,9 @@ function weightBalancer() {
     if (min.length < 2) min = "0" + min;
 
     let new_message = `
-    <div class="container darker" style="width: 50%; margin-left: auto; background-color: floralwhite;">
+    <div class="container darker" style="width: 45%; margin-left: auto; background-color: floralwhite;">
             <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>
-              <p style="font-size: large;">` + weightsForLeftAndRightSides + `</p>
+              <p style="font-size: large; word-break: break-all;">` + user_message + `</p>
               <span class="time-left">` + hour + ":" + min + `</span>
           </div>
     `;
@@ -156,13 +157,21 @@ function weightBalancer() {
 
     seconds_to_respond = 5;
 
+    responding_bot = Object.keys(colors);
+    responding_bot = responding_bot[Math.floor(Math.random()*responding_bot.length)];
+
+    respond = "O cześć " + user_name + "! Fajnie napisałeś <3";
+    if (user_message.length > 200) {
+      respond = "tl;dr";
+    }
+
     $.ajax({
         type: "POST",
         url: "../ajax/",   
         data: {
               csrfmiddlewaretoken: '{{ csrf_token }}',
               action: "message",
-              message: weightsForLeftAndRightSides,
+              message: user_message,
               message_time: seconds
             },
         success:  function(response){
@@ -173,8 +182,12 @@ function weightBalancer() {
 
 let chatroom = document.getElementById("chatroom");
 
+/*
+TODO
 var start_timestamp = parseInt("{{ start_timestamp }}");
 var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+*/
+var seconds = 0;
 
 var seconds_counter = document.getElementById('seconds-counter');
 /*
@@ -202,9 +215,45 @@ for (let i = 0; i < seconds; i++) {
     }
 }
 */
+
+var responding_bot = "";
+var respond = "";
+
 function incrementSeconds() {
     seconds += 1;
     if (seconds_to_respond >= 0) seconds_to_respond--;
+
+    var users_typing = [];
+
+    for (var i = 8; i > 0; i--) {
+      if (seconds + i in respect_bots_messages) {
+        if (!users_typing.includes(respect_bots_messages[seconds + i][0])) {
+          users_typing.push(respect_bots_messages[seconds + i][0]);
+        }
+      }
+    }
+
+    if (seconds_to_respond > 0) {
+      if (!users_typing.includes(responding_bot)) {
+        users_typing.push(responding_bot);
+      }
+    }
+
+    var typing_text = " pisze";
+
+    if (users_typing.length > 1) {
+      typing_text = " piszą";
+    }
+
+    typing_text = users_typing.join(", ") + typing_text;
+    typing_text = typing_text.replace(/,([^,]*)$/, " i" + '$1');
+
+    if (users_typing.length > 0) {
+      document.getElementById("stage").style.display = "block";
+      document.getElementById("user-writing").innerHTML = typing_text;
+    } else {
+      document.getElementById("stage").style.display = "none";
+    }
 
     const date = new Date();
     let hour = date.getHours().toString();
@@ -217,7 +266,7 @@ function incrementSeconds() {
       let new_message = `
       <div class="container" style="width: 50%; background-color: ` + colors[respect_bots_messages[seconds][0]] + `">
               <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + respect_bots_messages[seconds][0] + `</span>
-                <p style="font-size: large;">` + respect_bots_messages[seconds][1] + `</p>
+                <p style="font-size: large; word-break: break-all;">` + respect_bots_messages[seconds][1] + `</p>
                 <span class="time-left">` + hour + ":" + min + `</span>
             </div>
       `;
@@ -230,9 +279,9 @@ function incrementSeconds() {
 
     if (seconds_to_respond == 0) {
       let new_message = `
-      <div class="container" style="width: 50%; background-color: ` + colors["Ania"] + `">
-              <span alt="Avatar" class="right" style="width:100%;">` + "Ania" + `</span>
-                <p>` + "O cześć " + user_name + "! Fajnie napisałeś <3" + `</p>
+      <div class="container" style="width: 50%; background-color: ` + colors[responding_bot] + `">
+              <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + responding_bot + `</span>
+                <p style="font-size: large; word-break: break-all;">` + respond + `</p>
                 <span class="time-left">` + hour + ":" + min + `</span>
             </div>
       `;
@@ -306,6 +355,34 @@ var cancel = setInterval(incrementSeconds, 1000);
 </script>
 
 <style>
+  .input-group-prepend {
+    margin-bottom: 2%;
+    margin-top: 1%;
+  }
+
+  #send_btn {
+    width: 7%;
+    height: 50px;
+    border: none;
+    border-radius: 4pt;
+    box-shadow: 0px 4px 4px 0px rgb(0 0 0 / 30%);
+    outline-color: transparent;
+    font-size: larger;
+  }
+
+  #msg_field {
+    width: 50%;
+    background: aliceblue;
+    border: none;
+    border-radius: 2pt;
+    box-shadow: 0 0 0 1pt white;
+    outline-color: transparent;
+
+    text-indent: 1%;
+    font-size: 18px;
+    margin-right: 20px;
+  }
+
   .dot-pulse {
   position: relative;
   left: -9999px;
@@ -374,16 +451,16 @@ var cancel = setInterval(incrementSeconds, 1000);
   }
 }
 
-    .container {
-  border: 2px solid #dedede;
+.container {
   background-color: #f1f1f1;
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
+  box-shadow: 6px 6px 6px 0px rgb(0 0 0 / 30%);
+  border: none;
 }
 
 .darker {
-    max-height: 120px;
   border-color: #ccc;
   background-color: #ddd;
 }
@@ -408,14 +485,7 @@ var cancel = setInterval(incrementSeconds, 1000);
   margin-right:0;
 }
 
-.time-right {
-  float: right;
-  color: #aaa;
-
-}
-
 .time-left {
-  float: left;
   color: #000000;
   font-family: cursive;
 }
