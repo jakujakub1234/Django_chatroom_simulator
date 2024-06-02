@@ -1,0 +1,141 @@
+.input-group-prepend {
+  margin-bottom: 2%;
+  margin-top: 1%;
+}
+
+#btn-submit {
+  margin-top: 16px;
+  height: 40px;
+  width: 100px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 3px 6px #999;
+  outline-color: transparent;
+  font-size: larger;
+}
+
+#btn-submit:hover {
+  background-color: rgb(193, 200, 207);
+}
+
+#btn-submit:active {
+  background-color: rgb(193, 200, 207);
+  box-shadow: 1px 3px #666;
+  transform: translateY(4px);
+}
+
+#msg_field {
+  margin-left: 24px;
+  margin-top: 16px;
+  width: 50%;
+  background: aliceblue;
+  border: none;
+  border-radius: 2pt;
+  box-shadow: 0 0 0 1pt white;
+  outline-color: transparent;
+
+  text-indent: 1%;
+  font-size: 18px;
+  margin-right: 20px;
+}
+
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  box-shadow: 9999px 0 0 -5px;
+  animation: dot-pulse 1.5s infinite linear;
+  animation-delay: 0.25s;
+}
+.dot-pulse::before,
+.dot-pulse::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+}
+.dot-pulse::before {
+  box-shadow: 9984px 0 0 -5px;
+  animation: dot-pulse-before 1.5s infinite linear;
+  animation-delay: 0s;
+}
+.dot-pulse::after {
+  box-shadow: 10014px 0 0 -5px;
+  animation: dot-pulse-after 1.5s infinite linear;
+  animation-delay: 0.5s;
+}
+
+@keyframes dot-pulse-before {
+  0% {
+    box-shadow: 9984px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 9984px 0 0 2px;
+  }
+  60%,
+  100% {
+    box-shadow: 9984px 0 0 -5px;
+  }
+}
+@keyframes dot-pulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 9999px 0 0 2px;
+  }
+  60%,
+  100% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+}
+@keyframes dot-pulse-after {
+  0% {
+    box-shadow: 10014px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 10014px 0 0 2px;
+  }
+  60%,
+  100% {
+    box-shadow: 10014px 0 0 -5px;
+  }
+}
+
+.container {
+  width: 50%;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 6px 6px 6px 0px rgb(0 0 0 / 30%);
+  border: none;
+}
+
+.user-container {
+  border-color: #ccc;
+  background-color: #ddd;
+  width: 45%;
+  margin-left: auto;
+  background-color: floralwhite;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.time-left {
+  color: #000000;
+  font-family: cursive;
+}

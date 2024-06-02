@@ -1,10 +1,12 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from .forms import HomeForm
 from .models import Nicks
 from .models import Messages
 from .utils import lobby_time, chatroom_time
+from .chat_ai import ChatAI
 
 from datetime import datetime
 
@@ -130,17 +132,21 @@ class EndChatPageView(TemplateView):
 
         return super(EndChatPageView, self).get(request)
 
-class AjaxPageView(TemplateView):  
+class AjaxPageView(TemplateView):
+    chat_ai = ChatAI()
+
     def post(self, request, **kwargs):
         form = HomeForm()
         
         # TODO wylaczenie bazy
+        self.chat_ai.setNick(request.POST.get('nick'))
+
+        print("ZBAZOWANO " + request.POST.get('action'))
         return render(request, 'home.html', {'form':form})
         
         if request.POST.get('action') == "nick":
             nick = Nicks(qualtrics_id='1234', nick=request.POST.get('nick'))
-            nick.save()
-        
+            nick.save()        
 
         if request.POST.get('action') == "message":
             messages = Messages(
@@ -153,3 +159,11 @@ class AjaxPageView(TemplateView):
         
 
         return render(request, 'home.html', {'form':form})
+
+    def get(self, request):
+        respond = self.chat_ai.generateRespond(
+            request.GET['message'],
+            request.GET['responding_bot']
+        )
+
+        return JsonResponse({'respond': respond}, status=200, content_type="application/json")
