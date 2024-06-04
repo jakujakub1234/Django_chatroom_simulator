@@ -161,9 +161,8 @@ class AjaxPageView(TemplateView):
         return render(request, 'home.html', {'form':form})
 
     def get(self, request):
-        respond = self.chat_ai.generateRespond(
-            request.GET['message'],
-            request.GET['responding_bot']
+        respond, responding_bot = self.chat_ai.generateRespond(
+            request.GET['message']
         )
 
-        return JsonResponse({'respond': respond}, status=200, content_type="application/json")
+        return JsonResponse({'respond': respond, "responding_bot": responding_bot}, status=200, content_type="application/json")

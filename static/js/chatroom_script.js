@@ -40,7 +40,7 @@ function sendDataToDatabase(action, message, message_time, nick) {
 }
 
 jQuery.extend({
-    generateRespond: function(user_message, responding_bot) {
+    generateRespond: function(user_message) {
         var result = null;
         $.ajax({
             type: "GET",
@@ -48,14 +48,14 @@ jQuery.extend({
             async: false,
             data: {
                 csrfmiddlewaretoken: data_from_django.token,
-                message: user_message,
-                responding_bot: responding_bot
+                message: user_message
             },
             success: function (data) {
                 result = data.respond;
+                responding_bot = data.responding_bot
             }
         });
-       return result;
+       return [result, responding_bot];
     }
 });
 
@@ -69,9 +69,10 @@ function sendUserMessage() {
 
     sendMessageHTML(user_name, user_message, "user-container");
 
-    var responding_bot = bots_names[Math.floor(Math.random() * bots_names.length)];
+    var respond = $.generateRespond(user_message);
 
-    var respond = $.generateRespond(user_message, responding_bot);
+    var responding_bot = respond[1];
+    respond = respond[0];
 
     responds_queue.push([5, responding_bot, respond]);
 
@@ -149,6 +150,9 @@ submitButton.addEventListener("click", sendUserMessage);
 const chatroom = document.getElementById("chatroom");
 
 sendDataToDatabase("nick", "", "", user_name);
+
+document.getElementById("msg_field").focus();
+document.getElementById("msg_field").select();
 
 function incrementSeconds() {
     seconds++;
