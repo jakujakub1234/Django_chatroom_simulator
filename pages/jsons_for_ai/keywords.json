@@ -1,0 +1,25 @@
+{
+    "greetings": [
+        "hej",
+        "hejka",
+        "witaj",
+        "hejo",
+        "witajcie",
+        "witam",
+        "cześć",
+        "czesc",
+        "siema",
+        "siemka",
+        "elo",
+        "salut"
+    ],
+    "questions": [
+        "czy",
+        "czemu",
+        "dlaczego",
+        "co",
+        "kiedy",
+        "gdzie",
+        "jak"
+    ]
+}

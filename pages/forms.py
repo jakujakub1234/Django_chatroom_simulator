@@ -14,7 +14,8 @@ class HomeForm(forms.Form):
     def clean_key_from_qualtrics(self):
         key_from_qualtrics = self.cleaned_data['key_from_qualtrics']
         
-        if key_from_qualtrics != "12":
-            self._errors["key_from_qualtrics"] = ["Nieprawidłowy klucz z Qualtricsa"]
+        # TODO wyłączenie zabezpieczenia
+        #if key_from_qualtrics != "12":
+        #    self._errors["key_from_qualtrics"] = ["Nieprawidłowy klucz z Qualtricsa"]
         
         return key_from_qualtrics

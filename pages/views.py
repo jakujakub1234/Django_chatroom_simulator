@@ -138,19 +138,19 @@ class AjaxPageView(TemplateView):
     def post(self, request, **kwargs):
         form = HomeForm()
         
-        # TODO wylaczenie bazy
         self.chat_ai.setNick(request.POST.get('nick'))
 
         print("ZBAZOWANO " + request.POST.get('action'))
-        return render(request, 'home.html', {'form':form})
+        # TODO wylaczenie bazy
+        #return render(request, 'home.html', {'form':form})
         
         if request.POST.get('action') == "nick":
-            nick = Nicks(qualtrics_id='1234', nick=request.POST.get('nick'))
+            nick = Nicks(qualtrics_id=request.session['key'], nick=request.POST.get('nick'))
             nick.save()        
 
         if request.POST.get('action') == "message":
             messages = Messages(
-                qualtrics_id = '1234',
+                qualtrics_id = request.session['key'],
                 message = request.POST.get('message'),
                 message_time = request.POST.get('message_time')
             )

@@ -1,0 +1,8 @@
+{
+    "SPAM": "{{nick}} przestań spamować już",
+    "GIBBERISH": "Nie pisz bełkotu {{nick}}",
+    "TL_DR": "tl;dr",
+    "QUESTION": "Dobre pytanie {{nick}}",
+    "GREETINGS": "Hejka {{nick}}",
+    "GENERIC": "Fajnie napisał{{gender_e/a}}ś {{nick}} <3"
+}
