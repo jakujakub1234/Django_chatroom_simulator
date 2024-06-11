@@ -32,6 +32,7 @@ class ChatAI:
 
         self.greetings = keywords["greetings"]
         self.questions = keywords["questions"]
+        self.farewells = keywords["farewells"]
 
         self.never_existing_2_letters = set([
             'vq', 'qa', 'nq', 'hq', 'cv', 'dq', 'vk', 'vb', 'xg', 'vv', 'qh', 'xt', 'qv', 'vx', 'qe', 'cf', 'vh', 'qf', 'xl', 'bq', 'eq', 'vp', 'cx', 'uv', 'qr', 'fq', 'wv', 'hx', 'qb', 'jx', 'gv', 'px', 'tx', 'xj', 'fx', 'qp', 'xz', 'lx', 'fj', 'tv', 'vm', 'tq', 'xs', 'xw', 'yx', 'mq', 'qi', 'oq', 'yv', 'qw', 'sv', 'qy', 'zv', 'xp', 'xk', 'qk', 'sx', 'pz', 'kx', 'qj', 'lv', 'vf', 'xv', 'rv', 'vg', 'qt', 'xd', 'zq', 'qx', 'qc', 'rq', 'vj', 'xr', 'vw', 'vs', 'dx', 'mv', 'lq', 'ev', 'uq', 'xn', 'yq', 'xc', 'rx', 'vd', 'xh', 'pq', 'kq', 'vn', 'qg', 'cq', 'qz', 'wq', 'jv', 'dv', 'vc', 'pv', 'xf', 'sq', 'xm', 'bv', 'vr', 'vt', 'ql', 'qo', 'gx', 'gq', 'zx', 'aq', 'qn', 'wx', 'qm', 'fv', 'jq', 'xq', 'nv', 'kv', 'hv', 'vl', 'nx', 'xx', 'hf', 'bx', 'mx', 'xb', 'qs', 'qd', 'vz', 'fz', 'qq', 'kz'
@@ -46,6 +47,20 @@ class ChatAI:
 
         self.responds = open(os.path.join(module_dir, 'jsons_for_ai/responds.json'))
         self.responds = json.load(self.responds)
+
+    def preprocessMessage(self, message):
+        message = message.lower()
+        
+        message = message.replace("ę","e")
+        message = message.replace("ó","o")
+        message = message.replace("ą","a")
+        message = message.replace("ś","s")
+        message = message.replace("ż","z")
+        message = message.replace("ź","z")
+        message = message.replace("ć","c")
+        message = message.replace("ń","n")
+
+        return message
 
     def setNick(self, nick):
         self.user_nick = nick
@@ -118,12 +133,15 @@ class ChatAI:
         if any(greeting in message.split() for greeting in self.greetings):
             return self.responds["GREETINGS"]
 
+        if any(farewell in message.split() for farewell in self.farewells):
+            return self.responds["FAREWELLS"]
+
         return self.responds["GENERIC"]
 
     def generateRespond(self, message):
         self.user_messages_counter += 1
+        message = self.preprocessMessage(message)
 
-        message = message.lower()
         responding_bot = self.getRespondingBot(message)
 
         responding_message = self.generateRepondMessage(message, responding_bot)

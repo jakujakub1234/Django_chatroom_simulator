@@ -6,7 +6,6 @@
         "hejo",
         "witajcie",
         "witam",
-        "cześć",
         "czesc",
         "siema",
         "siemka",
@@ -21,5 +20,14 @@
         "kiedy",
         "gdzie",
         "jak"
+    ],
+    "farewells": [
+        "narka",
+        "nara",
+        "lece",
+        "spadam",
+        "papa",
+        "zegnam",
+        "narazie"
     ]
 }

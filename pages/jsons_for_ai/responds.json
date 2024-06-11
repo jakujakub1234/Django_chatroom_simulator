@@ -4,5 +4,6 @@
     "TL_DR": "tl;dr",
     "QUESTION": "Dobre pytanie {{nick}}",
     "GREETINGS": "Hejka {{nick}}",
+    "FAREWELLS": "Na razie {{nick}}",
     "GENERIC": "Fajnie napisał{{gender_e/a}}ś {{nick}} <3"
 }
