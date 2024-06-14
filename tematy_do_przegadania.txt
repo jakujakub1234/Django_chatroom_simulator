@@ -1,7 +1,0 @@
-usunąć sztywny limit czasu (i odliczanei na dole chatroomu), jak zostanie 30 skeunds to zrobić alert;
-
-jeśli ktoś wpisuje coś w inpucie to spowalniamy czas
-
-important messages w osobnej kolumnie w excelu
-
-dodanie szumu do przyrostu czasu w skrypcie do generowanie tablicy z wiadomościami botów;
