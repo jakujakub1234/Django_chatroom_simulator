@@ -23,9 +23,16 @@ function sendMessageHTML(user_name, message, extra_class = "", extra_style = "")
     });}
 
 function sendDataToDatabase(action, message, message_time, nick) {
+    var async_bool = true;
+
+    if (action == "nick") {
+        async_bool = false;
+    }
+
     $.ajax({
         type: "POST",
         url: "../ajax/",
+        async: async_bool,
         data: {
             csrfmiddlewaretoken: data_from_django.token,
             action: action,
@@ -156,6 +163,10 @@ document.getElementById("msg_field").select();
 
 function incrementSeconds() {
     seconds++;
+
+    if (seconds == 10) {
+        alert("Koniec czasu za chwilę!");
+    }
 
     responds_queue.every((respond) => respond[0]--);
 
