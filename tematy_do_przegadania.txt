@@ -1,6 +1,6 @@
-Czy jeśli boty odpisują to czekać dłużej na ich kolejne wiadomości? czy wtedy wydłużyć czas działania chatroomu?
+(check) Czy jeśli boty odpisują to czekać dłużej na ich kolejne wiadomości? czy wtedy wydłużyć czas działania chatroomu?
 
-Liczenie AI zatrzymuje czas na czacie: póki to będzie krótsze niż sekunda (a postaram się żeby było) to gitara, a jeśli nie to może usuniemy licznik z dołu strony? Bo przynajmniej nie będzie się to aż tak rzucać w oczy
+(check) Liczenie AI zatrzymuje czas na czacie: póki to będzie krótsze niż sekunda (a postaram się żeby było) to gitara, a jeśli nie to może usuniemy licznik z dołu strony? Bo przynajmniej nie będzie się to aż tak rzucać w oczy
 (można zrobić tak, że przy napisaniu wiadomości odpalamy AI, a w moemncie jak ją wypisujemy dobiera ją wyciągamy z serwera, dobre dobre)
 
-Rzeczy które trzeba zrobić wspólnie bo nie ma innej opcji: kod z Qualtricsa, kod do powrotu do Qulatricsa, nowy excel z wiadomościami, ustalenie czasu pisania botów
+(check) Rzeczy które trzeba zrobić wspólnie bo nie ma innej opcji: kod z Qualtricsa, kod do powrotu do Qulatricsa, nowy excel z wiadomościami, ustalenie czasu pisania botów

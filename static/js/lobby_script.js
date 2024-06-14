@@ -1,9 +1,9 @@
 /*
-TODO
-var start_timestamp = parseInt("{{ start_timestamp }}");
+TODO*/
+var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
 
-var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
-*/
+//var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+
 var seconds = 0;
 var wait_time = 19;
 
@@ -55,3 +55,13 @@ function incrementSeconds() {
 
 incrementSeconds();
 setInterval(incrementSeconds, 1000);
+
+// Reload on browser "previous" button
+window.addEventListener( "pageshow", function ( event ) {
+    var historyTraversal = event.persisted || 
+                           ( typeof window.performance != "undefined" && 
+                                window.performance.navigation.type === 2 );
+    if ( historyTraversal ) {
+      window.location.reload();
+    }
+});

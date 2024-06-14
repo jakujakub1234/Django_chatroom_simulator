@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block content %}
-<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-end-url="{% url 'end_chat' %}"tabindex="-1">
+<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-end-url="{% url 'return_qualtrics_code' %}" data-start-timestamp = "{{ start_timestamp}}" tabindex="-1">
 </article>
 
 <h1 style="text-align: center; margin-top: 100px;">Chatroom</h1>

@@ -16,7 +16,11 @@ class HomePageView(TemplateView):
     def get(self, request):
         form = HomeForm()
 
-        if 1 > 2:
+        # TODO!!! 
+        # specification
+        # use utils variables
+
+        if 1 > 2: # TODO session clearing
             for key in list(request.session.keys()):
                 if not key.startswith("_"): # skip keys set by the django system
                     del request.session[key]
@@ -132,19 +136,37 @@ class EndChatPageView(TemplateView):
 
         return super(EndChatPageView, self).get(request)
 
+class ReturnQualtricsCodePageView(TemplateView):
+    template_name = "return_qualtrics_code.html"
+
+    def get(self, request):
+        if 'key' not in request.session or request.session['key'] == "":
+            form = HomeForm()
+            return render(request, 'home.html', {'form':form})
+
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
+
+            #if survey_time > lobby_time + chatroom_time:
+            #    return HttpResponseRedirect("../end_chat")
+
+            if survey_time < lobby_time + chatroom_time:
+                return HttpResponseRedirect("../chatroom")
+
+            if survey_time < lobby_time:
+                return HttpResponseRedirect("../lobby")
+
+        return super(ReturnQualtricsCodePageView, self).get(request)
+
 class AjaxPageView(TemplateView):
     chat_ai = ChatAI()
 
     def post(self, request, **kwargs):
         form = HomeForm()
-        
-        self.chat_ai.setNick(request.POST.get('nick'))
-
-        print("ZBAZOWANO " + request.POST.get('action'))
-        # TODO wylaczenie bazy
-        #return render(request, 'home.html', {'form':form})
-        
+                
         if request.POST.get('action') == "nick":
+            self.chat_ai.setNick(request.POST.get('nick'))
+
             nick = Nicks(qualtrics_id=request.session['key'], nick=request.POST.get('nick'))
             nick.save()        
 

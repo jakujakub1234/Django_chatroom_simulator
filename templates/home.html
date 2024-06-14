@@ -8,6 +8,8 @@
     Uwaga! Czatu nie można opuścić, kończy się automatycznie po 4 minutach od dołączenia.
     <br>
     Po zakończeniu czatu zobaczysz kod, który należy podać w Qualtricsie żeby kontynuować badania
+    <br>
+    Nie wychodź z chatroomu przed jego zakończeniem, bo wtedy nie będziesz mógł powrócić do badania
 </h2>
 
 <p style="text-align: center;">
@@ -37,6 +39,16 @@
 <script>
 document.getElementById("id_nick").focus();
 document.getElementById("id_nick").select();
+
+// Reload on browser "previous" button
+window.addEventListener( "pageshow", function ( event ) {
+    var historyTraversal = event.persisted || 
+                           ( typeof window.performance != "undefined" && 
+                                window.performance.navigation.type === 2 );
+    if ( historyTraversal ) {
+      window.location.reload();
+    }
+});
 </script>
 
 {% endblock content %}
