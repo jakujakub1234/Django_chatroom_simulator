@@ -2,6 +2,7 @@ from enum import Enum
 import random
 import os
 import json
+import string
 
 class Gender(Enum):
     MALE=1
@@ -59,6 +60,8 @@ class ChatAI:
         message = message.replace("ź","z")
         message = message.replace("ć","c")
         message = message.replace("ń","n")
+
+        message = message.translate(str.maketrans('', '', string.punctuation)) # TODO maybe not best idea, user can forgot about space after comma
 
         return message
 

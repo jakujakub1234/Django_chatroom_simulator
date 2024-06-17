@@ -10,6 +10,13 @@
 <div id="chatroom">
 </div>
 
+<dialog id="dialog-box">
+  <b>Koniec czasu</b>
+  <p>Czat zakończy się automatycznie za 30 sekund</p>
+  <br>
+  <div class="dialog-buttons"><button id="dialog-button" onclick="closeDialog()">OK</button></div>
+</dialog>
+
 <div class="col-3" style="margin: auto;">
   <div class="snippet" data-title="dot-pulse" style="margin: auto;">
     <div id="stage" class="stage" style="margin: auto; margin-top: 2%;  display: none;">
@@ -31,7 +38,9 @@
   </form>
 </div>
 
-<div style="text-align: center;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
+<!-- TODO ukryć to -->
+  <div style="text-align: center;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
+
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'js/button_animation.js' %}"></script>

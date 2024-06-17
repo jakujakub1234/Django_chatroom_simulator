@@ -83,10 +83,10 @@ function sendUserMessage() {
 
     responds_queue.push([5, responding_bot, respond]);
 
-    sendDataToDatabase("message", user_message, seconds, user_name);
+    sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name);
 }
 
-function printTimeToLeftChat(time_to_left_chat)
+function printTimeToLeftChat(time_to_left_chat) //TODO będzie można usunąć
 {
     var new_time = "Czas do zakończenia czatu: "
     var minutes_to_end = Math.floor(time_to_left_chat / 60);
@@ -127,6 +127,7 @@ function printTimeToLeftChat(time_to_left_chat)
 
 var data_from_django = document.getElementById('data-from-django').dataset;
 var user_name = data_from_django.nick;
+var end_chat_alert_displayed = false;
 
 /*
 TODO*/
@@ -162,20 +163,22 @@ document.getElementById("msg_field").focus();
 document.getElementById("msg_field").select();
 
 function incrementSeconds() {
-    seconds++;
-
-    if (seconds == 10) {
-        alert("Koniec czasu za chwilę!");
+    if (document.getElementById("msg_field").value != "") {
+        seconds += 0.5;
+    } else {
+        seconds ++;
     }
+
+    var seconds_integer = Math.ceil(seconds);
 
     responds_queue.every((respond) => respond[0]--);
 
     var users_typing = [];
 
-    for (var i = 8; i > 0; i--) {
-        if (seconds + i in bots_messages) {
-            if (!users_typing.includes(bots_messages[seconds + i][0])) {
-                users_typing.push(bots_messages[seconds + i][0]);
+    for (var i = 16; i > 0; i--) {
+        if (seconds_integer + i in bots_messages) {
+            if (!users_typing.includes(bots_messages[seconds_integer + i][0])) {
+                users_typing.push(bots_messages[seconds_integer + i][0]);
             }
         }
     }
@@ -202,12 +205,12 @@ function incrementSeconds() {
         document.getElementById("stage").style.display = "none";
     }
 
-    if (seconds in bots_messages) {
+    if (seconds_integer in bots_messages) {
         sendMessageHTML(
-            bots_messages[seconds][0],
-            bots_messages[seconds][1],
+            bots_messages[seconds_integer][0],
+            bots_messages[seconds_integer][1],
             "",
-            "style=\"background-color: " + colors[bots_messages[seconds][0]] + "\""
+            "style=\"background-color: " + colors[bots_messages[seconds_integer][0]] + "\""
         );
     }
 
@@ -222,9 +225,14 @@ function incrementSeconds() {
         );
     }
 
-    var time_to_left_chat = 240 - seconds;
+    var time_to_left_chat = 270 - seconds_integer;
 
     printTimeToLeftChat(time_to_left_chat);
+
+    if (time_to_left_chat == 30 && !end_chat_alert_displayed) {
+        end_chat_alert_displayed = true;
+        openDialog();
+    }
 
     if (time_to_left_chat < 0) {
         window.location.href = data_from_django.endUrl;
@@ -243,3 +251,13 @@ window.addEventListener( "pageshow", function ( event ) {
       window.location.reload();
     }
 });
+
+function openDialog() {
+    const element = document.getElementById("dialog-box");
+    element.open = true;
+  }
+  
+  function closeDialog() {
+    const element = document.getElementById("dialog-box");
+    element.open = false;
+  }
