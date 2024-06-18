@@ -122,11 +122,11 @@
 }
 
 .user-container {
+  color: #fff1ff;
   border-color: #ccc;
-  background-color: #ddd;
   width: 45%;
   margin-left: auto;
-  background-color: floralwhite;
+  background-color: #3a54ff;
 }
 
 .container::after {
@@ -140,7 +140,10 @@
   font-family: cursive;
 }
 
-
+.time-left-user {
+  color: #fff1ff;
+  font-family: cursive;
+}
 
 select {
   padding: 10px;

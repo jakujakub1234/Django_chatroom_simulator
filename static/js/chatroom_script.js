@@ -7,11 +7,18 @@ function sendMessageHTML(user_name, message, extra_class = "", extra_style = "")
     if (hour.lengt < 2) hour = "0" + hour;
     if (min.length < 2) min = "0" + min;
 
+    var span_class = "time-left";
+    var span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>`;
+    if (extra_style == "") {
+        span_class = "time-left-user";
+        span_user = ``;
+    }
+    
     let new_message = `
       <div class="container ` + extra_class + `" ` + extra_style + `>
-        <span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>
+        ` + span_user + `
           <p style="font-size: large; ">` + message + `</p>
-        <span class="time-left">` + hour + ":" + min + `</span>
+        <span class="` + span_class + `">` + hour + ":" + min + `</span>
       </div>
     `;
 
@@ -163,6 +170,10 @@ document.getElementById("msg_field").focus();
 document.getElementById("msg_field").select();
 
 function incrementSeconds() {
+    if (seconds > 30) {
+        return;
+    }
+
     if (document.getElementById("msg_field").value != "") {
         seconds += 0.5;
     } else {
@@ -210,7 +221,8 @@ function incrementSeconds() {
             bots_messages[seconds_integer][0],
             bots_messages[seconds_integer][1],
             "",
-            "style=\"background-color: " + colors[bots_messages[seconds_integer][0]] + "\""
+            //"style=\"background-color: " + colors[bots_messages[seconds_integer][0]] + "\""
+            "style=\"background-color: #f7f7f7\""
         );
     }
 
@@ -221,7 +233,8 @@ function incrementSeconds() {
             respond[1],
             respond[2],
             "",
-            "style=\"background-color: " + colors[respond[1]] + "\""
+            //"style=\"background-color: " + colors[respond[1]] + "\""
+            "style=\"background-color: #f7f7f7\""
         );
     }
 
