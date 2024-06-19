@@ -285,3 +285,44 @@ kbd {
 #respond-input-box {
   margin-left: 1%;
 }
+
+.reactions-container {
+  float: right;
+}
+
+.reactions-container .svg-icon {
+  width: 35px;
+}
+
+.reactions-container-user {
+  float: right;
+}
+
+.reactions-container-user .svg-icon {
+  width: 35px;
+  fill: white;
+}
+
+#reactions-modal {
+  display: none;
+  position: absolute;
+  width: 35px;
+  height: 100px;
+  background: #bce9d9;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+#reactions-modal-user {
+  display: none;
+  position: absolute;
+  width: 35px;
+  height: 100px;
+  background: #bce9d9;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  margin-top: 10px;
+  margin-left: -40px;
+}
