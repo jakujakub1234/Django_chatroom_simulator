@@ -369,10 +369,6 @@ sendDataToDatabase("nick", "", "", user_name);
 document.getElementById("msg_field").focus();
 
 function incrementSeconds() {
-    if (seconds > 30) {
-        return;
-    }
-
     if (document.getElementById("msg_field").value != "") {
         seconds += 0.5;
     } else {

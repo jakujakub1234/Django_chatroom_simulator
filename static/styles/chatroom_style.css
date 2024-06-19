@@ -235,8 +235,9 @@ kbd {
 .container-respond {
   border-radius: 0;
   width: 25%;
-  background-color: #cbcbcb;
+  background-color: #e9e6e6;
   margin-bottom: -1.5%;
+  font-size: smaller;
 }
 
 .container-respond-user {
