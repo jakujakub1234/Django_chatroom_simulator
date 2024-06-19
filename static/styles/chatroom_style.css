@@ -112,7 +112,7 @@
 }
 
 .container {
-  width: 50%;
+  width: 90%;
   background-color: #f1f1f1;
   border-radius: 5px;
   padding: 10px;
@@ -124,7 +124,7 @@
 .user-container {
   color: #fff1ff;
   border-color: #ccc;
-  width: 45%;
+  width: 90%;
   margin-left: auto;
   background-color: #3a54ff;
 }
@@ -230,4 +230,58 @@ kbd {
   background-color: rgb(193, 200, 207);
   box-shadow: 1px 3px #666;
   transform: translateY(4px);
+}
+
+.container-respond {
+  border-radius: 0;
+  width: 25%;
+  background-color: #cbcbcb;
+  margin-bottom: -1.5%;
+}
+
+.container-respond-user {
+  margin-left: auto;
+}
+
+.wrapper {
+  display: flex;
+  width: 50%;
+}
+
+.wrapper-user {
+  display: flex;
+  width: 50%;
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.container-buttons {
+  display: inline-grid;
+  margin: 0 auto;
+}
+
+.message-button {
+  border: none;
+  background: none;
+}
+
+.message-button:hover .svg-icon{
+  fill: white !important;
+}
+
+.respond-button {
+  margin-top: 100%;
+}
+
+.reaction-button {
+  margin-bottom: 100%;
+}
+
+.svg-icon {
+  scale: 1.5;
+  fill: "#565D64";
+}
+
+#respond-input-box {
+  margin-left: 1%;
 }

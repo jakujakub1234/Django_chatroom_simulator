@@ -1,4 +1,4 @@
-function sendMessageHTML(user_name, message, extra_class = "", extra_style = "")
+function sendMessageHTML(user_name, message, is_bot, respond_message = "", respond_nick = "")
 {
     const date = new Date();
 
@@ -7,19 +7,62 @@ function sendMessageHTML(user_name, message, extra_class = "", extra_style = "")
     if (hour.lengt < 2) hour = "0" + hour;
     if (min.length < 2) min = "0" + min;
 
-    var span_class = "time-left";
-    var span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>`;
-    if (extra_style == "") {
+    var span_class;
+    var span_user;
+
+    var extra_class;
+    var wrapper_class;
+    var respond_class;
+    var extra_style;
+    
+    if (is_bot) {
+        span_class = "time-left";
+        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>`;
+
+        respond_class = "";
+        extra_class = "";
+        wrapper_class = "wrapper";
+        extra_style = "style=\"background-color: #f7f7f7\"";
+    } else {
         span_class = "time-left-user";
-        span_user = ``;
+        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic; display:none">` + user_name + `</span>`;
+        
+        respond_class = "container-respond-user";
+        wrapper_class = "wrapper-user";
+        extra_class = "user-container";
+        extra_style = "";
+    }
+
+    var new_message = "";
+
+    if (respond_message != "") {
+        new_message = `
+            <div class="container container-respond ` + respond_class + `">
+            <p>Odpowiedź do użytkownika ` + respond_nick + `</p>
+                <p>` + respond_message + `</p>
+            </div> 
+        `;
     }
     
-    let new_message = `
+    new_message += `
+    <div class="` + wrapper_class + `">
+
       <div class="container ` + extra_class + `" ` + extra_style + `>
         ` + span_user + `
-          <p style="font-size: large; ">` + message + `</p>
+        <p class="message-p" style="font-size: large; ">` + message + `</p>
         <span class="` + span_class + `">` + hour + ":" + min + `</span>
       </div>
+
+      <div class="container-buttons">
+        <button class="respond-button message-button" onclick="respondToMessage(this)">
+            <svg class="svg-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M607.856 320.112l-335.536-0.016 138.08-138.272-56.56-56.576L119.248 359.872l234.48 234.512 56.56-56.576-137.856-138.016 335.376 0.016c114.704 0 208.112 93.472 208.112 208.16s-95.92 208-207.92 208v80c160 0 287.92-129.2 287.92-288s-129.264-287.84-288.064-287.84z"/></svg>
+        </button>
+        <button class="reaction-button message-button">
+            <svg class="svg-icon" width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 7.5c0 .169-.01.336-.027.5h1.005A5.5 5.5 0 1 0 8 12.978v-1.005A4.5 4.5 0 1 1 12 7.5zM5.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2 2.5c.712 0 1.355-.298 1.81-.776l.707.708A3.49 3.49 0 0 1 7.5 10.5a3.49 3.49 0 0 1-2.555-1.108l.707-.708A2.494 2.494 0 0 0 7.5 9.5zm2-2.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2.5 3h1v2h2v1h-2v2h-1v-2h-2v-1h2v-2z"/></svg>
+        </button>
+      </div>
+
+    </div>
     `;
 
     chatroom.innerHTML += new_message;
@@ -28,6 +71,25 @@ function sendMessageHTML(user_name, message, extra_class = "", extra_style = "")
         top: document.body.scrollHeight,
         behavior: 'smooth'
     });}
+
+function respondToMessage(el) {
+    var message_div = el.parentNode.parentNode.querySelector('.container');
+
+    if (message_div == respond_message_div) {
+        respond_message_div = "";
+
+        respond_input_box.style.display = "none";
+    } else {
+        respond_message_div = message_div;
+
+        respond_input_box.style.display = "block";
+        respond_input_box.querySelector("#respond-input-box-nick").innerText = "Odpowiadasz użytkownikowi " + message_div.querySelector(".right").innerText;
+        respond_input_box.querySelector("#respond-input-box-message").innerText = message_div.querySelector(".message-p").innerText;
+    }
+
+    document.getElementById("msg_field").focus();
+    document.getElementById("msg_field").select();
+}
 
 function sendDataToDatabase(action, message, message_time, nick) {
     var async_bool = true;
@@ -81,14 +143,36 @@ function sendUserMessage() {
         return;
     }
 
-    sendMessageHTML(user_name, user_message, "user-container");
+    var true_responding_bot = "";
+
+    if (respond_message_div == "") {
+        sendMessageHTML(user_name, user_message, false);
+    } else {
+        sendMessageHTML(
+            user_name,
+            user_message,
+            false,
+            respond_message_div.querySelector(".message-p").innerText,
+            respond_message_div.querySelector(".right").innerText
+        );
+
+        true_responding_bot = respond_message_div.querySelector(".right").innerText;
+        
+        respond_message_div = "";
+        respond_input_box.style.display = "none";
+    }
+
 
     var respond = $.generateRespond(user_message);
 
     var responding_bot = respond[1];
     respond = respond[0];
 
-    responds_queue.push([5, responding_bot, respond]);
+    if (true_responding_bot != "" && true_responding_bot != user_name) {
+        responding_bot = true_responding_bot;
+    }
+
+    responds_queue.push([5, responding_bot, respond, user_message]);
 
     sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name);
 }
@@ -160,9 +244,12 @@ var bots_names = Object.keys(colors);
 
 var responds_queue = [];
 
+var respond_message_div = "";
+
 submitButton.addEventListener("click", sendUserMessage);
 
 const chatroom = document.getElementById("chatroom");
+const respond_input_box = document.getElementById("respond-input-box");
 
 sendDataToDatabase("nick", "", "", user_name);
 
@@ -220,9 +307,8 @@ function incrementSeconds() {
         sendMessageHTML(
             bots_messages[seconds_integer][0],
             bots_messages[seconds_integer][1],
-            "",
+            true
             //"style=\"background-color: " + colors[bots_messages[seconds_integer][0]] + "\""
-            "style=\"background-color: #f7f7f7\""
         );
     }
 
@@ -232,9 +318,10 @@ function incrementSeconds() {
         sendMessageHTML(
             respond[1],
             respond[2],
-            "",
+            true,
+            respond[3],
+            user_name
             //"style=\"background-color: " + colors[respond[1]] + "\""
-            "style=\"background-color: #f7f7f7\""
         );
     }
 

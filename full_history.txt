@@ -1,0 +1,1000 @@
+ 1013  ./a`
+ 1014  g++ FrequenciesCPPTestVirtuosWarsaw.cpp 
+ 1015  ./a.out 
+ 1016  g++ FrequenciesCPPTestVirtuosWarsaw.cpp 
+ 1017  ./a.out 
+ 1018  g++ FrequenciesCPPTestVirtuosWarsaw.cpp 
+ 1019  ./a.out 
+ 1020  g++ FrequenciesCPPTestVirtuosWarsaw.cpp 
+ 1021  ./a.out 
+ 1022  g++ FrequenciesCPPTestVirtuosWarsaw.cpp 
+ 1023  ./a.out 
+ 1024  g++ FrequenciesCPPTestVirtuosWarsaw.cpp 
+ 1025  ./a.out 
+ 1026  cd Desktop/
+ 1027  cd Graphics/
+ 1028  ls
+ 1029  cd Desktop/
+ 1030  ls
+ 1031  g++ test_cpp_Jakub_Maras.cpp 
+ 1032  ./a.out 
+ 1033  g++ test_cpp_Jakub_Maras.cpp 
+ 1034  ./a
+ 1035  ./a.out 
+ 1036  ./a
+ 1037  g++ test_cpp_Jakub_Maras.cpp 
+ 1038  ./a.out 
+ 1039  g++ test_cpp_Jakub_Maras.cpp 
+ 1040  ./a.out 
+ 1041  g++ test_cpp_Jakub_Maras.cpp 
+ 1042  ./a
+ 1043  ./a.out 
+ 1044  g++ test_cpp_Jakub_Maras.cpp 
+ 1045  ./a.out 
+ 1046  g++ test_cpp_Jakub_Maras.cpp 
+ 1047  ./a.out 
+ 1048  g++ test_cpp_Jakub_Maras.cpp 
+ 1049  ./a.out 
+ 1050  g++ test_cpp_Jakub_Maras.cpp 
+ 1051  ./a.out 
+ 1052  g++ test_cpp_Jakub_Maras.cpp 
+ 1053  ./a.out 
+ 1054  g++ test_cpp_Jakub_Maras.cpp 
+ 1055  ./a
+ 1056  ./a.out 
+ 1057  ./a
+ 1058  g++ test_cpp_Jakub_Maras.cpp 
+ 1059  ./a.out 
+ 1060  g++ test_cpp_Jakub_Maras.cpp 
+ 1061  ./a.out 
+ 1062  g++ test_cpp_Jakub_Maras.cpp 
+ 1063  ./a.out 
+ 1064  g++ test_cpp_Jakub_Maras.cpp 
+ 1065  ./a.out 
+ 1066  g++ test_cpp_Jakub_Maras.cpp 
+ 1067  ./a.out 
+ 1068  g++ test_cpp_Jakub_Maras.cpp 
+ 1069  ./a
+ 1070  ./a.out 
+ 1071  ./a
+ 1072  g++ test_cpp_Jakub_Maras.cpp 
+ 1073  ./a.out 
+ 1074  g++ test_cpp_Jakub_Maras.cpp 
+ 1075  ./a.out 
+ 1076  g++ test_cpp_Jakub_Maras.cpp 
+ 1077  ./a.out 
+ 1078  g++ test_cpp_Jakub_Maras.cpp 
+ 1079  ./a.out 
+ 1080  g++ test_cpp_Jakub_Maras.cpp 
+ 1081  ./a.out 
+ 1082  g++ test_cpp_Jakub_Maras.cpp 
+ 1083  ./a.out 
+ 1084  g++ test_cpp_Jakub_Maras.cpp 
+ 1085  ./a.out 
+ 1086  g++ test_cpp_Jakub_Maras.cpp 
+ 1087  ./a.out 
+ 1088  g++ test_cpp_Jakub_Maras.cpp 
+ 1089  ./a.out 
+ 1090  g++ test_cpp_Jakub_Maras.cpp 
+ 1091  ./a.out 
+ 1092  g++ test_cpp_Jakub_Maras.cpp 
+ 1093  ./a.out 
+ 1094  g++ test_cpp_Jakub_Maras.cpp 
+ 1095  ./a.out 
+ 1096  g++ test_cpp_Jakub_Maras.cpp 
+ 1097  ./a.out 
+ 1098  g++ test_cpp_Jakub_Maras.cpp 
+ 1099  ./a.out 
+ 1100  cd Desktop/Graphics/BloodyOcean/
+ 1101  ./bloodOcean 
+ 1102  make
+ 1103  ./bloodOcean 
+ 1104  make
+ 1105  ./bloodOcean 
+ 1106  cd Desktop/Graphics/BloodyOcean/
+ 1107  ./bloodOcean 
+ 1108  cd Desktop/Graphics/BloodyOcean/
+ 1109  ./bloodOcean 
+ 1110  cd Downloads/
+ 1111  Rscript a.R 
+ 1112  sudo apt install r-base-core
+ 1113  Rscript a.R 
+ 1114  Rscript
+ 1115  Rscript "print("XD")"
+ 1116  Rscript -e "print("XD")"
+ 1117  Rscript -e "pri"
+ 1118  Rscript -e "print('xd)"
+ 1119  Rscript -e "print('xd')"
+ 1120  Rscript -e print('xd')
+ 1121  Rscript -e "install.packages("ggplot2")"
+ 1122  Rscript -e "install.packages("rstanarm")"
+ 1123  Rscript -e "install.packages('ggplot2')"
+ 1124  chmod +xrw /usr/local/lib/R/site-library/
+ 1125  sudo chmod +xrw /usr/local/lib/R/site-library/
+ 1126  Rscript -e "install.packages('ggplot2')"
+ 1127  sudo chmod -R 777 /usr/local/lib/R/site-library/
+ 1128  Rscript -e "install.packages('ggplot2')"
+ 1129  Rscript a.R 
+ 1130  Rscript -e "install.packages('rstanarm')"
+ 1131  Rscript a.R 
+ 1132  q
+ 1133  Rscript a.R 
+ 1134  Rscript -e "install.packages('Rcpp')"
+ 1135  Rscript a.R 
+ 1136  mkdir ../Desktop/Dominika
+ 1137  cd ..
+ 1138  cd Desktop/Dominika/
+ 1139  touch homework.R
+ 1140  Rscript homework.R 
+ 1141  mv ../../Downloads/process.R 
+ 1142  mv ../../Downloads/process.R -
+ 1143  ls
+ 1144  mv - process.R
+ 1145  ls
+ 1146  Rscript homework.R 
+ 1147  cd Desktop/Dominika/
+ 1148  Rscript homework.R 
+ 1149  Rscript -e "install.packages('gtsummary')"
+ 1150  Rscript -e "install.packages('stargazer')"
+ 1151  Rscript homework.R 
+ 1152  Rscript -e "install.packages('stargazer')"
+ 1153  Rscript homework.R 
+ 1154  Rscript -e "install.packages('gtsummary')"
+ 1155  Rscript homework.R 
+ 1156  Rscript -e "update.packages()"
+ 1157  Rscript -e "install.packages('gtsummary')"
+ 1158  Rscript -e "install.packages('cli')"
+ 1159  Rscript homework.R 
+ 1160  Rscript -e "install.packages('gtsummary')"
+ 1161  Rscript -e "install.packages('gt')"
+ 1162  cd Desktop/Dominika/
+ 1163  Rscript homework.R 
+ 1164  Rscript -e "install.packages('gtsummary')"
+ 1165  Rscript homework.R 
+ 1166  cd ..
+ 1167  touch hack
+ 1168  gedit hack 
+ 1169  Rscript -e "X=2;print(x);"
+ 1170  Rscript -e "X=2;print(X);"
+ 1171  python train_chatbot.py 
+ 1172  python chatgui.py 
+ 1173  npm install
+ 1174  sudo apt install npm
+ 1175  npm install
+ 1176  npm run serve
+ 1177  python
+ 1178  python run_bot.py --type=console
+ 1179  pip install telegram
+ 1180  python run_bot.py --type=console
+ 1181  pip install telegram.ext
+ 1182  pip install python-telegram-bot
+ 1183  python run_bot.py --type=console
+ 1184  pip install python-telegram-bot
+ 1185  python run_bot.py --type=console
+ 1186  pip install telegram
+ 1187  pip uninstall telegram
+ 1188  pip install python-telegram-bot
+ 1189  python run_bot.py --type=console
+ 1190  pip show python-telegram-bot
+ 1191  export PYTHONPATH=$PYTHONPATH:/home/maras/anaconda3/lib/python3.9/site-packages
+ 1192  python run_bot.py --type=console
+ 1193  python -c "import sys; print('\n'.join(sys.path))"
+ 1194  python run_bot.py 
+ 1195  pip install -r requirements.txt
+ 1196  python run_bot.py 
+ 1197  pip install -r requirements.txt install -r requirements.txt --use-deprecated=legacy-resolver
+ 1198  python run_bot.py 
+ 1199  pip status
+ 1200  pip 
+ 1201  pip list
+ 1202  python run_bot.py 
+ 1203  $ python run_bot.py --type=console
+ 1204  conda create -n gpt2bot python=3.7.6
+ 1205  python3 -m venv venv
+ 1206  source venv/bin/activate 
+ 1207  pip install -r requirements.txt
+ 1208  cp configs/medium-cpu.cfg my_chatbot.cfg
+ 1209  nano my_chatbot.cfg
+ 1210  python run_bot.py --type=telegram --config=my_chatbot.cfg
+ 1211  python run_bot.py --type=telegram 
+ 1212  pip 
+ 1213  pip show telegram
+ 1214  pip show python-telegram-bot
+ 1215  python
+ 1216  cd ..
+ 1217  ls
+ 1218  cd chat-simulator-main/
+ 1219  npm run serve
+ 1220  cd ..
+ 1221  ls
+ 1222  cd Chatbot-using-Python-master/
+ 1223  ls
+ 1224  python chatgui.py 
+ 1225  python chatgui.py
+ 1226  cd ..
+ 1227  cd chat-simulator-main/
+ 1228  ls
+ 1229  cd ..
+ 1230  ls
+ 1231  cd gpt2bot-master/
+ 1232  ls
+ 1233  python run_bot.py 
+ 1234  python client.py 
+ 1235  python client.py 127.0.0.1 8808
+ 1236  python gui.py 
+ 1237  pip install pyttsx3
+ 1238  python gui.py 
+ 1239  python bot.py 
+ 1240  python gui.py 
+ 1241  cd ..
+ 1242  cd Chat-Room-server-master/
+ 1243  ls
+ 1244  python chat_server.py 
+ 1245  python chat_server.py localhost 9989
+ 1246  python chat_server.py 127.0.0.1 8808
+ 1247  python manage.py 
+ 1248  python chat_server.py 127.0.0.1 8808runserver
+ 1249  python manage.py runserver
+ 1250  ls
+ 1251  cd django_project/
+ 1252  ls
+ 1253  cd ..
+ 1254  history
+ 1255  python manage.py runserver
+ 1256  python manage.py migrate
+ 1257  python manage.py runserver
+ 1258  cd ..
+ 1259  ls
+ 1260  cd ch4-message-board/
+ 1261  python manage.py runserver
+ 1262  python manage.py migrate
+ 1263  python manage.py runserver
+ 1264  cd ..
+ 1265  cd ch3-pages/
+ 1266  python manage.py migrate
+ 1267  python manage.py runsever
+ 1268  python manage.py runserver
+ 1269  pip install psycopg2-binary
+ 1270  pip install dj-database-url
+ 1271  pip freeze > requirements.txt
+ 1272  pip install 'whitenoise[brotli]'
+ 1273  pip freeze > requirements.txt
+ 1274  touch build.sh
+ 1275  gedit build.sh 
+ 1276  chmod a+x build.sh
+ 1277  pip install gunicorn uvicorn
+ 1278  pip freeze > requirements.txt
+ 1279  python -m gunicorn mysite.asgi:application -k uvicorn.workers.UvicornWorker
+ 1280  python -m gunicorn chatroom.asgi:application -k uvicorn.workers.UvicornWorker
+ 1281  python -m gunicorn pages.asgi:application -k uvicorn.workers.UvicornWorker
+ 1282  python -m gunicorn pages:application -k uvicorn.workers.UvicornWorker
+ 1283  python -m gunicorn pages -k uvicorn.workers.UvicornWorker
+ 1284  python -m gunicorn pages:application -k uvicorn.workers.UvicornWorker
+ 1285  python -m gunicorn pages.asgi:application -k uvicorn.workers.UvicornWorker
+ 1286  pip install -U asgi_redis
+ 1287  python -m gunicorn pages.asgi:application -k uvicorn.workers.UvicornWorker
+ 1288  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1289  pip install asgiref==3.1.2
+ 1290  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1291  pip install --upgrade pip
+ 1292  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1293  pip install django\
+ 1294  pip install django
+ 1295  pip upgrade django
+ 1296  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1297  python manage.py runsever
+ 1298  python manage.py runserver
+ 1299  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1300  touch render.yaml
+ 1301  gedit render.yaml 
+ 1302  git init
+ 1303  git add .
+ 1304  git status
+ 1305  git commit 
+ 1306  git branch -M master
+ 1307  git remote add origin git@github.com:jakujakub1234/Django_chatroom_simulator.git
+ 1308  git push -u origin main
+ 1309  git branch -M main
+ 1310  git remote add origin git@github.com:jakujakub1234/Django_chatroom_simulator.git
+ 1311  git push -u origin main
+ 1312  pip freeze
+ 1313  py -m pip freeze 
+ 1314  sudo apt install pythnonpy
+ 1315  sudo apt install pythonpy
+ 1316  py -m pip freeze 
+ 1317  py -m pip freeze  > requirements.txt
+ 1318  py  pip freeze  > requirements.txt
+ 1319  pip install pipreqs
+ 1320  rm requirements.txt 
+ 1321  pipreqs
+ 1322  gedit requirements.txt 
+ 1323  git add .
+ 1324  git commmit -m "second"
+ 1325  git commit -m "second"
+ 1326  git push -u origin main
+ 1327  python3 -m  pipreqs.pipreqs .
+ 1328  rm requirements.txt 
+ 1329  python3 -m  pipreqs.pipreqs .
+ 1330  pip install pip-tools
+ 1331  rm requirements.txt 
+ 1332  git add .
+ 1333  git commit -m "third"
+ 1334  git push
+ 1335  pip freeze
+ 1336  pip freeze > always_add_to_requirments
+ 1337  git add .
+ 1338  git commit -m "fourth"
+ 1339  git push
+ 1340  git add .
+ 1341  git commit -m "fifth"
+ 1342  git push
+ 1343  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1344  git add .
+ 1345  git commit -m "sixth"
+ 1346  git push
+ 1347  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1348  history
+ 1349  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1350  ls
+ 1351  mkdir static
+ 1352  cd static/
+ 1353  mkdir images
+ 1354  cd ..
+ 1355  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1356  python excel_to_js_array.py 
+ 1357  cd Desktop/Dominika/djangoforbeginners-main/
+ 1358  cd ch3-pages/
+ 1359  ls
+ 1360  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1361  git add ,
+ 1362  git add .
+ 1363  git commit -m "basic chatroom"
+ 1364  git push
+ 1365  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1366  git add .
+ 1367  git commit -m "basic chatroom v2"
+ 1368  git push
+ 1369  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1370  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1371  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1372  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1373  sudo systemctl start postgresql
+ 1374  ls
+ 1375  python manage.py runserver 127.0.0.1:8000
+ 1376  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1377  sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib
+ 1378  sudo -u postgres psql
+ 1379  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1380  git add.
+ 1381  git add .
+ 1382  git commit -m "database test"
+ 1383  git push
+ 1384  sudo -u postgres psql
+ 1385  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1386  sudo -u postgres psql
+ 1387  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1388  python manage.py migrate
+ 1389  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1390  git add .
+ 1391  git commit -m "nick input"
+ 1392  git push
+ 1393  cd Desktop/Dominika/
+ 1394  history
+ 1395  Rscript bayesian_inference.r 
+ 1396  cd Desktop/Dominika/skrypty_pomocniczne/
+ 1397  python excel_to_js_array.py 
+ 1398  ls
+ 1399  cd ..
+ 1400  cd unrespected_repo/
+ 1401  git init
+ 1402  git add .
+ 1403  git commit -m "first"
+ 1404  git branch -M main
+ 1405  git remote add origin git@github.com:jakujakub1234/Django_chatroom_simulator_unrespected.git
+ 1406  git push -u origin main
+ 1407  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1408  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1409  manage.py collectstatic
+ 1410  python manage.py collectstatic
+ 1411  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1412  pip install django-jquery
+ 1413  pip freeze
+ 1414  manage.py collectstatic
+ 1415  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1416  python manage.py collectstatic
+ 1417  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1418  touch login.php
+ 1419  sudo rm wordpress.conf 
+ 1420  sudo apachectl configtest
+ 1421  sudo systemctl reload apache2
+ 1422  cd Desktop/
+ 1423  mkdir coding_test
+ 1424  cd coding_test/
+ 1425  python manage.py makemigrations 
+ 1426  cd ..
+ 1427  cd Dominika/djangoforbeginners-main/ch3-pages/
+ 1428  python manage.py makemigrations 
+ 1429  history
+ 1430  sudo -u postgres psql
+ 1431  python manage.py makemigrations 
+ 1432  python manage.py makemigrations messages
+ 1433  python manage.py makemigrations mysite
+ 1434  python manage.py migrate
+ 1435  sudo -u postgres psql
+ 1436  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1437  sudo -u postgres psql
+ 1438  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1439  sudo -u postgres psql
+ 1440  git add . 
+ 1441  git commit -m "Database test"
+ 1442  git push
+ 1443  PGPASSWORD=0Gb2IMBlm3bWuVdNtozwxh4Cuy7m8VTZ psql -h dpg-cp8fmqe74orc73di5300-a.oregon-postgres.render.com -U mysite mysite_b1dt
+ 1444  cd ..
+ 1445  cd coding_test/
+ 1446  cd /var/www/html/
+ 1447  mkdir coding_test
+ 1448  sudo mkdir coding_test
+ 1449  sudo touch login.php
+ 1450  rm login.php 
+ 1451  sudo rm login.php 
+ 1452  cd coding_test/
+ 1453  touch login.php
+ 1454  sudo touch login.php
+ 1455  cd ..
+ 1456  sudo chmod a+rwx coding_test/
+ 1457  cd coding_test/
+ 1458  gedit login.php 
+ 1459  php -v
+ 1460  cd ..
+ 1461  gedit index.html 
+ 1462  sudo gedit /etc/apache2/sites-enabled/000-default.conf
+ 1463  ls
+ 1464  cd coding_test/
+ 1465  ls
+ 1466  gedit login.php 
+ 1467  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1468  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1469  sudo -u postgres psql
+ 1470  history
+ 1471  sudo -u postgres psql
+ 1472  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1473  sudo -u postgres psql
+ 1474  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1475  git add .
+ 1476  git commit -m "layout"
+ 1477  git push
+ 1478  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1479  git add .
+ 1480  git commit -m "layout2"
+ 1481  git push
+ 1482  git init
+ 1483  git add .
+ 1484  	git config --global --add safe.directory /var/www/html/coding_test
+ 1485  git add .
+ 1486  git commit -m "init"
+ 1487  git branch -M main
+ 1488  git remote add origin git@github.com:jakujakub1234/luxolis_coding_test.git
+ 1489  git push -u origin main
+ 1490  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1491  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1492  python
+ 1493  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1494  python
+ 1495  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1496  python
+ 1497  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1498  python
+ 1499  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1500  python
+ 1501  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1502  sudo kill 3231
+ 1503  sudo kill 7014
+ 1504  ps -A
+ 1505  ps -A | grep python
+ 1506  ps -A | grep gunicorn
+ 1507  ps -A | grep work
+ 1508  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWork
+ 1509  killall gunicorn
+ 1510  ps ax|grep gunicorn
+ 1511  kill -9 14319
+ 1512  kill -9 14320
+ 1513  ps ax|grep gunicorn
+ 1514  kill -9 15512
+ 1515  kill -9 15536
+ 1516  kill -9 15735
+ 1517  kill -9 15777
+ 1518  kill -9 15793
+ 1519  kill -9 14320
+ 1520  ps ax|grep gunicorn
+ 1521  kill -9 15799
+ 1522  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1523  git add .
+ 1524  git commit -m "security"
+ 1525  git push
+ 1526  Cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1527  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1528  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1529  git add .
+ 1530  git commit -m "layout v2"
+ 1531  git push
+ 1532  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1533  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1534  git add .
+ 1535  git commit -m "layout v3"
+ 1536  git push
+ 1537  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1538  ls
+ 1539  python manage.py migrate
+ 1540  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1541  cd Desktop/Dominika/skrypty_pomocniczne/
+ 1542  mv excel_to_js_array.py excel_to_json_array.py 
+ 1543  python excel_to_json_array.py 
+ 1544  cat bots_messages.js 
+ 1545  python excel_to_json_array.py 
+ 1546  cat bots_messages.js 
+ 1547  python excel_to_json_array.py 
+ 1548  cd ..
+ 1549  cd djangoforbeginners-main/ch3-pages/
+ 1550  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1551  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1552  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1553  python
+ 1554  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1555  python
+ 1556  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1557  python
+ 1558  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1559  git add .
+ 1560  git commit -m "ai v2"
+ 1561  git push
+ 1562  python
+ 1563  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1564  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1565  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1566  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1567  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1568  python
+ 1569  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1570  git add .
+ 1571  git commit -m "greetings"
+ 1572  git push
+ 1573  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1574  git push
+ 1575  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1576  git add .
+ 1577  git commit -m "title"
+ 1578  git push
+ 1579  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1580  python manage.py migrate
+ 1581  python manage.py makemigrations
+ 1582  python manage.py migrate
+ 1583  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1584  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1585  postgres
+ 1586  postgresql
+ 1587  psql
+ 1588  psql -u root
+ 1589  history
+ 1590  history > hist.txt
+ 1591  sudo -u postgres psql
+ 1592  python manage.py migrate
+ 1593  python manage.py makemigrations
+ 1594  python manage.py migrate
+ 1595  python manage.py makemigrations
+ 1596  python manage.py migrate
+ 1597  python manage.py makemigrations
+ 1598  python manage.py migrate
+ 1599  python manage.py makemigrations
+ 1600  python manage.py migrate
+ 1601  python manage.py migrate zero --fake
+ 1602  python manage.py migrate mysite zero --fake
+ 1603  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1604  python manage.py migrate django_project zero --fake
+ 1605  python manage.py migrate mysite zero
+ 1606  python manage.py migrate django_project zero
+ 1607  python manage.py migrate zero
+ 1608  python manage.py migrate mysite zero
+ 1609  python manage.py migrate my_site zero
+ 1610  python manage.py migrate 
+ 1611  python manage.py makemigrations
+ 1612  python manage.py migrate django_project zerosudo -u postgres psql
+ 1613  sudo -u postgres psql
+ 1614  python manage.py makemigrations
+ 1615  python manage.py migrate
+ 1616  python manage.py migrate --fake
+ 1617  python manage.py makemigrations
+ 1618  python manage.py migrate 
+ 1619  sudo -u postgres psql
+ 1620  python manage.py migrate pages zero
+ 1621  python manage.py makemigrations
+ 1622  python manage.py makemigrations pages
+ 1623  python manage.py migrate pages
+ 1624  python manage.py migrate 
+ 1625  sudo -u postgres psql
+ 1626  python manage.py migrate 
+ 1627  python manage.py migrate --fake default
+ 1628  python manage.py migrate --fake pages
+ 1629  python manage.py migrate 
+ 1630  python manage.py migrate pages
+ 1631  sudo -u postgres psql
+ 1632  python manage.py migrate pages
+ 1633  python manage.py makemigrations
+ 1634  python manage.py makemigrations pages
+ 1635  python manage.py migrate
+ 1636  python manage.py migrate paegs
+ 1637  python manage.py migrate pages
+ 1638  sudo -u postgres psql
+ 1639  python manage.py migrate pages
+ 1640  python manage.py makemigrations pages
+ 1641  python manage.py loaddata initial
+ 1642  sudo -u postgres psql
+ 1643  python manage.py makemigrations 
+ 1644  python manage.py migrate
+ 1645  sudo -u postgres psql
+ 1646  python manage.py migrate 0
+ 1647  python manage.py migrate --fake pages zero
+ 1648  python manage.py migrate pages
+ 1649  sudo -u postgres psql
+ 1650  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1651  sudo -u postgres psql
+ 1652  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1653  sudo -u postgres psql
+ 1654  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1655  sudo -u postgres psql
+ 1656  python generate_plots.py 
+ 1657  sudo -u postgres psql
+ 1658  python generate_plots.py 
+ 1659  cd ../djangoforbeginners-main/ch3-pages/
+ 1660  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1661  sudo -u postgres psql
+ 1662  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1663  cd ..
+ 1664  cd wizualizacja_wynikow/
+ 1665  python generate_plots.py 
+ 1666  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1667  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1668  code --verbose
+ 1669  sudo snap revert code --revision 159
+ 1670  cd Desktop/Dominika/wizualizacja_wynikow/restore_chat/
+ 1671  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1672  sudo -u postgres psql
+ 1673  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1674  cd ..
+ 1675  cd djangoforbeginners-main/ch3-pages/
+ 1676  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1677  cd ..
+ 1678  cd wizualizacja_wynikow/
+ 1679  cd restore_chat/
+ 1680  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1681  cd Desktop/
+ 1682  cd ..
+ 1683  cd home/
+ 1684  ls
+ 1685  cd maras
+ 1686  history
+ 1687  cd Downloads/
+ 1688  Rscript rail.R 
+ 1689  Rscript -e "library(lme4); data(Rail); describe(Rail);"
+ 1690  Rscript -e "library(lme4); data(Rail); library(Hmisc); describe(Rail);"
+ 1691  history
+ 1692  Rscript -e "install.packages('Hmisc')"
+ 1693  Rscript -e "library(lme4); data(Rail); library(Hmisc); describe(Rail);"
+ 1694  Rscript -e "library(lme4); data(Rail); stat.desc(Rail);"
+ 1695  Rscript -e "library(lme4); library(pastecs); data(Rail); stat.desc(Rail);"
+ 1696  Rscript -e "install.packages('pastecs')"
+ 1697  Rscript -e "library(lme4); library(pastecs); data(Rail); stat.desc(Rail);"
+ 1698  Rscript -e "library(lme4); library(nlme); library(pastecs); data(Rail); stat.desc(Rail);"
+ 1699  Rscript -e "library(lme4); library(nlme); library(pastecs); data(sleepstudy); stat.desc(sleepstudy);"
+ 1700  Rscript rail.R 
+ 1701  Rscript -e "library(lme4); library(nlme); library(pastecs); data(Rail); stat.desc(Rail);"
+ 1702  Rscript -e "library(lme4); library(nlme); library(pastecs); data(sleepstudy); stat.desc(sleepstudy);"
+ 1703  Rscript rail.R 
+ 1704  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/pages/
+ 1705  python detect_gibberish.py 
+ 1706  cd ..
+ 1707  cd skrypty_pomocniczne/
+ 1708  python find_never_use_2_letters.py 
+ 1709  cd ..
+ 1710  cd djangoforbeginners-main/ch3-pages/pages/
+ 1711  python detect_gibberish.py 
+ 1712  cd ..
+ 1713  cd skrypty_pomocniczne/
+ 1714  python find_never_use_2_letters.py 
+ 1715  cd skrypty_pomocniczne/
+ 1716  python find_never_use_2_letters.py 
+ 1717  python find_never_use_3_letters.py 
+ 1718  python find_never_use_3_letters.py > 3_letters.txt
+ 1719  python find_never_use_2_letters.py > 2_letters.txt
+ 1720  cd ..
+ 1721  cd djangoforbeginners-main/ch3-pages/pages/
+ 1722  python detect_gibberish.py 
+ 1723  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1724  cd ..
+ 1725  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1726  git add .
+ 1727  git status
+ 1728  git reset
+ 1729  git status
+ 1730  git add .
+ 1731  git status
+ 1732  git commit -m "gibberish"
+ 1733  git push
+ 1734  cd Desktop/Dominika/
+ 1735  ls
+ 1736  gedit homework.R 
+ 1737  Rscript homework.R 
+ 1738  cd Desktop/Dominika/
+ 1739  Rscript homework.R 
+ 1740  Rscript -e "install.packages('rempsyc')"
+ 1741  Rscript homework.R 
+ 1742  Rscript -e "install.packages('expss')"
+ 1743  Rscript homework.R 
+ 1744  Rscript -e "install.packages('felxtable')"
+ 1745  Rscript -e "install.packages('flextable')"
+ 1746  Rscript homework.R 
+ 1747  Rscript -e "install.packages('gdtools')"
+ 1748  Rscript -e "install.packages('ragg')"
+ 1749  Rscript -e "install.packages('officer')"
+ 1750  Rscript homework.R 
+ 1751  Rscript -e "install.packages('flextable')"
+ 1752  sudo apt-get install libcurl4-openssl-dev
+ 1753  sudo yum -y install libcurl-devel
+ 1754  Rscript -e "install.packages('flextable')"
+ 1755  Rscript -e "install.packages('systemfonts')"
+ 1756  Rscript -e "install.packages('flextable')"
+ 1757  sudo apt install libfontconfig1-dev
+ 1758  Rscript -e "install.packages('flextable')"
+ 1759  sudo apt install cairo
+ 1760  sudo apt install pkg-config
+ 1761  install.packages("gdtools", type = "source")
+ 1762  Rscript -e "install.packages('gdtools')"
+ 1763  sudo apt install cairo
+ 1764  sudo apt-get build-dep cairo
+ 1765  Rscript -e "install.packages('flextable')"
+ 1766  conda install -c conda-forge pkg-config
+ 1767  conda install -c anaconda cairo  
+ 1768  Rscript -e "install.packages('flextable')"
+ 1769  conda install -c anaconda pkgconfig
+ 1770  Rscript -e "install.packages('flextable')"
+ 1771  devtools::update_packages() ;
+ 1772  Rscript -e "install.packages('flextable'); devtools::update_packages()"
+ 1773  Rscript -e "devtools::update_packages(); install.packages('flextable')"
+ 1774  Rscript homework.R 
+ 1775  Rscript -e "install.packages('devtools')"
+ 1776  apt update && apt install -y libcurl4-openssl-dev
+ 1777  sudo apt update && apt install -y libcurl4-openssl-dev
+ 1778  sudo apt update && sudo apt install -y libcurl4-openssl-dev
+ 1779  sudo apt install -y libfreetype-dev libfontconfig-dev
+ 1780  Rscript -e "install.packages('devtools')"
+ 1781  sudo apt install libharfbuzz-dev libfribidi-dev
+ 1782  Rscript -e "install.packages('devtools')"
+ 1783  Rscript homework.R 
+ 1784  cd djangoforbeginners-main/ch3-pages/
+ 1785  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1786  history > tmp.txt
+ 1787  killall gunicorn
+ 1788  ps ax|grep gunicorn
+ 1789  kill -9 35905
+ 1790  kill -9 35906
+ 1791  kill -9 35918
+ 1792  kill -9 35929
+ 1793  kill -9 35968
+ 1794  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1795  git add .
+ 1796  git commit -m "farewells"
+ 1797  git status
+ 1798  git push
+ 1799  python generate_plots.py 
+ 1800  python excel_to_json_array.py 
+ 1801  sudo -u postgres psql
+ 1802  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1803  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1804  cd ..
+ 1805  cd wizualizacja_wynikow/restore_chat/
+ 1806  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1807  cd ..
+ 1808  cd djangoforbeginners-main/ch3-pages/
+ 1809  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1810  cd djangoforbeginners-main/ch3-pages/
+ 1811  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1812  sudo -u postgres psql
+ 1813  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1814  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1815  cd ..
+ 1816  cd skrypty_pomocniczne/
+ 1817  python excel_to_json_array.py 
+ 1818  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorkercsd
+ 1819  cd ..
+ 1820  cd wizualizacja_wynikow/
+ 1821  cd restore_chat/
+ 1822  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorkercsd
+ 1823  ps ax|grep gunicorn
+ 1824  kill -9 18960
+ 1825  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorkercsd
+ 1826  history
+ 1827  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1828  python excel_to_json_array.py 
+ 1829  python
+ 1830  cd ..
+ 1831  cd djangoforbeginners-main/ch3-pages/
+ 1832  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1833  git add .
+ 1834  git status
+ 1835  git commit -m "bug fix 1"
+ 1836  git push
+ 1837  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1838  git add .
+ 1839  git commit -m "bug fix 2"
+ 1840  git rm -r --cached .
+ 1841  git status
+ 1842  git add .
+ 1843  git status
+ 1844  git commit -m "gitignore update"
+ 1845  git push
+ 1846  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1847  cd ..
+ 1848  cd skrypty_pomocniczne/
+ 1849  python excel_to_json_array.py 
+ 1850  python
+ 1851  python excel_to_json_array.py 
+ 1852  cd ..
+ 1853  cd Dominika/djangoforbeginners-main/ch3-pages/
+ 1854  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorkercdas
+ 1855  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorkercd
+ 1856  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1857  cd ..
+ 1858  cd skrypty_pomocniczne/sentiment_detector/
+ 1859  python
+ 1860  ls
+ 1861  cd pl-sentiment-analysis-master/
+ 1862  ls
+ 1863  cd Scr
+ 1864  cd Scripts/
+ 1865  ls
+ 1866  cd ..
+ 1867  ls
+ 1868  python LSTM.py
+ 1869  pip install -r requirements.txt
+ 1870  pip install scikit-learn
+ 1871  pip install Keras
+ 1872  pip install gensim
+ 1873  pip install many_stop_words
+ 1874  pip install TensorFlow
+ 1875  pip install wordcloud
+ 1876  python LSTM.py
+ 1877  touch naive-bayes.py
+ 1878  rm naive-bayes.py 
+ 1879  touch naive-bayes.py
+ 1880  python naive-bayes.py 
+ 1881  pip install emoji
+ 1882  python naive-bayes.py 
+ 1883  time echo "XD"
+ 1884  time python naive-bayes.py 
+ 1885  touch stopwords_polish.txt
+ 1886  time python naive-bayes.py 
+ 1887  gedit finalized_model.sav 
+ 1888  time python naive-bayes.py 
+ 1889  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 1890  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorkercd
+ 1891  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1892  python generate_extra_csv_info.py 
+ 1893  python
+ 1894  cd ..
+ 1895  ls
+ 1896  cd sentiment_detector/
+ 1897  ls
+ 1898  cd Machine_lerning_twitter_sentiment_project-master/
+ 1899  ls
+ 1900  python manipulation_models_trainer.py 
+ 1901  cd Desktop/Dominika/skrypty_pomocniczne/
+ 1902  ls
+ 1903  cd sentiment_detector/
+ 1904  ls
+ 1905  cd Machine_lerning_twitter_sentiment_project-master/
+ 1906  ls
+ 1907  time python manipulation_models_trainer.py 
+ 1908  python load_and_use_model.py 
+ 1909  python short_model_test.py 
+ 1910  time python short_model_test.py 
+ 1911  python load_and_use_model.py 
+ 1912  python short_model_test.py 
+ 1913  python load_and_use_model.py 
+ 1914  cd Desktop/Dominika/skrypty_pomocniczne/sentiment_detector/Machine_lerning_twitter_sentiment_project-master/
+ 1915  ls
+ 1916  python manipulation_models_trainer.py 
+ 1917  cd ..
+ 1918  cd Machine_lerning_twitter_sentiment_project-master/
+ 1919  python load_and_use_model.py 
+ 1920  python manipulation_models_trainer.py 
+ 1921  cd ..
+ 1922  cd djangoforbeginners-main/ch3-pages/
+ 1923  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 1924  git add .
+ 1925  git status
+ 1926  git commit -m "final_version 1.0
+ 1927  "
+ 1928  git push
+ 1929  cd ..
+ 1930  cd skrypty_pomocniczne/sentiment_detector/Machine_lerning_twitter_sentiment_project-master/
+ 1931  python manipulation_models_trainer.py 
+ 1932  python load_and_use_model.py 
+ 1933  python predict.py 
+ 1934  head -n 100 Dataset.csv short_dataset.csv
+ 1935  head -n 100 Dataset.csv > short_dataset.csv
+ 1936  cd ..
+ 1937  cd clarin-pl/
+ 1938  . run.sh 
+ 1939  pip install gensim
+ 1940  python predict.py 
+ 1941  pip install gensim.models
+ 1942  pip install --force-reinstall -v "gensim==3.8.3"
+ 1943  python predict.py 
+ 1944  cd ..
+ 1945  cd Machine_lerning_twitter_sentiment_project-master/
+ 1946  python manipulation_models_trainer.py 
+ 1947  cd ..
+ 1948  cd clarin-pl/
+ 1949  ls
+ 1950  . run.sh 
+ 1951  cd ..
+ 1952  cd Machine_lerning_twitter_sentiment_project-master/
+ 1953  curl -O http://2017.poleval.pl/task2/sentiment-treebank.tar.gz
+ 1954  tar -xvf sentiment-treebank.tar.gz
+ 1955  rm sentiment-treebank.tar.gz
+ 1956  python manipulation_models_trainer.py 
+ 1957  cd ..
+ 1958  cd clarin-pl/
+ 1959  echo "Creating directories"
+ 1960  mkdir -p data/pol/ models/ results/ finals/ treehopper/tmp/
+ 1961  echo "Download training set"
+ 1962  curl -O http://2017.poleval.pl/task2/sentiment-treebank.tar.gz
+ 1963  tar -xvf sentiment-treebank.tar.gz
+ 1964  rm sentiment-treebank.tar.gz
+ 1965  echo "Download fastText word vectors for Polish"
+ 1966  curl -O https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.pl.zip
+ 1967  mkdir -p data/pol/fasttext
+ 1968  unzip wiki.pl.zip
+ 1969  rm wiki.pl.zip
+ 1970  #echo "Download and build fastText from source"
+ 1971  #git clone https://github.com/facebookresearch/fastText.git
+ 1972  #make fastText
+ 1973  #echo "Install Python requirements"
+ 1974  #pip install -r requirements.txt
+ 1975  #pip install http://download.pytorch.org/whl/cu80/torch-0.1.12.post2-cp35-cp35m-linux_x86_64.whl
+ 1976  echo "Download test set"
+ 1977  curl -O http://mozart.ipipan.waw.pl/~axw/poleval/poleval_test.tar.gz
+ 1978  tar -xvf poleval_test.tar.gz
+ 1979  mv poleval_test test
+ 1980  rm poleval_test.tar.gz
+ 1981  echo "Download test labels"
+ 1982  curl -O http://mozart.ipipan.waw.pl/~axw/poleval/gold_labels
+ 1983  cp gold_labels test/polevaltest_labels.txt
+ 1984  rm gold_labels
+ 1985  . run.sh 
+ 1986  cd ..
+ 1987  cd Machine_lerning_twitter_sentiment_project-master/
+ 1988  python manipulation_models_trainer.py 
+ 1989  pip install --upgrade numpy
+ 1990  python manipulation_models_trainer.py 
+ 1991  pip install --upgrade gensim
+ 1992  python manipulation_models_trainer.py 
+ 1993  python
+ 1994  python manipulation_models_trainer.py 
+ 1995  pip -v
+ 1996  pip -version
+ 1997  pip --version
+ 1998  pip install --upgrade numpy
+ 1999  pip --disable-pip-version-check list --outdated --format=json | python -c "import json, sys; print('\n'.join([x['name'] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U
+ 2000  python manipulation_models_trainer.py 
+ 2001  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 2002  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 2003  cd Desktop/Dominika/djangoforbeginners-main/ch3-pages/
+ 2004  python -m gunicorn django_project.asgi:application -k uvicorn.workers.UvicornWorker
+ 2005  git commit -m "release for Dominikas test"
+ 2006  git add .
+ 2007  git commit -m "release for Dominikas test"
+ 2008  git push
+ 2009  ls
+ 2010  pip install requirements.txt 
+ 2011  pip install -r requirements.txt 
+ 2012  history > full_history.txt
