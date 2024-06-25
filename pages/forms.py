@@ -45,4 +45,4 @@ class HomeForm(forms.Form):
         #if is_key_in_db != None:
         #    self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
         
-        return [key_from_qualtrics, is_positive_manipulation]
+        return key_from_qualtrics
