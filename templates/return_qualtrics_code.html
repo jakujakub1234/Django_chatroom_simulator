@@ -3,6 +3,14 @@
 {% block content %}
 
 <h1 style="text-align: center; margin-top: 100px;">Dziękujemy za udział w czacie</h1>
-<h2 style="text-align: center; margin-top: 100px;">Twój kod do kontynuowania badania to 1234</h2>
+<h2 style="text-align: center; margin-top: 100px;">Twój kod do kontynuowania badania to:</h2>
+<h1 id="return-code" style="text-align: center; font-size: xxx-large;"></h1>
+
+<script>
+
+var return_codes = ["672304", "327482", "273047", "049821", "182027"];
+document.getElementById('return-code').innerText = " " + return_codes[Math.floor(Math.random()*return_codes.length)];
+
+</script>
 
 {% endblock content %}

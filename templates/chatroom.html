@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block content %}
-<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-end-url="{% url 'return_qualtrics_code' %}" data-start-timestamp = "{{ start_timestamp}}" tabindex="-1">
+<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-end-url="{% url 'return_qualtrics_code' %}" data-start-timestamp = "{{ start_timestamp}}" data-is-positive = "{{ is_positive_manipulation }}" tabindex="-1">
 </article>
 
 <h1 style="text-align: center; margin-top: 100px;">Chatroom</h1>
@@ -44,12 +44,13 @@
 </div>
 
 <!-- TODO ukryć to -->
-  <div style="text-align: center;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
+  <div style="text-align: center; display: none;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
 
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'js/button_animation.js' %}"></script>
-<script src="{% static 'js/bots_messages.js' %}"></script>
+<script src="{% static 'js/positive_bots_messages.js' %}"></script>
+<script src="{% static 'js/negative_bots_messages.js' %}"></script>
 <script src="{% static 'js/chatroom_script.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'styles/chatroom_style.css' %}">

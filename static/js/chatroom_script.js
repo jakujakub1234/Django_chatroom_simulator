@@ -283,9 +283,19 @@ var end_chat_alert_displayed = false;
 /*
 TODO*/
 var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
-//var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+//var seconds = 0;
 
-var seconds = 0;
+var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+
+var is_positive = document.getElementById('data-from-django').dataset.isPositive;
+
+bots_messages = [];
+
+if (is_positive == "True") {
+    bots_messages = positive_bots_messages;
+} else {
+    bots_messages = negative_bots_messages;
+}
 
 var seconds_counter = document.getElementById('seconds-counter');
 var submitButton = document.querySelector("#btn-submit")

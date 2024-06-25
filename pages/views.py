@@ -25,7 +25,7 @@ class HomePageView(TemplateView):
                 if not key.startswith("_"): # skip keys set by the django system
                     del request.session[key]
 
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -49,6 +49,7 @@ class HomePageView(TemplateView):
                 request.session['nick'] = "Uczestnik badania"
 
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
+            request.session['is_positive_manipulation'] = form.data['is_positive_manipulation']
             request.session['start_timestamp'] = datetime.now().timestamp()
     
             return HttpResponseRedirect("/lobby/")
@@ -63,7 +64,7 @@ class LobbyPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -92,7 +93,7 @@ class ChatroomPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -111,6 +112,7 @@ class ChatroomPageView(TemplateView):
         context['nick'] = self.request.session['nick']
 
         context['start_timestamp'] = self.request.session['start_timestamp'] + lobby_time
+        context['is_positive_manipulation'] = self.request.session['is_positive_manipulation']
 
         return context
 

@@ -1,16 +1,14 @@
 /*
 TODO*/
 var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
+//var seconds = 0;
 
-//var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
-var seconds = 0;
 var wait_time = 19;
 
 var timer_text = document.getElementById('seconds-counter');
 var users_counter = document.getElementById('users-counter');
-
-document.getElementById('wait_time').innerText = "Czas do dołączenie do chatroomu: " + wait_time + " sekund (tylko do testów)";
 
 var users_actual_amount = 2;
 var time_to_another_users = [

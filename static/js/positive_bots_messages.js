@@ -1,4 +1,4 @@
-bots_messages = {
+positive_bots_messages = {
     1:["Ania", "Cześć!"],
     4:["Kasia", "Hej, dzień doby! "],
     5:["Kasia", "dobry***"],
