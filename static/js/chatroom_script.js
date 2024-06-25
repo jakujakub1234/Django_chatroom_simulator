@@ -415,7 +415,9 @@ function incrementSeconds() {
         sendMessageHTML(
             bots_messages[seconds_integer][0],
             bots_messages[seconds_integer][1],
-            true
+            true,
+            bots_messages[seconds_integer][3] ?? "",
+            bots_messages[seconds_integer][2] ?? ""
             //"style=\"background-color: " + colors[bots_messages[seconds_integer][0]] + "\""
         );
     }
@@ -433,7 +435,7 @@ function incrementSeconds() {
         );
     }
 
-    var time_to_left_chat = 270 - seconds_integer;
+    var time_to_left_chat = 320 - seconds_integer;
 
     printTimeToLeftChat(time_to_left_chat);
 

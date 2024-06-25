@@ -1,2 +1,2 @@
 lobby_time = 19
-chatroom_time = 270
+chatroom_time = 320

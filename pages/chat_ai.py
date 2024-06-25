@@ -78,12 +78,13 @@ class ChatAI:
             self.user_gender = Gender.MALE
 
         for key in self.responds:
-            self.responds[key] = self.responds[key].replace("{{nick}}", self.user_nick)
+            for i in range(len(self.responds[key])):
+                self.responds[key][i] = self.responds[key][i].replace("{{nick}}", self.user_nick)
 
-            if self.user_gender == Gender.FEMALE:
-                self.responds[key] = self.responds[key].replace("{{gender_e/a}}", "a")
-            else:
-                self.responds[key] = self.responds[key].replace("{{gender_e/a}}", "e")
+                if self.user_gender == Gender.FEMALE:
+                    self.responds[key][i] = self.responds[key][i].replace("{{gender_e/a}}", "a")
+                else:
+                    self.responds[key][i] = self.responds[key][i].replace("{{gender_e/a}}", "e")
 
     def detectGibberish(self, message):
         words = message.split()
@@ -101,8 +102,8 @@ class ChatAI:
         vowels_count = vowels_count / len(message)
         consonants_count = consonants_count / len(message)
 
-        if vowels_count < 0.1 or consonants_count < 0.1:
-            return True
+        #if vowels_count < 0.1 or consonants_count < 0.1:
+        #    return True
 
         return False
 
@@ -147,7 +148,7 @@ class ChatAI:
 
         responding_bot = self.getRespondingBot(message)
 
-        responding_message = self.generateRepondMessage(message, responding_bot)
+        responding_message = random.choice(self.generateRepondMessage(message, responding_bot))
 
         return [
             responding_message,

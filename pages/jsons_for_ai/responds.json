@@ -1,9 +1,32 @@
 {
-    "SPAM": "{{nick}} przestań spamować już",
-    "GIBBERISH": "Nie pisz bełkotu {{nick}}",
-    "TL_DR": "tl;dr",
-    "QUESTION": "Dobre pytanie {{nick}}",
-    "GREETINGS": "Hejka {{nick}}",
-    "FAREWELLS": "Na razie {{nick}}",
-    "GENERIC": "Fajnie napisał{{gender_e/a}}ś {{nick}} <3"
+    "SPAM": 
+        ["lol",
+        "....",
+        "ok..."],
+    "GIBBERISH": ["?", "...", "nie ogarniam", "ok?.." ],
+    "TL_DR": ["tl;dr"],
+    "QUESTION": 
+        ["w sumie...", 
+        ":P", 
+        "Dobre pytanie", 
+        "zależy", 
+        "co nie XD"],
+    "GREETINGS":  
+        ["Hejka {{nick}}", 
+        "Hej!",
+        "Siema!",
+        "Dzień dobry",
+        "Elo!"], 
+    "FAREWELLS": 
+        ["Na razie", 
+        "pa", 
+        "Miło było :P",
+        "cześć"], 
+    "GENERIC": ["ma sens",
+        "To zależy od kontekstu.",
+        "moze warto się nad tym zastanowić", 
+        "Trudno jednoznacznie stwierdzić",
+        "Może być różnie.", 
+        "skomplikowane to wszystko..."
+        ]
 }
