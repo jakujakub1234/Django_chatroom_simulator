@@ -445,7 +445,7 @@ function incrementSeconds() {
         );
     }
 
-    var time_to_left_chat = 320 - seconds_integer;
+    var time_to_left_chat = 330 - seconds_integer;
 
     printTimeToLeftChat(time_to_left_chat);
 
