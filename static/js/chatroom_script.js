@@ -498,7 +498,7 @@ function incrementSeconds() {
         openDialog();
     }
 
-    if (time_to_left_chat == 300) {
+    if (time_to_left_chat == 0) {
         $.ajax({
             type: "POST",
             url: "../ajax/",
