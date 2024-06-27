@@ -270,8 +270,6 @@ function sendUserMessage() {
 
     responds_queue.push([5, responding_bot, respond, user_message]);
 
-    console.log(respond_message_id);
-
     sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id);
 }
 
@@ -353,6 +351,8 @@ var users_message_id = -1;
 var like_reactions_memory = new Set();
 var heart_reactions_memory = new Set();
 var angry_reactions_memory = new Set();
+
+var seconds_messages_sent = new Set();
 
 const heart_svg = `<?xml version="1.0" encoding="iso-8859-1"?>
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
@@ -465,7 +465,7 @@ function incrementSeconds() {
         document.getElementById("stage").style.display = "none";
     }
 
-    if (seconds_integer in bots_messages) {
+    if (seconds_integer in bots_messages && !seconds_messages_sent.has(seconds_integer)) {
         sendMessageHTML(
             bots_messages[seconds_integer][0],
             bots_messages[seconds_integer][1],
@@ -474,6 +474,8 @@ function incrementSeconds() {
             bots_messages[seconds_integer][2] ?? ""
             //"style=\"background-color: " + colors[bots_messages[seconds_integer][0]] + "\""
         );
+
+        seconds_messages_sent.add(seconds_integer);
     }
 
     if (responds_queue.length > 0 && responds_queue[0][0] <= 0) {
