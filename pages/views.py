@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .forms import HomeForm
 from .models import Nicks
 from .models import Messages
+from .models import LikeReactions, HeartReactions, AngryReactions
 from .utils import lobby_time, chatroom_time
 from .chat_ai import ChatAI
 
@@ -169,19 +170,60 @@ class AjaxPageView(TemplateView):
         if request.POST.get('action') == "nick":
             self.chat_ai.setNick(request.POST.get('nick'))
 
-            nick = Nicks(qualtrics_id=request.session['key'], nick=request.POST.get('nick'))
+            nick = Nicks(
+                qualtrics_id=request.session['key'],
+                nick=request.POST.get('nick'),
+                is_manipulation_positive=(request.session['is_positive_manipulation']=="True")
+            )
+
             nick.save()        
 
         if request.POST.get('action') == "message":
             messages = Messages(
                 qualtrics_id = request.session['key'],
                 message = request.POST.get('message'),
-                message_time = request.POST.get('message_time')
+                message_time = request.POST.get('message_time'),
+                message_respond_to = request.POST.get('respond_message_id')
             )
             
             messages.save()
         
+        if request.POST.get('action') == "like_reactions":
+            reactions_array = []
 
+            for elem in request.POST.get('reactions').split():
+                reactions_array.append({
+                       "qualtrics_id": request.session['key'],
+                        "message_id": int(elem),
+                })
+
+            django_list = [LikeReactions(**vals) for vals in reactions_array]
+            LikeReactions.objects.bulk_create(django_list)
+
+        if request.POST.get('action') == "heart_reactions":
+            reactions_array = []
+
+            for elem in request.POST.get('reactions').split():
+                reactions_array.append({
+                       "qualtrics_id": request.session['key'],
+                        "message_id": int(elem),
+                })
+
+            django_list = [HeartReactions(**vals) for vals in reactions_array]
+            HeartReactions.objects.bulk_create(django_list)
+
+        if request.POST.get('action') == "angry_reactions":
+            reactions_array = []
+
+            for elem in request.POST.get('reactions').split():
+                reactions_array.append({
+                       "qualtrics_id": request.session['key'],
+                        "message_id": int(elem),
+                })
+
+            django_list = [AngryReactions(**vals) for vals in reactions_array]
+            AngryReactions.objects.bulk_create(django_list)
+            
         return render(request, 'home.html', {'form':form})
 
     def get(self, request):

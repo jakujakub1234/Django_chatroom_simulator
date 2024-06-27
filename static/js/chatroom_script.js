@@ -16,6 +16,7 @@ function sendMessageHTML(user_name, message, is_bot, respond_message = "", respo
     var wrapper_class;
     var respond_class;
     var extra_style;
+    var message_id;
     
     if (is_bot) {
         span_class = "time-left";
@@ -27,6 +28,9 @@ function sendMessageHTML(user_name, message, is_bot, respond_message = "", respo
         extra_class = "";
         wrapper_class = "wrapper";
         extra_style = "style=\"background-color: #f7f7f7\"";
+
+        message_id = bots_message_id;
+        bots_message_id++;
     } else {
         span_class = "time-left-user";
         span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic; display:none">` + user_name + `</span>`;
@@ -37,6 +41,9 @@ function sendMessageHTML(user_name, message, is_bot, respond_message = "", respo
         wrapper_class = "wrapper-user";
         extra_class = "user-container";
         extra_style = "";
+        
+        message_id = users_message_id;
+        users_message_id--;
     }
 
     var new_message = "";
@@ -55,7 +62,7 @@ function sendMessageHTML(user_name, message, is_bot, respond_message = "", respo
 
       <div class="container ` + extra_class + `" ` + extra_style + `>
         ` + span_user + `
-        <p class="message-p" style="font-size: large; ">` + message + `</p>
+        <p data-index="` + message_id + `" class="message-p" style="font-size: large; ">` + message + `</p>
         <span class="` + span_class + `">` + hour + ":" + min + `</span>
 
         <div class="reactions-container_scr ` + reactions_container_class + `">
@@ -141,17 +148,42 @@ function addReaction(el, emotion_id) {
     var svg = [like_svg, heart_svg, angry_svg][emotion_id];
 
     var reactions_container = el.parentNode.parentNode.parentNode.querySelector(".reactions-container_scr");
+    var message_id = el.parentNode.parentNode.parentNode.querySelector(".message-p").dataset.index;
 
     var reaction = reactions_container.querySelector("#" + span_id);
 
     if (reaction) {
         reaction.remove();
+
+        switch (emotion_id) {
+            case 0:
+                like_reactions_memory.delete(message_id);
+                break;
+            case 1:
+                heart_reactions_memory.delete(message_id);
+                break;
+            case 2:
+                angry_reactions_memory.delete(message_id);
+                break;
+        }
     } else {
         reactions_container.innerHTML += "<span id=" + span_id + ">" + svg + "</span>";
+
+        switch (emotion_id) {
+            case 0:
+                like_reactions_memory.add(message_id);
+                break;
+            case 1:
+                heart_reactions_memory.add(message_id);
+                break;
+            case 2:
+                angry_reactions_memory.add(message_id);
+                break;
+        }
     }
 }
 
-function sendDataToDatabase(action, message, message_time, nick) {
+function sendDataToDatabase(action, message, message_time, nick, respond_message_id = 0) {
     var async_bool = true;
 
     if (action == "nick") {
@@ -167,7 +199,8 @@ function sendDataToDatabase(action, message, message_time, nick) {
             action: action,
             message: message,
             message_time: message_time,
-            nick: nick
+            nick: nick,
+            respond_message_id: respond_message_id
         },
         success: function (response) {
             return response;
@@ -204,6 +237,7 @@ function sendUserMessage() {
     }
 
     var true_responding_bot = "";
+    var respond_message_id = 0;
 
     if (respond_message_div == "") {
         sendMessageHTML(user_name, user_message, false);
@@ -215,6 +249,8 @@ function sendUserMessage() {
             respond_message_div.querySelector(".message-p").innerText,
             respond_message_div.querySelector(".right").innerText
         );
+
+        respond_message_id = respond_message_div.querySelector(".message-p").dataset.index;
 
         true_responding_bot = respond_message_div.querySelector(".right").innerText;
         
@@ -234,7 +270,9 @@ function sendUserMessage() {
 
     responds_queue.push([5, responding_bot, respond, user_message]);
 
-    sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name);
+    console.log(respond_message_id);
+
+    sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id);
 }
 
 function printTimeToLeftChat(time_to_left_chat) //TODO będzie można usunąć
@@ -309,6 +347,12 @@ const colors = {
     "Arek": "thistle",
     "Bartek": "tan",
 }
+
+var bots_message_id = 1;
+var users_message_id = -1;
+var like_reactions_memory = new Set();
+var heart_reactions_memory = new Set();
+var angry_reactions_memory = new Set();
 
 const heart_svg = `<?xml version="1.0" encoding="iso-8859-1"?>
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
@@ -454,7 +498,49 @@ function incrementSeconds() {
         openDialog();
     }
 
-    if (time_to_left_chat < 0) {
+    if (time_to_left_chat == 300) {
+        $.ajax({
+            type: "POST",
+            url: "../ajax/",
+            async: true,
+            data: {
+                csrfmiddlewaretoken: data_from_django.token,
+                action: "like_reactions",
+                reactions: Array.from(like_reactions_memory).join(' ')
+            },
+            success: function (response) {
+                return response;
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "../ajax/",
+            async: true,
+            data: {
+                csrfmiddlewaretoken: data_from_django.token,
+                action: "heart_reactions",
+                reactions: Array.from(heart_reactions_memory).join(' ')
+            },
+            success: function (response) {
+                return response;
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "../ajax/",
+            async: true,
+            data: {
+                csrfmiddlewaretoken: data_from_django.token,
+                action: "angry_reactions",
+                reactions: Array.from(angry_reactions_memory).join(' ')
+            },
+            success: function (response) {
+                return response;
+            }
+        });
+
         window.location.href = data_from_django.endUrl;
     }
 }
