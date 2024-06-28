@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<article id="data-from-django" data-chatroom-url = "{% url 'chatroom' %}" data-start-timestamp = "{{ start_timestamp }}"></article>
+<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-chatroom-url = "{% url 'chatroom' %}" data-start-timestamp = "{{ start_timestamp }}"></article>
 
 <h1 style="text-align: center; margin-top: 100px;">Witaj {{ nick }}, poczekaj na przydzielenie do chatroomu</h1>
 
@@ -14,6 +14,7 @@
 <a style="text-align: center;" href="{% url 'chatroom' %}">Pomiń oczekiwania (tylko do testów)</a>
 -->
 
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'js/lobby_script.js' %}"></script>
 
 {% endblock content %}

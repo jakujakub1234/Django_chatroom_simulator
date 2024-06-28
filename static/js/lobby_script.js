@@ -28,8 +28,26 @@ for (let i = 0; i < 7; i++) {
     }
 }
 
+var data_from_django = document.getElementById('data-from-django').dataset;
+
 function incrementSeconds() {
     seconds += 1;
+
+    if (seconds == 1) {
+        $.ajax({
+            type: "POST",
+            url: "../ajax/",
+            async: true,
+            data: {
+                csrfmiddlewaretoken: data_from_django.token,
+                action: "nick",
+                nick: data_from_django.nick
+            },
+            success: function (response) {
+                return response;
+            }
+        });
+    }
 
     var seconds_text = " sekund";
 

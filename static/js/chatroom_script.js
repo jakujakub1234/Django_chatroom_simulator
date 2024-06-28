@@ -418,7 +418,7 @@ submitButton.addEventListener("click", sendUserMessage);
 const chatroom = document.getElementById("chatroom");
 const respond_input_box = document.getElementById("respond-input-box");
 
-sendDataToDatabase("nick", "", "", user_name);
+//sendDataToDatabase("nick", "", "", user_name);
 
 document.getElementById("msg_field").focus();
 
