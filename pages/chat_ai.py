@@ -34,6 +34,7 @@ class ChatAI:
         self.greetings = keywords["greetings"]
         self.questions = keywords["questions"]
         self.farewells = keywords["farewells"]
+        self.what_should_we_do = keywords["what_should_we_do"]
 
         self.never_existing_2_letters = set([
             'vq', 'qa', 'nq', 'hq', 'cv', 'dq', 'vk', 'vb', 'xg', 'vv', 'qh', 'xt', 'qv', 'vx', 'qe', 'cf', 'vh', 'qf', 'xl', 'bq', 'eq', 'vp', 'cx', 'uv', 'qr', 'fq', 'wv', 'hx', 'qb', 'jx', 'gv', 'px', 'tx', 'xj', 'fx', 'qp', 'xz', 'lx', 'fj', 'tv', 'vm', 'tq', 'xs', 'xw', 'yx', 'mq', 'qi', 'oq', 'yv', 'qw', 'sv', 'qy', 'zv', 'xk', 'qk', 'sx', 'pz', 'kx', 'qj', 'lv', 'vf', 'xv', 'rv', 'vg', 'qt', 'zq', 'qx', 'qc', 'rq', 'vj', 'xr', 'vw', 'vs', 'dx', 'mv', 'lq', 'ev', 'uq', 'xn', 'yq', 'xc', 'rx', 'vd', 'xh', 'pq', 'kq', 'vn', 'qg', 'cq', 'qz', 'wq', 'jv', 'dv', 'vc', 'pv', 'xf', 'sq', 'xm', 'bv', 'vr', 'vt', 'ql', 'qo', 'gx', 'gq', 'zx', 'aq', 'qn', 'wx', 'qm', 'fv', 'jq', 'xq', 'nv', 'kv', 'hv', 'vl', 'nx', 'xx', 'hf', 'bx', 'mx', 'xb', 'qs', 'qd', 'vz', 'fz', 'qq', 'kz'
@@ -115,10 +116,10 @@ class ChatAI:
         return random.choice(self.bots_names)
 
     def generateRepondMessage(self, message, responding_bot):
-        responding_bot_gender = Gender.MALE
+        #responding_bot_gender = Gender.MALE
 
-        if responding_bot[-1] == "a":
-            responding_bot_gender = Gender.FEMALE
+        #if responding_bot[-1] == "a":
+        #    responding_bot_gender = Gender.FEMALE
 
         self.user_messages_counter += 1
 
@@ -131,6 +132,9 @@ class ChatAI:
         if len(message) > 300:
             return self.responds["TL_DR"]
 
+        if any(what_should_we_do_elem in message for what_should_we_do_elem in self.what_should_we_do):
+            return self.responds["WHAT_SHOULD_WE_DO"]
+        
         if any(question in message.split() for question in self.questions) or "?" in message:
             return self.responds["QUESTION"]
 

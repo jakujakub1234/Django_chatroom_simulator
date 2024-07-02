@@ -273,7 +273,7 @@ function sendUserMessage() {
     sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id);
 }
 
-function printTimeToLeftChat(time_to_left_chat) //TODO będzie można usunąć
+function printTimeToLeftChat(time_to_left_chat)
 {
     var new_time = "Czas do zakończenia czatu: "
     var minutes_to_end = Math.floor(time_to_left_chat / 60);
@@ -417,6 +417,7 @@ submitButton.addEventListener("click", sendUserMessage);
 
 const chatroom = document.getElementById("chatroom");
 const respond_input_box = document.getElementById("respond-input-box");
+const dialog_box = document.getElementById("dialog-box");
 
 //sendDataToDatabase("nick", "", "", user_name);
 
@@ -495,8 +496,26 @@ function incrementSeconds() {
 
     printTimeToLeftChat(time_to_left_chat);
 
+    if (time_to_left_chat > 0 && time_to_left_chat % 60 == 0) {
+        end_chat_alert_displayed = true;
+
+        var minutes = Math.floor(time_to_left_chat / 60);
+        var minutes_text = "minut";
+
+        if (minutes < 5) {
+            minutes_text = "minuty";
+        }
+        if (minutes == 1) {
+            minutes_text = "minuta"
+        }
+
+        dialog_box.querySelector("p").innerText = "Czat zakończy się automatycznie za " + minutes.toString() + " " + minutes_text;
+        openDialog();
+    }
+
     if (time_to_left_chat == 30 && !end_chat_alert_displayed) {
         end_chat_alert_displayed = true;
+        dialog_box.querySelector("p").innerText = "Czat zakończy się automatycznie za 30 sekund";
         openDialog();
     }
 
@@ -561,11 +580,14 @@ window.addEventListener( "pageshow", function ( event ) {
 });
 
 function openDialog() {
-    const element = document.getElementById("dialog-box");
-    element.open = true;
-  }
-  
-  function closeDialog() {
-    const element = document.getElementById("dialog-box");
-    element.open = false;
-  }
+    dialog_box.open = true;
+}
+
+function closeDialog() {
+    dialog_box.open = false;
+}
+
+function closeRespond() {
+    respond_message_div = "";
+    respond_input_box.style.display = "none";
+}

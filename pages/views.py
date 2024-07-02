@@ -17,10 +17,6 @@ class HomePageView(TemplateView):
     def get(self, request):
         form = HomeForm()
 
-        # TODO!!! 
-        # specification
-        # use utils variables
-
         if 1 > 2: # TODO session clearing
             for key in list(request.session.keys()):
                 if not key.startswith("_"): # skip keys set by the django system

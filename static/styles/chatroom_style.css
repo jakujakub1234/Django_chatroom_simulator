@@ -136,13 +136,15 @@
 }
 
 .time-left {
-  color: #000000;
+  color: #828181;
   font-family: cursive;
+  font-size: smaller;
 }
 
 .time-left-user {
-  color: #fff1ff;
+  color: #dddddd;
   font-family: cursive;
+  font-size: smaller;
 }
 
 select {
@@ -326,4 +328,31 @@ kbd {
   -webkit-border-radius: 50px;
   margin-top: 10px;
   margin-left: -40px;
+}
+
+.close-respond {
+  border: aliceblue;
+  float: right;
+  width: 50px;
+  height: 50px;
+  opacity: 0.3;
+  margin-right: 2px;
+}
+.close-respond:hover {
+  opacity: 1;
+  background: #e9e6e6;
+}
+.close-respond:before, .close-respond:after {
+  position: absolute;
+  content: ' ';
+  height: 20px;
+  width: 2px;
+  background-color: #333;
+  margin-top: -10px;
+}
+.close-respond:before {
+  transform: rotate(45deg);
+}
+.close-respond:after {
+  transform: rotate(-45deg);
 }

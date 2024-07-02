@@ -11,7 +11,7 @@
 </div>
 
 <dialog id="dialog-box">
-  <b>Koniec czasu</b>
+  <b>Uwaga</b>
   <p>Czat zakończy się automatycznie za 30 sekund</p>
   <br>
   <div class="dialog-buttons"><button id="dialog-button" onclick="closeDialog()">OK</button></div>
@@ -27,6 +27,7 @@
 </div>
 
 <div id="respond-input-box" class="container container-respond" style="display: none">
+  <button class="close-respond" id="close-respond" onclick="closeRespond()"></button>
   <p id="respond-input-box-nick">Odpowiedź do użytkownika</p>
   <p id="respond-input-box-message">respond_message</p>
 </div> 
@@ -36,7 +37,7 @@
     {% csrf_token %}
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <input type="text" placeholder="Napisz wiadomość..." name="message" id="msg_field" maxlength="1000" tabindex="0">
+        <input type="text" placeholder="Napisz wiadomość..." name="message" id="msg_field" maxlength="250" tabindex="0">
         <button name="send" class="btn btn-success" id="btn-submit" tabindex="1">Wyślij</button>
       </div>
     </div>
@@ -44,7 +45,7 @@
 </div>
 
 <!-- TODO ukryć to -->
-  <div style="text-align: center; display: none;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
+  <div style="text-align: center;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
 
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>

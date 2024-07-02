@@ -22,7 +22,10 @@
         ["Na razie", 
         "pa", 
         "Miło było :P",
-        "cześć"], 
+        "cześć"],
+    "WHAT_SHOULD_WE_DO":
+        ["rozmawiać o Żydach chyba",
+        "chyba po prostu pisać o tolerancji"],
     "GENERIC": ["🤔",
         "ma sens",
         "To zależy od kontekstu.",
