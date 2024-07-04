@@ -147,12 +147,14 @@ class ChatAI:
         return self.responds["GENERIC"]
 
     def generateRespond(self, message):
-        self.user_messages_counter += 1
         message = self.preprocessMessage(message)
-
+        
         responding_bot = self.getRespondingBot(message)
 
         responding_message = random.choice(self.generateRepondMessage(message, responding_bot))
+
+        if self.user_messages_counter % 3 == 0:
+            responding_message = ""
 
         return [
             responding_message,

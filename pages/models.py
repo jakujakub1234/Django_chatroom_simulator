@@ -12,6 +12,7 @@ class Messages(models.Model):
     message = models.CharField(max_length=2550)
     message_time = models.IntegerField()
     message_respond_to = models.IntegerField(default=0)
+    typing_time = models.IntegerField(default=0)
 
 #class Reactions(models.Model):
 #    qualtrics_id = models.CharField(max_length=255)
@@ -30,10 +31,9 @@ class AngryReactions(models.Model):
     qualtrics_id = models.CharField(max_length=255)
     message_id = models.IntegerField()
 
-
-    #
-    # EMOTIONS ID:
-    #     0 -> like
-    #     1 -> heart
-    #     2 -> angry
-    #
+class Interactions(models.Model):
+    qualtrics_id = models.CharField(max_length=255)
+    hesitation = models.IntegerField()
+    mouse_movement_seconds = models.IntegerField()
+    scroll_seconds = models.IntegerField()
+    input_seconds = models.IntegerField()

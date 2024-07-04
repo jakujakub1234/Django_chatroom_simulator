@@ -6,6 +6,7 @@ from .forms import HomeForm
 from .models import Nicks
 from .models import Messages
 from .models import LikeReactions, HeartReactions, AngryReactions
+from .models import Interactions
 from .utils import lobby_time, chatroom_time
 from .chat_ai import ChatAI
 
@@ -179,7 +180,8 @@ class AjaxPageView(TemplateView):
                 qualtrics_id = request.session['key'],
                 message = request.POST.get('message'),
                 message_time = request.POST.get('message_time'),
-                message_respond_to = request.POST.get('respond_message_id')
+                message_respond_to = request.POST.get('respond_message_id'),
+                typing_time = request.POST.get('typing_time')
             )
             
             messages.save()
@@ -220,6 +222,17 @@ class AjaxPageView(TemplateView):
             django_list = [AngryReactions(**vals) for vals in reactions_array]
             AngryReactions.objects.bulk_create(django_list)
             
+        if request.POST.get('action') == "interactions":
+            interactions = Interactions(
+                qualtrics_id = request.session['key'],
+                hesitation = request.POST.get('hesitation'),
+                mouse_movement_seconds = request.POST.get('mouse_movement_seconds'),
+                scroll_seconds = request.POST.get('scroll_seconds'),
+                input_seconds = request.POST.get('input_seconds')
+            )
+            
+            interactions.save()
+
         return render(request, 'home.html', {'form':form})
 
     def get(self, request):

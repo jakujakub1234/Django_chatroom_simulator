@@ -10,7 +10,7 @@ var wait_time = 19;
 var timer_text = document.getElementById('seconds-counter');
 var users_counter = document.getElementById('users-counter');
 
-var users_actual_amount = 2;
+var users_actual_amount = 3;
 var time_to_another_users = [
     0,
     0,
@@ -18,7 +18,7 @@ var time_to_another_users = [
     4,
     7,
     13,
-    15,
+    17,
 ];
 
 for (let i = 0; i < 7; i++) {
@@ -87,11 +87,11 @@ function incrementSeconds() {
 
     timer_text.innerText = "Czas oczekiwania: " + seconds + seconds_text;
 
-    if (seconds == time_to_another_users[users_actual_amount]) {
+    if (seconds == time_to_another_users[users_actual_amount-1]) {
         users_actual_amount++;
         users_counter.innerText = "lość osób w lobby: " + users_actual_amount;
 
-        document.getElementById('bot-' + users_actual_amount.toString()).innerHTML = avatar_svg + "<br>" + bots_nicks[users_actual_amount-1];
+        document.getElementById('bot-' + (users_actual_amount-1).toString()).innerHTML = avatar_svg + "<br>" + bots_nicks[users_actual_amount-2];
         //if (users_actual_amount < 8) {
         //    document.getElementById('bot-' + (users_actual_amount + 1).toString()).innerHTML = loading_circle;
         //}

@@ -183,6 +183,23 @@ function addReaction(el, emotion_id) {
     }
 }
 
+function addBotReaction(el_id, emotion_id) {
+    /*
+        EMOTIONS ID:
+            0 -> like
+            1 -> heart
+            2 -> angry
+    */
+    var span_id = ["like-user-bot", "heart-user-bot", "angry-user-bot"][emotion_id];
+    var svg = [like_svg, heart_svg, angry_svg][emotion_id];
+
+    var message_elem = document.querySelector("[data-index='" + el_id + "']");
+
+    var reactions_container = message_elem.parentNode.querySelector(".reactions-container_scr");
+
+    reactions_container.innerHTML += "<span id=" + span_id + ">" + svg + "</span>";
+}
+
 function sendDataToDatabase(action, message, message_time, nick, respond_message_id = 0) {
     var async_bool = true;
 
@@ -200,7 +217,8 @@ function sendDataToDatabase(action, message, message_time, nick, respond_message
             message: message,
             message_time: message_time,
             nick: nick,
-            respond_message_id: respond_message_id
+            respond_message_id: respond_message_id,
+            typing_time: typing_time
         },
         success: function (response) {
             return response;
@@ -231,6 +249,12 @@ jQuery.extend({
 function sendUserMessage() {
     var user_message = document.getElementById("msg_field").value;
     document.getElementById("msg_field").value = "";
+
+    if (user_message.match(/\w+/g).length > 1) {
+        users_long_messages_counter++;
+    }
+
+    is_user_typing = false;
 
     if (user_message === null || user_message.match(/^ *$/) !== null) {
         return;
@@ -264,13 +288,21 @@ function sendUserMessage() {
     var responding_bot = respond[1];
     respond = respond[0];
 
-    if (true_responding_bot != "" && true_responding_bot != user_name) {
-        responding_bot = true_responding_bot;
+    if (respond != "") {
+        if (true_responding_bot != "" && true_responding_bot != user_name) {
+            responding_bot = true_responding_bot;
+        }
+
+        responds_queue.push([5, responding_bot, respond, user_message]);
     }
 
-    responds_queue.push([5, responding_bot, respond, user_message]);
+    if (users_long_messages_counter > 0 && users_long_messages_counter % 2 == 0 && user_message.match(/\w+/g).length > 1) {
+        likes_queue.push([3, users_message_id+1]);
+    }
 
     sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id);
+
+    typing_time = 0;
 }
 
 function printTimeToLeftChat(time_to_left_chat)
@@ -354,6 +386,19 @@ var angry_reactions_memory = new Set();
 
 var seconds_messages_sent = new Set();
 
+var hesitation = 0;
+var mouse_movement_seconds = 0;
+var scroll_seconds = 0;
+var input_seconds = 0;
+
+var mouse_movement_sleep = false;
+var scroll_sleep = false;
+var is_user_typing = false;
+var typing_time = 0;
+
+var users_long_messages_counter = 0;
+var curiosity_question_sended = false;
+
 const heart_svg = `<?xml version="1.0" encoding="iso-8859-1"?>
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 <svg class="svg-icon" fill="#000000" width="1em" height="1em" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -409,6 +454,7 @@ const angry_svg = `<?xml version="1.0" encoding="iso-8859-1"?>
 var bots_names = Object.keys(colors);
 
 var responds_queue = [];
+var likes_queue = [];
 
 var respond_message_div = "";
 var opened_modal = "";
@@ -424,15 +470,29 @@ const dialog_box = document.getElementById("dialog-box");
 document.getElementById("msg_field").focus();
 
 function incrementSeconds() {
+    mouse_movement_sleep = false;
+    scroll_sleep = false;
+
     if (document.getElementById("msg_field").value != "") {
         seconds += 0.5;
+        input_seconds++;
+        is_user_typing = true;
+        typing_time++;
     } else {
         seconds ++;
+
+        if (is_user_typing) {
+            hesitation++;
+            is_user_typing = false;
+        }
+
+        typing_time = 0;
     }
 
     var seconds_integer = Math.ceil(seconds);
 
     responds_queue.every((respond) => respond[0]--);
+    likes_queue.every((like) => like[0]--);
 
     var users_typing = [];
 
@@ -488,8 +548,23 @@ function incrementSeconds() {
             true,
             respond[3],
             user_name
-            //"style=\"background-color: " + colors[respond[1]] + "\""
         );
+    }
+
+    if (!curiosity_question_sended && seconds_integer > 45) {
+        curiosity_question_sended = true;
+
+        sendMessageHTML(
+            bots_names[1],
+            "Ej " + user_name + ", a ty co myślisz?",
+            true
+        );
+    }
+
+    if (likes_queue.length > 0 && likes_queue[0][0] <= 0) {
+        var like = likes_queue.shift();
+
+        addBotReaction(like[1], 0);
     }
 
     var time_to_left_chat = 330 - seconds_integer;
@@ -562,6 +637,23 @@ function incrementSeconds() {
             }
         });
 
+        $.ajax({
+            type: "POST",
+            url: "../ajax/",
+            async: true,
+            data: {
+                csrfmiddlewaretoken: data_from_django.token,
+                action: "interactions",
+                hesitation: hesitation,
+                mouse_movement_seconds: mouse_movement_seconds,
+                scroll_seconds: scroll_seconds,
+                input_seconds: input_seconds
+            },
+            success: function (response) {
+                return response;
+            }
+        });
+
         window.location.href = data_from_django.endUrl;
     }
 }
@@ -576,6 +668,20 @@ window.addEventListener( "pageshow", function ( event ) {
                                 window.performance.navigation.type === 2 );
     if ( historyTraversal ) {
       window.location.reload();
+    }
+});
+
+window.addEventListener("mousemove", (e) => {
+    if (!mouse_movement_sleep) {
+        mouse_movement_seconds++;
+        mouse_movement_sleep = true;
+    }
+});
+
+window.addEventListener("scroll", (e) => {
+    if (!scroll_sleep) {
+        scroll_seconds++;
+        scroll_sleep = true;
     }
 });
 
