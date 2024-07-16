@@ -79,14 +79,45 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = "kubax1234210@wp.pl"
 EMAIL_HOST_PASSWORD = "Konsola1"
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': dj_database_url.config(
+#    #default='postgresql://postgres:postgres@localhost:5432/mysite',
+#    conn_max_age=600
+#)}
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'HOST': '104.197.57.248',
+#        'USER': 'postgres',
+#        'PASSWORD': 'efC3XZ3456hBCVw4Z',
+#        'NAME': 'ManipulationDB',
+#    }
+#}
+
 DATABASES = {
-    'default': dj_database_url.config(
-    default='postgresql://postgres:postgres@localhost:5432/mysite',
-    conn_max_age=600
-)}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': '104.197.57.248',
+        'USER': 'postgres',
+        'PASSWORD': 'efC3XZ3456hBCVw4Z',
+        'NAME': 'ManipulationDB'
+    }
+}
+
+#DATABASE_URL="postgres://postgres:efC3XZ3456hBCVw4Z@//cloudsql/reliable-byte-428411-d8:us-central1:manipulationpretest/ManipulationDB"
+#GS_BUCKET_NAME="reliable-byte-428411-d8_reliable-byte-428411-d8.appspot.com"
+
+#DATABASES = {
+#    'default': dj_database_url.config(default=DATABASE_URL)
+#}
+
+#DATABASES['default']['NAME'] = 'ManipulationDB'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

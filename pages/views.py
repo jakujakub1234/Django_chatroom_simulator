@@ -169,7 +169,8 @@ class AjaxPageView(TemplateView):
 
             nick = Nicks(
                 qualtrics_id=request.session['key'],
-                nick=request.POST.get('nick'),
+                nick=request.session['nick'],
+                chatroom_start=datetime.now().timestamp(),
                 is_manipulation_positive=(request.session['is_positive_manipulation']=="True")
             )
 
@@ -179,6 +180,8 @@ class AjaxPageView(TemplateView):
             messages = Messages(
                 qualtrics_id = request.session['key'],
                 message = request.POST.get('message'),
+                prev_message = request.POST.get('prev_message'),
+                prev_prev_message = request.POST.get('prev_prev_message'),
                 message_time = request.POST.get('message_time'),
                 message_respond_to = request.POST.get('respond_message_id'),
                 typing_time = request.POST.get('typing_time')
@@ -228,7 +231,8 @@ class AjaxPageView(TemplateView):
                 hesitation = request.POST.get('hesitation'),
                 mouse_movement_seconds = request.POST.get('mouse_movement_seconds'),
                 scroll_seconds = request.POST.get('scroll_seconds'),
-                input_seconds = request.POST.get('input_seconds')
+                input_seconds = request.POST.get('input_seconds'),
+                is_chatroom_finished = request.POST.get('is_chatroom_finished')
             )
             
             interactions.save()
@@ -237,7 +241,8 @@ class AjaxPageView(TemplateView):
 
     def get(self, request):
         respond, responding_bot = self.chat_ai.generateRespond(
-            request.GET['message']
+            request.GET['message'],
+            request.GET['prev_message_id']
         )
 
         return JsonResponse({'respond': respond, "responding_bot": responding_bot}, status=200, content_type="application/json")

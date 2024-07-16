@@ -10,9 +10,8 @@ var wait_time = 19;
 var timer_text = document.getElementById('seconds-counter');
 var users_counter = document.getElementById('users-counter');
 
-var users_actual_amount = 3;
+var users_actual_amount = 2;
 var time_to_another_users = [
-    0,
     0,
     3,
     4,
@@ -31,13 +30,12 @@ for (let i = 0; i < 7; i++) {
 var data_from_django = document.getElementById('data-from-django').dataset;
 
 const bots_nicks = [
-    "Michal",
-    "Ania",
-    "Agnieszka",
-    "Arek",
+    "julkakulka",
     "Kasia",
-    "Piotrek",
-    "Bartek"
+    "pixelninja99",
+    "archi12",
+    "Bartek",
+    "niedzielkaa"
 ];
 
 const avatar_svg = `<?xml version="1.0" encoding="UTF-8"?>
@@ -49,33 +47,34 @@ const avatar_svg = `<?xml version="1.0" encoding="UTF-8"?>
 const loading_circle = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
 
 document.getElementById('bot-0').innerHTML = avatar_svg + "<br>" + bots_nicks[0];
-document.getElementById('bot-1').innerHTML = avatar_svg + "<br>" + bots_nicks[1];
-document.getElementById('bot-2').innerHTML = avatar_svg + "<br>" + data_from_django.nick;
+document.getElementById('bot-1').innerHTML = avatar_svg + "<br>" + data_from_django.nick;
 
+document.getElementById('bot-2').innerHTML = loading_circle;
 document.getElementById('bot-3').innerHTML = loading_circle;
 document.getElementById('bot-4').innerHTML = loading_circle;
 document.getElementById('bot-5').innerHTML = loading_circle;
 document.getElementById('bot-6').innerHTML = loading_circle;
-document.getElementById('bot-7').innerHTML = loading_circle;
 
-function incrementSeconds() {
-    seconds += 1;
-
-    if (seconds == 1) {
-        $.ajax({
-            type: "POST",
-            url: "../ajax/",
-            async: true,
-            data: {
-                csrfmiddlewaretoken: data_from_django.token,
-                action: "nick",
-                nick: data_from_django.nick
-            },
-            success: function (response) {
-                return response;
-            }
-        });
+$.ajax({
+    type: "POST",
+    url: "../ajax/",
+    async: true,
+    data: {
+        csrfmiddlewaretoken: data_from_django.token,
+        action: "nick",
+        nick: data_from_django.nick
+    },
+    success: function (response) {
+        return response;
     }
+});
+
+function incrementSeconds() {    
+    if (seconds > wait_time) {
+        return;
+    }
+
+    seconds += 1;
 
     var seconds_text = " sekund";
 
@@ -87,7 +86,7 @@ function incrementSeconds() {
 
     timer_text.innerText = "Czas oczekiwania: " + seconds + seconds_text;
 
-    if (seconds == time_to_another_users[users_actual_amount-1]) {
+    while (seconds >= time_to_another_users[users_actual_amount-1]) {
         users_actual_amount++;
         users_counter.innerText = "lość osób w lobby: " + users_actual_amount;
 

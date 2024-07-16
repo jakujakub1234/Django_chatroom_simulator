@@ -37,12 +37,12 @@ class HomeForm(forms.Form):
             self._errors["key_from_qualtrics"] = ["Nieprawidłowy klucz z Qualtricsa"]
 
         key_from_qualtrics = key_from_qualtrics[:-5]
-
-        is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
         
         # TODO wylaczone zabezpieczenie
 
-        #if is_key_in_db != None:
-        #    self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
+        is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
+
+        if is_key_in_db != None:
+            self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
         
         return key_from_qualtrics

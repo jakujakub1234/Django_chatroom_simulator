@@ -19,21 +19,18 @@ class ChatAI:
         self.user_messages_counter = 0
 
         self.bots_names = [
-            "Ania",
+            "julkakulka",
             "Kasia",
-            "Piotrek",
-            "Agnieszka",
-            "Michal",
-            "Arek",
-            "Bartek"
+            "pixelninja99",
+            "archi12",
+            "Bartek",
+            "niedzielkaa"
         ]
 
         keywords = open(os.path.join(module_dir, 'jsons_for_ai/keywords.json'))
         keywords = json.load(keywords)
 
-        self.greetings = keywords["greetings"]
         self.questions = keywords["questions"]
-        self.farewells = keywords["farewells"]
         self.what_should_we_do = keywords["what_should_we_do"]
 
         self.never_existing_2_letters = set([
@@ -49,6 +46,8 @@ class ChatAI:
 
         self.responds = open(os.path.join(module_dir, 'jsons_for_ai/responds.json'))
         self.responds = json.load(self.responds)
+
+        self.what_should_we_do_counter = 0
 
     def preprocessMessage(self, message):
         message = message.lower()
@@ -115,7 +114,7 @@ class ChatAI:
 
         return random.choice(self.bots_names)
 
-    def generateRepondMessage(self, message, responding_bot):
+    def generateRepondMessage(self, message, responding_bot, prev_message_id):
         #responding_bot_gender = Gender.MALE
 
         #if responding_bot[-1] == "a":
@@ -123,35 +122,45 @@ class ChatAI:
 
         self.user_messages_counter += 1
 
+        
+        if prev_message_id < 5 or prev_message_id > 48:
+            return [""]
+
         if self.user_messages_counter > 50:
             return self.responds["SPAM"]
 
         if self.detectGibberish(message):
             return self.responds["GIBBERISH"]
 
+        if prev_message_id < 10 or prev_message_id > 46:
+            return [""]
+
         if len(message) > 300:
             return self.responds["TL_DR"]
 
-        if any(what_should_we_do_elem in message for what_should_we_do_elem in self.what_should_we_do):
-            return self.responds["WHAT_SHOULD_WE_DO"]
+        if prev_message_id > 11 and prev_message_id < 17 and self.what_should_we_do_counter < 3:
+            if any(what_should_we_do_elem in message for what_should_we_do_elem in self.what_should_we_do):
+                self.what_should_we_do_counter += 1
+
+                return [self.responds["WHAT_SHOULD_WE_DO"][self.what_should_we_do_counter-1]]
         
+        if prev_message_id > 14 and prev_message_id < 40:
+            if len(message.split()) < 4:
+                return self.responds["EXPLAIN_MORE"]
+
         if any(question in message.split() for question in self.questions) or "?" in message:
             return self.responds["QUESTION"]
 
-        if any(greeting in message.split() for greeting in self.greetings):
-            return self.responds["GREETINGS"]
-
-        if any(farewell in message.split() for farewell in self.farewells):
-            return self.responds["FAREWELLS"]
-
         return self.responds["GENERIC"]
 
-    def generateRespond(self, message):
+    def generateRespond(self, message, prev_message_id):
+        prev_message_id = int(prev_message_id)
+
         message = self.preprocessMessage(message)
         
         responding_bot = self.getRespondingBot(message)
 
-        responding_message = random.choice(self.generateRepondMessage(message, responding_bot))
+        responding_message = random.choice(self.generateRepondMessage(message, responding_bot, prev_message_id))
 
         if self.user_messages_counter % 3 == 0:
             responding_message = ""

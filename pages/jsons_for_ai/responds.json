@@ -1,37 +1,96 @@
 {
-    "SPAM": 
-        ["lol",
+    "SPAM": [
+        "lol",
         "....",
-        "ok..."],
-    "GIBBERISH": ["?", "...", "nie ogarniam", "ok?.." ],
-    "TL_DR": ["tl;dr"],
-    "QUESTION": 
-        ["🤔",
+        "ok...",
+        "xd"
+    ],
+    "GIBBERISH": [
+        "?",
+        "...",
+        "nie ogarniam",
+        "ok?..",
+        "🤔",
+        "???", 
+        "nie rozumiem cię", 
+        "nie wiemy czy nie jesteśmy oceniani{{NEW_MESSAGE}}może warto się postarać nad odpowiedzią?", 
+        "fajnie by było, gdybyś napisał coś sensownego 😃", 
+        "hahaha coo?",
+        "xd?"
+    ],
+    "TL_DR": [
+        "tl;dr",
+        "mógłbyś streścić? :)"
+    ],
+    "QUESTION": [
+        "🤔",
         "w sumie...", 
         ":P", 
         "Dobre pytanie", 
         "zależy", 
-        "co nie XD"],
-    "GREETINGS":  
-        ["Hejka", 
+        "co nie XD",
+        "xd",
+        "Właśnie nie jestem pewna",
+        "Kurcze, ciężko stwierdzić...",
+        "Też się zastanawiam",
+        "Sam mam wątpliwości",
+        "Hmmmm..."
+    ],
+    "GREETINGS": [
+        "Hejka", 
         "Hej!",
         "Siema!",
         "Dzień dobry",
-        "Elo!"],
-    "FAREWELLS": 
-        ["Na razie", 
+        "Elo!",
+        "cześć!:)"
+    ],
+    "FAREWELLS": [
+        "Na razie", 
         "pa", 
         "Miło było :P",
-        "cześć"],
-    "WHAT_SHOULD_WE_DO":
-        ["rozmawiać o Żydach chyba",
-        "chyba po prostu pisać o tolerancji"],
-    "GENERIC": ["🤔",
+        "cześć",
+        "hej",
+        "Dzięki za dyskusję, paaa!"
+    ],
+    "WHAT_SHOULD_WE_DO": [
+        "Mamy porozmawiać na temat inkluzywnej edukacji",
+		"chyba dać parę pomysłów na to jak usprawnić system, żeby nikogo nie wykluczać",
+		"Powiedz, co myślisz o inkluzywnej edukacji"
+    ],
+    "GENERIC": [
+        "🤔",
         "ma sens",
         "To zależy od kontekstu.",
         "moze warto się nad tym zastanowić", 
         "Trudno jednoznacznie stwierdzić",
         "Może być różnie.", 
-        "skomplikowane to wszystko..."
-        ]
+        "skomplikowane to wszystko...",
+        "xd",
+        "no nie wiem",
+        "Nie wiem co o tym myśle",
+        "rozwiniesz myśl?",
+        "Ciekawe spostrzeżenie",
+        "Super, że zwracasz na to uwagę",
+        "fair point",
+        "bardzo interesujące",
+        "Co masz na myśli?",
+        "Może rozwiniesz wypowiedź?",
+        "Interesująca sprawa",
+        "Dobre!",
+        "no nieźle",
+        "otóż to! ❤️",
+	    "xd dokladnie.."
+    ],
+    "EXPLAIN_MORE": [
+		"Może rozwiniesz wypowiedź?",
+		"Interesująca sprawa",
+		"oo, ciekawe, masz jeszcze jakieś przemyślenia na ten temat?",
+		"nie wiem, czy dobrze rozumiem - rozwiniesz?",
+		"powiedz coś więcej na ten temat😘",
+		"Fajne! chętnie wysłucham jak dokładnie to widzisz!"
+	],
+    "CURIOSITY_QUESTIONS": [
+		"A Ty {{nick}}, co myślisz?",
+		"A Ty {{nick}} masz może jakiś pomysł?"
+	]
 }

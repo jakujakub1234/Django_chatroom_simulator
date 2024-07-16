@@ -5,9 +5,9 @@
 <article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-chatroom-url = "{% url 'chatroom' %}" data-start-timestamp = "{{ start_timestamp }}"></article>
 
 <h1 style="text-align: center; margin-top: 100px;">Witaj {{ nick }}, poczekaj na przydzielenie do chatroomu</h1>
-<h2 style="text-align: center;">Uwaga! Czatu nie można opuścić, kończy się automatycznie po około 5 minutach od dołączenia.</h2>
+<h2 style="text-align: center;">Uwaga! Czatu nie można opuścić, kończy się automatycznie po około 8 minutach od dołączenia.</h2>
 
-<h2 id="users-counter" style="text-align: center;">Ilość osób w lobby: 3</h1>
+<h2 id="users-counter" style="text-align: center;">Ilość osób w lobby: 2</h1>
 
 <div style="text-align: center;" id='seconds-counter'>Czas oczekiwania: - sekund</div>
 
@@ -19,11 +19,14 @@
             <td id="bot-2"></td>
             <td id="bot-3"></td>
         </tr>
+    </tbody>
+</table>
+<table id="bots-table" class="bots-table" style="margin-top: -3px;">
+    <tbody>
         <tr>
             <td id="bot-4"></td>
             <td id="bot-5"></td>
             <td id="bot-6"></td>
-            <td id="bot-7"></td>
         </tr>
     </tbody>
 </table>

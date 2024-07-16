@@ -1,5 +1,20 @@
-function sendMessageHTML(user_name, message, is_bot, respond_message = "", respond_nick = "")
+function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "", respond_nick = "", is_respond_to_user=false)
 {
+    prev_prev_message = prev_message;
+    prev_message = current_message;
+
+    current_message = "";
+    
+    if (!is_bot) {
+        current_message = "PARTICIPANT: ";
+    } else if (is_respond_to_user) {
+        current_message = "BOT_REPLY: ";
+    } else {
+        current_message = "STABLE: ";
+    }
+
+    current_message += message;
+
     const date = new Date();
 
     let hour = date.getHours().toString();
@@ -20,7 +35,7 @@ function sendMessageHTML(user_name, message, is_bot, respond_message = "", respo
     
     if (is_bot) {
         span_class = "time-left";
-        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + user_name + `</span>`;
+        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + sending_user_name + `</span>`;
 
         reactions_container_class = "reactions-container";
         reaction_modal_id = "reactions-modal";
@@ -31,9 +46,15 @@ function sendMessageHTML(user_name, message, is_bot, respond_message = "", respo
 
         message_id = bots_message_id;
         bots_message_id++;
+
+        if (!is_respond_to_user) {
+            draft_bots_message_id++;
+            dict_draft_message_id_to_message_id[draft_bots_message_id-1] = bots_message_id-1;
+        }
+
     } else {
         span_class = "time-left-user";
-        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic; display:none">` + user_name + `</span>`;
+        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic; display:none">` + sending_user_name + `</span>`;
      
         reactions_container_class = "reactions-container-user";
         reaction_modal_id = "reactions-modal-user";
@@ -215,6 +236,8 @@ function sendDataToDatabase(action, message, message_time, nick, respond_message
             csrfmiddlewaretoken: data_from_django.token,
             action: action,
             message: message,
+            prev_message: prev_message,
+            prev_prev_message: prev_prev_message,
             message_time: message_time,
             nick: nick,
             respond_message_id: respond_message_id,
@@ -235,7 +258,8 @@ jQuery.extend({
             async: false,
             data: {
                 csrfmiddlewaretoken: data_from_django.token,
-                message: user_message
+                message: user_message,
+                prev_message_id: draft_bots_message_id
             },
             success: function (data) {
                 result = data.respond;
@@ -282,7 +306,6 @@ function sendUserMessage() {
         respond_input_box.style.display = "none";
     }
 
-
     var respond = $.generateRespond(user_message);
 
     var responding_bot = respond[1];
@@ -293,11 +316,42 @@ function sendUserMessage() {
             responding_bot = true_responding_bot;
         }
 
-        responds_queue.push([5, responding_bot, respond, user_message]);
+        var times = [0, 4, 5, 6, 7, 15, 15, 18, 20, 20, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24];
+
+        if (!respond.includes("{{NEW_MESSAGE}}")) {
+            var respond_len = 1;
+            
+            if (respond.match(/\w+/g) != null) {
+                respond_len = respond.match(/\w+/g).length;
+            }
+
+            responds_queue.push([times[respond_len], responding_bot, respond, user_message]);
+
+        } else {
+            var respond = respond.split("{{NEW_MESSAGE}}");
+
+            var respond_len = 1;
+            
+            if (respond[0].match(/\w+/g) != null) {
+                respond_len = respond[0].match(/\w+/g).length;
+            }
+
+            responds_queue.push([times[respond_len], responding_bot, respond[0], user_message]);
+
+            respond_len = 1;
+
+            if (respond[1].match(/\w+/g) != null) {
+                respond_len = respond[1].match(/\w+/g).length;
+            }
+
+            responds_queue.push([times[respond_len] + 4, responding_bot, respond[1], user_message]);
+        }
+
+        responds_queue.sort((a, b) => a[0] - b[0]);
     }
 
     if (users_long_messages_counter > 0 && users_long_messages_counter % 2 == 0 && user_message.match(/\w+/g).length > 1) {
-        likes_queue.push([3, users_message_id+1]);
+        reactions_queue.push([3, users_message_id+1, 0]);
     }
 
     sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id);
@@ -369,16 +423,16 @@ var seconds_counter = document.getElementById('seconds-counter');
 var submitButton = document.querySelector("#btn-submit")
 
 const colors = {
-    "Ania": "aquamarine",
+    "julkakulka": "aquamarine",
     "Kasia": "beige",
-    "Piotrek": "silver",
-    "Agnieszka": "darkseagreen",
-    "Michal": "powderblue",
-    "Arek": "thistle",
-    "Bartek": "tan",
+    "pixelninja99": "silver",
+    "archi12": "darkseagreen",
+    "Bartek": "powderblue",
+    "niedzielkaa": "thistle"
 }
 
 var bots_message_id = 1;
+var draft_bots_message_id = 1;
 var users_message_id = -1;
 var like_reactions_memory = new Set();
 var heart_reactions_memory = new Set();
@@ -454,10 +508,17 @@ const angry_svg = `<?xml version="1.0" encoding="iso-8859-1"?>
 var bots_names = Object.keys(colors);
 
 var responds_queue = [];
-var likes_queue = [];
+var reactions_queue = [];
+var dict_draft_message_id_to_message_id = {};
 
 var respond_message_div = "";
 var opened_modal = "";
+
+var prev_prev_message = "NONE";
+var prev_message = "NONE";
+var current_message = "NONE";
+
+var end_chatroom = false;
 
 submitButton.addEventListener("click", sendUserMessage);
 
@@ -470,11 +531,15 @@ const dialog_box = document.getElementById("dialog-box");
 document.getElementById("msg_field").focus();
 
 function incrementSeconds() {
+    if (seconds > 490) {
+        return;
+    }
+
     mouse_movement_sleep = false;
     scroll_sleep = false;
 
     if (document.getElementById("msg_field").value != "") {
-        seconds += 0.5;
+        seconds ++;
         input_seconds++;
         is_user_typing = true;
         typing_time++;
@@ -492,7 +557,7 @@ function incrementSeconds() {
     var seconds_integer = Math.ceil(seconds);
 
     responds_queue.every((respond) => respond[0]--);
-    likes_queue.every((like) => like[0]--);
+    reactions_queue.every((reaction) => reaction[0]--);
 
     var users_typing = [];
 
@@ -537,41 +602,73 @@ function incrementSeconds() {
         );
 
         seconds_messages_sent.add(seconds_integer);
+
+        if (bots_messages[seconds_integer][4] != "") {
+            emojis_ids = bots_messages[seconds_integer][4].split(',');
+            emojis_times = bots_messages[seconds_integer][5].split(',');
+
+            for (var i = 0; i < emojis_ids.length; i++) {
+                reactions_queue.push([emojis_times[i], dict_draft_message_id_to_message_id[draft_bots_message_id-1], emojis_ids[i]]);
+            }
+        }
     }
 
-    if (responds_queue.length > 0 && responds_queue[0][0] <= 0) {
+    while (responds_queue.length > 0 && responds_queue[0][0] <= 0) {
         var respond = responds_queue.shift();
 
-        sendMessageHTML(
-            respond[1],
-            respond[2],
-            true,
-            respond[3],
-            user_name
-        );
+        var respond_len = 1;
+        
+        if (respond[2].match(/\w+/g) != null) {
+            respond_len = respond[2].match(/\w+/g).length;
+        }
+
+        if (respond_len > 5) {
+            sendMessageHTML(
+                respond[1],
+                respond[2],
+                true,
+                respond[3],
+                user_name,
+                true
+            );
+        } else {
+            sendMessageHTML(
+                respond[1],
+                respond[2],
+                true,
+                "",
+                "",
+                true
+            );
+        }
     }
 
-    if (!curiosity_question_sended && seconds_integer > 45) {
+    if (!curiosity_question_sended && draft_bots_message_id == 29) {
         curiosity_question_sended = true;
+
+        curiosity_question = [
+            "A Ty " + user_name + ", co myślisz?",
+            "A Ty " + user_name + " masz może jakiś pomysł?"
+        ][0];
 
         sendMessageHTML(
             bots_names[1],
-            "Ej " + user_name + ", a ty co myślisz?",
+            curiosity_question,
             true
         );
     }
 
-    if (likes_queue.length > 0 && likes_queue[0][0] <= 0) {
-        var like = likes_queue.shift();
+    while (reactions_queue.length > 0 && reactions_queue[0][0] <= 0) {
+        var reaction = reactions_queue.shift();
 
-        addBotReaction(like[1], 0);
+        addBotReaction(reaction[1], reaction[2]);
     }
 
-    var time_to_left_chat = 330 - seconds_integer;
+    var time_to_left_chat = 490 - seconds_integer;
 
     printTimeToLeftChat(time_to_left_chat);
 
-    if (time_to_left_chat > 0 && time_to_left_chat % 60 == 0) {
+    if (time_to_left_chat > 0 && time_to_left_chat % 60 == 0 && time_to_left_chat < 470) {
         end_chat_alert_displayed = true;
 
         var minutes = Math.floor(time_to_left_chat / 60);
@@ -595,6 +692,7 @@ function incrementSeconds() {
     }
 
     if (time_to_left_chat == 0) {
+        end_chatroom = true;
         $.ajax({
             type: "POST",
             url: "../ajax/",
@@ -647,7 +745,8 @@ function incrementSeconds() {
                 hesitation: hesitation,
                 mouse_movement_seconds: mouse_movement_seconds,
                 scroll_seconds: scroll_seconds,
-                input_seconds: input_seconds
+                input_seconds: input_seconds,
+                is_chatroom_finished: 1
             },
             success: function (response) {
                 return response;
@@ -684,6 +783,82 @@ window.addEventListener("scroll", (e) => {
         scroll_sleep = true;
     }
 });
+
+window.addEventListener('beforeunload', function(e) {
+    if (end_chatroom) {
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "../ajax/",
+        async: true,
+        data: {
+            csrfmiddlewaretoken: data_from_django.token,
+            action: "like_reactions",
+            reactions: Array.from(like_reactions_memory).join(' ')
+        },
+        success: function (response) {
+            return response;
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: "../ajax/",
+        async: true,
+        data: {
+            csrfmiddlewaretoken: data_from_django.token,
+            action: "heart_reactions",
+            reactions: Array.from(heart_reactions_memory).join(' ')
+        },
+        success: function (response) {
+            return response;
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: "../ajax/",
+        async: true,
+        data: {
+            csrfmiddlewaretoken: data_from_django.token,
+            action: "angry_reactions",
+            reactions: Array.from(angry_reactions_memory).join(' ')
+        },
+        success: function (response) {
+            return response;
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: "../ajax/",
+        async: true,
+        data: {
+            csrfmiddlewaretoken: data_from_django.token,
+            action: "interactions",
+            hesitation: hesitation,
+            mouse_movement_seconds: mouse_movement_seconds,
+            scroll_seconds: scroll_seconds,
+            input_seconds: input_seconds,
+            is_chatroom_finished: 0
+        },
+        success: function (response) {
+            return response;
+        }
+    });
+
+    hesitation = 0;
+    mouse_movement_seconds = 0;
+    scroll_seconds = 0;
+    input_seconds = 0;
+
+    e.preventDefault();
+    e.returnValue = 'Na pewno chcesz opuścić chatroom? Może to uniemożliwić ukończenie badania';
+
+    return 'Na pewno chcesz opuścić chatroom? Może to uniemożliwić ukończenie badania';
+  });
 
 function openDialog() {
     dialog_box.open = true;

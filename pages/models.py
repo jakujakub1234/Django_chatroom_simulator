@@ -10,6 +10,8 @@ class Nicks(models.Model):
 class Messages(models.Model):
     qualtrics_id = models.CharField(max_length=255)
     message = models.CharField(max_length=2550)
+    prev_message = models.CharField(max_length=2550, default="DEFAULT")
+    prev_prev_message = models.CharField(max_length=2550, default="DEFAULT")
     message_time = models.IntegerField()
     message_respond_to = models.IntegerField(default=0)
     typing_time = models.IntegerField(default=0)
@@ -37,3 +39,4 @@ class Interactions(models.Model):
     mouse_movement_seconds = models.IntegerField()
     scroll_seconds = models.IntegerField()
     input_seconds = models.IntegerField()
+    is_chatroom_finished = models.IntegerField(default=0)
