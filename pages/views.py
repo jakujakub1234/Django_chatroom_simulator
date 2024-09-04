@@ -23,7 +23,8 @@ class HomePageView(TemplateView):
                 if not key.startswith("_"): # skip keys set by the django system
                     del request.session[key]
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        #TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -62,7 +63,8 @@ class LobbyPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        #TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -91,7 +93,8 @@ class ChatroomPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        #TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -182,6 +185,7 @@ class AjaxPageView(TemplateView):
                 message = request.POST.get('message'),
                 prev_message = request.POST.get('prev_message'),
                 prev_prev_message = request.POST.get('prev_prev_message'),
+                bot_response = request.POST.get('bot_response'),
                 message_time = request.POST.get('message_time'),
                 message_respond_to = request.POST.get('respond_message_id'),
                 typing_time = request.POST.get('typing_time')

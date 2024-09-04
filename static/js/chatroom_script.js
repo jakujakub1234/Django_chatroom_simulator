@@ -1,11 +1,13 @@
-function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "", respond_nick = "", is_respond_to_user=false)
+function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "", respond_nick = "", is_respond_to_user=false, is_curiosity_question = false)
 {
     prev_prev_message = prev_message;
     prev_message = current_message;
 
     current_message = "";
     
-    if (!is_bot) {
+    if (is_curiosity_question) {
+        current_message = "EXTRA: ";
+    } else if (!is_bot) {
         current_message = "PARTICIPANT: ";
     } else if (is_respond_to_user) {
         current_message = "BOT_REPLY: ";
@@ -221,7 +223,7 @@ function addBotReaction(el_id, emotion_id) {
     reactions_container.innerHTML += "<span id=" + span_id + ">" + svg + "</span>";
 }
 
-function sendDataToDatabase(action, message, message_time, nick, respond_message_id = 0) {
+function sendDataToDatabase(action, message, message_time, nick, respond_message_id = 0, bot_response) {
     var async_bool = true;
 
     if (action == "nick") {
@@ -238,6 +240,7 @@ function sendDataToDatabase(action, message, message_time, nick, respond_message
             message: message,
             prev_message: prev_message,
             prev_prev_message: prev_prev_message,
+            bot_response: bot_response,
             message_time: message_time,
             nick: nick,
             respond_message_id: respond_message_id,
@@ -276,6 +279,8 @@ function sendUserMessage() {
 
     if (user_message.match(/\w+/g).length > 1) {
         users_long_messages_counter++;
+        
+        curiosity_question_sended = true;
     }
 
     is_user_typing = false;
@@ -316,7 +321,7 @@ function sendUserMessage() {
             responding_bot = true_responding_bot;
         }
 
-        var times = [0, 4, 5, 6, 7, 15, 15, 18, 20, 20, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24];
+        var times = [0, 2, 2, 3, 3, 7, 7, 9, 10, 10, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12];
 
         if (!respond.includes("{{NEW_MESSAGE}}")) {
             var respond_len = 1;
@@ -354,7 +359,13 @@ function sendUserMessage() {
         reactions_queue.push([3, users_message_id+1, 0]);
     }
 
-    sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id);
+    var respond_to_save_to_db = respond;
+
+    if (respond_to_save_to_db == "") {
+        respond_to_save_to_db = "NONE";
+    }
+
+    sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id, respond_to_save_to_db);
 
     typing_time = 0;
 }
@@ -402,12 +413,11 @@ var data_from_django = document.getElementById('data-from-django').dataset;
 var user_name = data_from_django.nick;
 var end_chat_alert_displayed = false;
 
-/*
-TODO*/
-var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
-//var seconds = 0;
+//TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+//var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
+var seconds = 0;
 
-var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+//var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
 var is_positive = document.getElementById('data-from-django').dataset.isPositive;
 
@@ -622,6 +632,16 @@ function incrementSeconds() {
             respond_len = respond[2].match(/\w+/g).length;
         }
 
+        sendMessageHTML(
+            respond[1],
+            respond[2],
+            true,
+            respond[3],
+            user_name,
+            true
+        );
+
+        /*
         if (respond_len > 5) {
             sendMessageHTML(
                 respond[1],
@@ -640,7 +660,7 @@ function incrementSeconds() {
                 "",
                 true
             );
-        }
+        }*/
     }
 
     if (!curiosity_question_sended && draft_bots_message_id == 29) {
@@ -654,6 +674,10 @@ function incrementSeconds() {
         sendMessageHTML(
             bots_names[1],
             curiosity_question,
+            true,
+            "",
+            "",
+            false,
             true
         );
     }

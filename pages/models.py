@@ -12,6 +12,7 @@ class Messages(models.Model):
     message = models.CharField(max_length=2550)
     prev_message = models.CharField(max_length=2550, default="DEFAULT")
     prev_prev_message = models.CharField(max_length=2550, default="DEFAULT")
+    bot_response = models.CharField(max_length=2550, default="DEFAULT")
     message_time = models.IntegerField()
     message_respond_to = models.IntegerField(default=0)
     typing_time = models.IntegerField(default=0)

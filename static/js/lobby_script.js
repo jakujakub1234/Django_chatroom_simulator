@@ -1,9 +1,8 @@
-/*
-TODO*/
-var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
-//var seconds = 0;
+//TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+//var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
+var seconds = 0;
 
-var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+//var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
 var wait_time = 19;
 

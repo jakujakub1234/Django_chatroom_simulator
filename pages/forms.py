@@ -20,29 +20,34 @@ class HomeForm(forms.Form):
         key_from_qualtrics = self.cleaned_data['key_from_qualtrics']
         is_positive_manipulation = self.data['is_positive_manipulation']
 
-        key_from_qualtrics = key_from_qualtrics[:-2]
+        # TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        #key_from_qualtrics = key_from_qualtrics[:-2]
 
-        control_number = key_from_qualtrics[-5:]
+        # TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        #control_number = key_from_qualtrics[-5:]
+        control_number = key_from_qualtrics
 
-        if control_number != "76392" and control_number != "76393":
-            self._errors["key_from_qualtrics"] = ["Nieprawidłowy klucz z Qualtricsa"]
+        # TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        #if control_number != "76392" and control_number != "76393":
+        #    self._errors["key_from_qualtrics"] = ["Nieprawidłowy klucz z Qualtricsa"]
 
-        if control_number == "76392":
+        # TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        if True or control_number == "76392":
             self.data = self.data.copy()
             self.data['is_positive_manipulation'] = "True"
-        elif control_number == "76393":
+        else:# control_number == "76393":
             self.data = self.data.copy()
             self.data['is_positive_manipulation'] = "False"
-        else:
-            self._errors["key_from_qualtrics"] = ["Nieprawidłowy klucz z Qualtricsa"]
+        #else:
+        #    self._errors["key_from_qualtrics"] = ["Nieprawidłowy klucz z Qualtricsa"]
 
-        key_from_qualtrics = key_from_qualtrics[:-5]
+        # TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        #key_from_qualtrics = key_from_qualtrics[:-5]
         
-        # TODO wylaczone zabezpieczenie
+        # TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
+        #is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
 
-        is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
-
-        if is_key_in_db != None:
-            self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
+        #if is_key_in_db != None:
+        #    self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
         
         return key_from_qualtrics
