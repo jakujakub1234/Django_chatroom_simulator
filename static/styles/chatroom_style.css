@@ -12,6 +12,7 @@
   box-shadow: 3px 6px #999;
   outline-color: transparent;
   font-size: larger;
+  position: absolute;
 }
 
 #btn-submit:hover {
@@ -37,6 +38,7 @@
   text-indent: 1%;
   font-size: 18px;
   margin-right: 20px;
+  height: 50px;
 }
 
 .dot-pulse {
@@ -114,11 +116,12 @@
 .container {
   width: 90%;
   background-color: #f1f1f1;
-  border-radius: 5px;
+  border-radius: 40px;
   padding: 10px;
   margin: 10px;
   box-shadow: 6px 6px 6px 0px rgb(0 0 0 / 30%);
   border: none;
+  background-image: linear-gradient(to top, #358bcb 0%, #0763c5 100%) !important;
 }
 
 .user-container {
@@ -136,15 +139,17 @@
 }
 
 .time-left {
-  color: #828181;
+  color: #bdbdbd;
   font-family: cursive;
   font-size: smaller;
+  margin-left: 1%;
 }
 
 .time-left-user {
   color: #dddddd;
   font-family: cursive;
   font-size: smaller;
+  margin-left: 1%;
 }
 
 select {
@@ -235,11 +240,12 @@ kbd {
 }
 
 .container-respond {
-  border-radius: 0;
+  border-radius: 30px;
   width: 25%;
   background-color: #e9e6e6;
   margin-bottom: -1.5%;
   font-size: smaller;
+  background-image: linear-gradient(to top, #3d3d3d 0%, #3d3d3d 100%) !important;
 }
 
 .container-respond-user {
@@ -269,7 +275,7 @@ kbd {
 }
 
 .message-button:hover .svg-icon{
-  fill: white !important;
+  fill: black !important;
 }
 
 .respond-button {
@@ -282,7 +288,11 @@ kbd {
 
 .svg-icon {
   scale: 1.5;
-  fill: "#565D64";
+  /*fill: white;*/
+}
+
+.svg-icon-main {
+  fill: white;
 }
 
 #respond-input-box {

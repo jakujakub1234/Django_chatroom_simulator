@@ -23,8 +23,7 @@ class HomePageView(TemplateView):
                 if not key.startswith("_"): # skip keys set by the django system
                     del request.session[key]
 
-        #TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -63,8 +62,7 @@ class LobbyPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        #TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -93,8 +91,7 @@ class ChatroomPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form})
 
-        #TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -170,16 +167,22 @@ class AjaxPageView(TemplateView):
         if request.POST.get('action') == "nick":
             self.chat_ai.setNick(request.POST.get('nick'))
 
+            # TODO wylaczenie bazy
+            '''
             nick = Nicks(
                 qualtrics_id=request.session['key'],
                 nick=request.session['nick'],
                 chatroom_start=datetime.now().timestamp(),
                 is_manipulation_positive=(request.session['is_positive_manipulation']=="True")
             )
+            '''
 
-            nick.save()        
+            # TODO wylaczenie bazy
+            #nick.save()        
 
         if request.POST.get('action') == "message":
+            # TODO wylaczenie bazy
+            '''
             messages = Messages(
                 qualtrics_id = request.session['key'],
                 message = request.POST.get('message'),
@@ -190,11 +193,16 @@ class AjaxPageView(TemplateView):
                 message_respond_to = request.POST.get('respond_message_id'),
                 typing_time = request.POST.get('typing_time')
             )
+            '''
             
-            messages.save()
+            # TODO wylaczenie bazy
+            #messages.save()
         
         if request.POST.get('action') == "like_reactions":
             reactions_array = []
+
+            # TODO wylaczenie bazy
+            '''
 
             for elem in request.POST.get('reactions').split():
                 reactions_array.append({
@@ -204,9 +212,13 @@ class AjaxPageView(TemplateView):
 
             django_list = [LikeReactions(**vals) for vals in reactions_array]
             LikeReactions.objects.bulk_create(django_list)
+            '''
 
         if request.POST.get('action') == "heart_reactions":
             reactions_array = []
+
+            # TODO wylaczenie bazy
+            '''
 
             for elem in request.POST.get('reactions').split():
                 reactions_array.append({
@@ -216,10 +228,13 @@ class AjaxPageView(TemplateView):
 
             django_list = [HeartReactions(**vals) for vals in reactions_array]
             HeartReactions.objects.bulk_create(django_list)
+            '''
 
         if request.POST.get('action') == "angry_reactions":
             reactions_array = []
 
+            # TODO wylaczenie bazy
+            '''
             for elem in request.POST.get('reactions').split():
                 reactions_array.append({
                        "qualtrics_id": request.session['key'],
@@ -228,8 +243,11 @@ class AjaxPageView(TemplateView):
 
             django_list = [AngryReactions(**vals) for vals in reactions_array]
             AngryReactions.objects.bulk_create(django_list)
+            '''
             
         if request.POST.get('action') == "interactions":
+            # TODO wylaczenie bazy
+            '''
             interactions = Interactions(
                 qualtrics_id = request.session['key'],
                 hesitation = request.POST.get('hesitation'),
@@ -238,8 +256,10 @@ class AjaxPageView(TemplateView):
                 input_seconds = request.POST.get('input_seconds'),
                 is_chatroom_finished = request.POST.get('is_chatroom_finished')
             )
+            '''
             
-            interactions.save()
+            # TODO wylaczenie bazy
+            #interactions.save()
 
         return render(request, 'home.html', {'form':form})
 

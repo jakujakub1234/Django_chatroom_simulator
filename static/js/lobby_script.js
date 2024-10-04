@@ -1,8 +1,7 @@
-//TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
-//var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
-var seconds = 0;
+var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
+//var seconds = 0;
 
-//var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
 var wait_time = 19;
 
@@ -40,7 +39,7 @@ const bots_nicks = [
 const avatar_svg = `<?xml version="1.0" encoding="UTF-8"?>
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 <svg width="80px" height="80px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-    <path d="m 8 1 c -1.65625 0 -3 1.34375 -3 3 s 1.34375 3 3 3 s 3 -1.34375 3 -3 s -1.34375 -3 -3 -3 z m -1.5 7 c -2.492188 0 -4.5 2.007812 -4.5 4.5 v 0.5 c 0 1.109375 0.890625 2 2 2 h 8 c 1.109375 0 2 -0.890625 2 -2 v -0.5 c 0 -2.492188 -2.007812 -4.5 -4.5 -4.5 z m 0 0" fill="#2e3436"/>
+    <path style="fill: white; "d="m 8 1 c -1.65625 0 -3 1.34375 -3 3 s 1.34375 3 3 3 s 3 -1.34375 3 -3 s -1.34375 -3 -3 -3 z m -1.5 7 c -2.492188 0 -4.5 2.007812 -4.5 4.5 v 0.5 c 0 1.109375 0.890625 2 2 2 h 8 c 1.109375 0 2 -0.890625 2 -2 v -0.5 c 0 -2.492188 -2.007812 -4.5 -4.5 -4.5 z m 0 0" fill="#2e3436"/>
 </svg>`;
 
 const loading_circle = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
@@ -68,7 +67,7 @@ $.ajax({
     }
 });
 
-function incrementSeconds() {    
+function incrementSeconds() {   
     if (seconds > wait_time) {
         return;
     }

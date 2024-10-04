@@ -37,14 +37,16 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
     
     if (is_bot) {
         span_class = "time-left";
-        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic;">` + sending_user_name + `</span>`;
+        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic; margin-left: 1%;">` + sending_user_name + `</span>`;
 
         reactions_container_class = "reactions-container";
         reaction_modal_id = "reactions-modal";
         respond_class = "";
         extra_class = "";
         wrapper_class = "wrapper";
-        extra_style = "style=\"background-color: #f7f7f7\"";
+        //extra_style = "style=\"background-color: #f7f7f7\"";
+        //extra_style = "style=\"background-color: " + colors[sending_user_name] + "\""
+        extra_style = "";
 
         message_id = bots_message_id;
         bots_message_id++;
@@ -94,10 +96,10 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
 
       <div class="container-buttons">
         <button class="respond-button message-button" onclick="respondToMessage(this)">
-            <svg class="svg-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M607.856 320.112l-335.536-0.016 138.08-138.272-56.56-56.576L119.248 359.872l234.48 234.512 56.56-56.576-137.856-138.016 335.376 0.016c114.704 0 208.112 93.472 208.112 208.16s-95.92 208-207.92 208v80c160 0 287.92-129.2 287.92-288s-129.264-287.84-288.064-287.84z"/></svg>
+            <svg class="svg-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: white;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M607.856 320.112l-335.536-0.016 138.08-138.272-56.56-56.576L119.248 359.872l234.48 234.512 56.56-56.576-137.856-138.016 335.376 0.016c114.704 0 208.112 93.472 208.112 208.16s-95.92 208-207.92 208v80c160 0 287.92-129.2 287.92-288s-129.264-287.84-288.064-287.84z"/></svg>
         </button>
         <button class="reaction-button message-button" onclick="openReactionsModal(this)">
-            <svg class="svg-icon" width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 7.5c0 .169-.01.336-.027.5h1.005A5.5 5.5 0 1 0 8 12.978v-1.005A4.5 4.5 0 1 1 12 7.5zM5.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2 2.5c.712 0 1.355-.298 1.81-.776l.707.708A3.49 3.49 0 0 1 7.5 10.5a3.49 3.49 0 0 1-2.555-1.108l.707-.708A2.494 2.494 0 0 0 7.5 9.5zm2-2.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2.5 3h1v2h2v1h-2v2h-1v-2h-2v-1h2v-2z"/></svg>
+            <svg class="svg-icon svg-icon-main" width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 7.5c0 .169-.01.336-.027.5h1.005A5.5 5.5 0 1 0 8 12.978v-1.005A4.5 4.5 0 1 1 12 7.5zM5.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2 2.5c.712 0 1.355-.298 1.81-.776l.707.708A3.49 3.49 0 0 1 7.5 10.5a3.49 3.49 0 0 1-2.555-1.108l.707-.708A2.494 2.494 0 0 0 7.5 9.5zm2-2.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2.5 3h1v2h2v1h-2v2h-1v-2h-2v-1h2v-2z"/></svg>
         </button>
 
         <div class="reactions-modal" id="` + reaction_modal_id + `">
@@ -413,11 +415,10 @@ var data_from_django = document.getElementById('data-from-django').dataset;
 var user_name = data_from_django.nick;
 var end_chat_alert_displayed = false;
 
-//TODO SECURITY OFF WYLACZENIE ZABEZPIECZEN
-//var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
-var seconds = 0;
+var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
+//var seconds = 0;
 
-//var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
 var is_positive = document.getElementById('data-from-django').dataset.isPositive;
 
@@ -430,15 +431,16 @@ if (is_positive == "True") {
 }
 
 var seconds_counter = document.getElementById('seconds-counter');
-var submitButton = document.querySelector("#btn-submit")
+var submitButton = document.querySelector("#btn-submit");
+var msgField = document.querySelector("#msg_field");
 
 const colors = {
-    "julkakulka": "aquamarine",
-    "Kasia": "beige",
-    "pixelninja99": "silver",
-    "archi12": "darkseagreen",
-    "Bartek": "powderblue",
-    "niedzielkaa": "thistle"
+    "julkakulka": "#000080",
+    "Kasia": "#272757",
+    "pixelninja99": "#305CDE",
+    "archi12": "#B5C7EB",
+    "Bartek": "#909EAE",
+    "niedzielkaa": "#B3EBF2"
 }
 
 var bots_message_id = 1;
@@ -541,6 +543,9 @@ const dialog_box = document.getElementById("dialog-box");
 document.getElementById("msg_field").focus();
 
 function incrementSeconds() {
+    if (seconds > 30) {
+        return;
+    }
     if (seconds > 490) {
         return;
     }
@@ -607,7 +612,7 @@ function incrementSeconds() {
             bots_messages[seconds_integer][1],
             true,
             bots_messages[seconds_integer][3] ?? "",
-            bots_messages[seconds_integer][2] ?? ""
+            bots_messages[seconds_integer][2] ?? "",
             //"style=\"background-color: " + colors[bots_messages[seconds_integer][0]] + "\""
         );
 
@@ -692,7 +697,7 @@ function incrementSeconds() {
 
     printTimeToLeftChat(time_to_left_chat);
 
-    if (time_to_left_chat > 0 && time_to_left_chat % 60 == 0 && time_to_left_chat < 470) {
+    if (time_to_left_chat == 7*60 || time_to_left_chat == 2*60) {
         end_chat_alert_displayed = true;
 
         var minutes = Math.floor(time_to_left_chat / 60);
@@ -709,7 +714,7 @@ function incrementSeconds() {
         openDialog();
     }
 
-    if (time_to_left_chat == 30 && !end_chat_alert_displayed) {
+    if (false && time_to_left_chat == 30 && !end_chat_alert_displayed) {
         end_chat_alert_displayed = true;
         dialog_box.querySelector("p").innerText = "Czat zakończy się automatycznie za 30 sekund";
         openDialog();
@@ -896,3 +901,12 @@ function closeRespond() {
     respond_message_div = "";
     respond_input_box.style.display = "none";
 }
+
+var input = document.getElementById("myInput");
+
+msgField.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    submitButton.click();
+  }
+});

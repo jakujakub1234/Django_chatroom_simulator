@@ -84,11 +84,12 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': dj_database_url.config(
-#    #default='postgresql://postgres:postgres@localhost:5432/mysite',
-#    conn_max_age=600
-#)}
+# TODO wylaczenie bazy (zakomentowac)
+DATABASES = {
+    'default': dj_database_url.config(
+    default='postgresql://postgres:postgres@localhost:5432/mysite',
+    conn_max_age=600
+)}
 
 #DATABASES = {
 #    'default': {
@@ -100,15 +101,16 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 #    }
 #}
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': '104.197.57.248',
-        'USER': 'postgres',
-        'PASSWORD': 'efC3XZ3456hBCVw4Z',
-        'NAME': 'ManipulationDB'
-    }
-}
+# TODO wylaczenie bazy
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'HOST': '104.197.57.248',
+#        'USER': 'postgres',
+#        'PASSWORD': 'efC3XZ3456hBCVw4Z',
+#        'NAME': 'ManipulationDB'
+#    }
+#}
 
 #DATABASE_URL="postgres://postgres:efC3XZ3456hBCVw4Z@//cloudsql/reliable-byte-428411-d8:us-central1:manipulationpretest/ManipulationDB"
 #GS_BUCKET_NAME="reliable-byte-428411-d8_reliable-byte-428411-d8.appspot.com"

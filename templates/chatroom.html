@@ -37,7 +37,7 @@
     {% csrf_token %}
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <input type="text" placeholder="Napisz wiadomość..." name="message" id="msg_field" maxlength="250" tabindex="0">
+        <textarea type="text" placeholder="Napisz wiadomość..." name="message" id="msg_field" maxlength="250" tabindex="0"> </textarea>
         <button name="send" class="btn btn-success" id="btn-submit" tabindex="1">Wyślij</button>
       </div>
     </div>
@@ -45,7 +45,7 @@
 </div>
 
 <!-- TODO ukryć to -->
-  <div style="text-align: center;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
+  <div style="text-align: right;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
 
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
