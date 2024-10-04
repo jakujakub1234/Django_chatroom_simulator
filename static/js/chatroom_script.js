@@ -543,9 +543,6 @@ const dialog_box = document.getElementById("dialog-box");
 document.getElementById("msg_field").focus();
 
 function incrementSeconds() {
-    if (seconds > 30) {
-        return;
-    }
     if (seconds > 490) {
         return;
     }
