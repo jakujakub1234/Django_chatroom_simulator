@@ -87,7 +87,7 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
 
       <div class="container ` + extra_class + `" ` + extra_style + `>
         ` + span_user + `
-        <p data-index="` + message_id + `" class="message-p" style="font-size: large; ">` + message + `</p>
+        <p data-index="` + message_id + `" class="message-p">` + message + `</p>
         <span class="` + span_class + `">` + hour + ":" + min + `</span>
 
         <div class="reactions-container_scr ` + reactions_container_class + `">
@@ -907,3 +907,29 @@ msgField.addEventListener("keypress", function(event) {
     submitButton.click();
   }
 });
+
+// TODO prototyp
+var xdd = document.querySelector("#btn-prototype");
+var font_size_change = 0;
+var font_sizes = ["10px", "25px", "large"]
+xdd.addEventListener("click", xd);
+
+function xd() {
+    var ele = document.getElementsByClassName('message-p');
+    for (var i = 0; i < ele.length; i++ ) {
+        ele[i].style.fontSize = font_sizes[font_size_change];
+    }
+    font_size_change = (font_size_change + 1)  % 3;
+}
+
+var xdd2 = document.querySelector("#btn-prototype-2");
+xdd2.addEventListener("click", xd2);
+var layouts = ["linear-gradient(to top, #cfd9df 0%, #a6dfff 100%)", "linear-gradient(to top, #1e2323 0%, #274455 100%)"];
+var xd_colors = ["black", "white"];
+var act_layout = 0;
+
+function xd2() {
+    document.body.style.backgroundImage = layouts[act_layout];
+    document.body.style.color = xd_colors[act_layout];
+    act_layout = (act_layout + 1) % 2;
+}
