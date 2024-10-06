@@ -37,7 +37,7 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
     
     if (is_bot) {
         span_class = "time-left";
-        span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic; margin-left: 1%;">` + sending_user_name + `</span>`;
+        span_user = `<span alt="Avatar" class="right span-bot">` + sending_user_name + `</span>`;
 
         reactions_container_class = "reactions-container";
         reaction_modal_id = "reactions-modal";
@@ -123,7 +123,10 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
     window.scroll({
         top: document.body.scrollHeight,
         behavior: 'smooth'
-    });}
+    });
+
+    xd(font_size_change);
+}
 
 function respondToMessage(el) {
     var message_div = el.parentNode.parentNode.querySelector('.container');
@@ -909,17 +912,80 @@ msgField.addEventListener("keypress", function(event) {
 });
 
 // TODO prototyp
-var xdd = document.querySelector("#btn-prototype");
+var xdd = document.querySelector("#change-font-size");
 var font_size_change = 0;
-var font_sizes = ["10px", "25px", "large"]
-xdd.addEventListener("click", xd);
+xdd.addEventListener("change", function() {
+    const selectedIndex = xdd.selectedIndex;
+    xd(selectedIndex);
+  });
 
-function xd() {
-    var ele = document.getElementsByClassName('message-p');
-    for (var i = 0; i < ele.length; i++ ) {
-        ele[i].style.fontSize = font_sizes[font_size_change];
+function xd(change_index) {
+    font_size_change = change_index;
+
+    var ele = document.getElementsByClassName('time-left');
+    for (var i = 0; i < ele.length; i++) {
+        if (font_size_change == 0) {
+            ele[i].style.fontSize = "10pt";
+        }
+        if (font_size_change == 1) {
+            ele[i].style.fontSize = "13pt";
+        }
+        if (font_size_change == 2) {
+            ele[i].style.fontSize = "16pt";
+        }
     }
-    font_size_change = (font_size_change + 1)  % 3;
+
+    ele = document.getElementsByClassName('time-left-user');
+    for (var i = 0; i < ele.length; i++) {
+        if (font_size_change == 0) {
+            ele[i].style.fontSize = "10pt";
+        }
+        if (font_size_change == 1) {
+            ele[i].style.fontSize = "13pt";
+        }
+        if (font_size_change == 2) {
+            ele[i].style.fontSize = "16pt";
+        }
+    }
+
+    ele = document.getElementsByClassName('container-respond');
+    for (var i = 0; i < ele.length; i++) {
+        if (font_size_change == 0) {
+            ele[i].style.fontSize = "10pt";
+        }
+        if (font_size_change == 1) {
+            ele[i].style.fontSize = "13pt";
+        }
+        if (font_size_change == 2) {
+            ele[i].style.fontSize = "16pt";
+        }
+    }
+
+    ele = document.getElementsByClassName('message-p');
+    for (var i = 0; i < ele.length; i++) {
+        if (font_size_change == 0) {
+            ele[i].style.fontSize = "13.5pt";
+        }
+        if (font_size_change == 1) {
+            ele[i].style.fontSize = "16.5pt";
+        }
+        if (font_size_change == 2) {
+            ele[i].style.fontSize = "19.5pt";
+        }
+    }
+
+    ele = document.getElementsByClassName('span-bot');
+    for (var i = 0; i < ele.length; i++) {
+        if (font_size_change == 0) {
+            ele[i].style.fontSize = "12pt";
+        }
+        if (font_size_change == 1) {
+            ele[i].style.fontSize = "15pt";
+        }
+        if (font_size_change == 2) {
+            ele[i].style.fontSize = "17pt";
+        }
+    }
 }
 
 var xdd2 = document.querySelector("#btn-prototype-2");

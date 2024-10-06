@@ -45,11 +45,19 @@
 </div>
 
 <!-- TODO ukryć to -->
-  <div style="text-align: right;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</div>
+<div class="bottom-bar">
 
-<button name="send" class="btn btn-success" id="btn-prototype" tabindex="1">Zmień rozmiar (prototyp)</button>
+<label for="change-font-size" style="margin-top: auto; margin-bottom: auto;">Zmień rozmiar czcionki</label>
+  <select id="change-font-size">
+      <option value="0">Mały</option>
+      <option value="1">Średni</option>
+      <option value="2">Duży</option>
+  </select>
 <button name="send" class="btn btn-success" id="btn-prototype-2" tabindex="1">Zmień kolor (prototyp)</button>
 
+<span style="float: right; margin-right: 2%; padding-top: inherit;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</span>
+
+</div>
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'js/button_animation.js' %}"></script>
