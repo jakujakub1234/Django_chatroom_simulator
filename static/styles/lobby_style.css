@@ -59,3 +59,15 @@ td {
       transform: rotate(360deg);
     }
   }
+
+  body {
+    background-color: #ffffff !important;
+    color: black !important;
+  }
+  
+  p {
+    /*TODO change font*/
+    /* font-family: monospace; */
+    color: black !important;
+  
+  }
