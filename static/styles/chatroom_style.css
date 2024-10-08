@@ -130,6 +130,7 @@
   width: 90%;
   margin-left: auto;
   background-color: #3a54ff;
+  background-image: linear-gradient(to top, #3d3d3d 0%, #3d3d3d 100%) !important;
 }
 
 .container::after {
