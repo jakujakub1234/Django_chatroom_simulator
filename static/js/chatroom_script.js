@@ -992,6 +992,7 @@ var xdd2 = document.querySelector("#btn-prototype-2");
 xdd2.addEventListener("click", xd2);
 //var layouts = ["linear-gradient(to top, #cfd9df 0%, #a6dfff 100%)", "linear-gradient(to top, #1e2323 0%, #274455 100%)"];
 var layouts = ["#FFFFFF", "#222222"];
+var msg_field_colors = ["#f3f3f5", "aliceblue"]
 var xd_colors = ["black", "white"];
 var act_layout = 0;
 
@@ -999,5 +1000,7 @@ function xd2() {
     //document.body.style.backgroundImage = layouts[act_layout];
     document.body.style.backgroundColor = layouts[act_layout];
     document.body.style.color = xd_colors[act_layout];
+    msgField.style.background = msg_field_colors[act_layout];
+
     act_layout = (act_layout + 1) % 2;
 }
