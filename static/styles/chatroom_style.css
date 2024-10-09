@@ -277,7 +277,7 @@ kbd {
 }
 
 .message-button:hover .svg-icon{
-  fill: black !important;
+  fill: rgb(126, 126, 126) !important;
 }
 
 .respond-button {

@@ -126,6 +126,7 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
     });
 
     xd(font_size_change);
+    xd2(0);
 }
 
 function respondToMessage(el) {
@@ -989,18 +990,28 @@ function xd(change_index) {
 }
 
 var xdd2 = document.querySelector("#btn-prototype-2");
-xdd2.addEventListener("click", xd2);
+xdd2.addEventListener("click", function() {
+    xd2(1);
+  });
 //var layouts = ["linear-gradient(to top, #cfd9df 0%, #a6dfff 100%)", "linear-gradient(to top, #1e2323 0%, #274455 100%)"];
 var layouts = ["#FFFFFF", "#222222"];
 var msg_field_colors = ["#f3f3f5", "aliceblue"]
 var xd_colors = ["black", "white"];
-var act_layout = 0;
+var act_layout = 1;
 
-function xd2() {
+function xd2(change_index) {
+    act_layout = (act_layout + change_index) % 2;
+
     //document.body.style.backgroundImage = layouts[act_layout];
     document.body.style.backgroundColor = layouts[act_layout];
-    document.body.style.color = xd_colors[act_layout];
+    //document.body.style.color = xd_colors[act_layout];
     msgField.style.background = msg_field_colors[act_layout];
 
-    act_layout = (act_layout + 1) % 2;
+    ele = document.getElementsByClassName('svg-icon');
+    for (var i = 0; i < ele.length; i++) {
+        ele[i].style.fill = xd_colors[act_layout];
+    }
+
+    document.getElementById("user-writing").style.color = xd_colors[act_layout];
+    document.getElementById("header-text").style.color = xd_colors[act_layout];
 }
