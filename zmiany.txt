@@ -1,1 +1,62 @@
-10% margin lefit i right in homepage
+[STRONA STARTOWA]
+
+[teksty]
+
+Chatroom badania
+Uwaga! Czatu nie można opuścić, zamyka się automatycznie po około 8 minutach od dołączenia.
+Po zakończeniu czatu dostaniesz kod, który musisz wpisać w karcie, w której wypełniałeś badanie w programie Qualtrics. Pamiętaj aby nie zamknąć karty z badaniem w Qualtrics. Wpisanie kodu pozwoli Ci kontynuować badanie.
+Wyjście z chatroomu powoduje jego automatyczne zakończenie
+Do celu badania wykorzystane będą następujące informacje: Twój wybrany nick, czas wejścia do czatu, wysłane wiadomości i interakcje ze stroną.
+Informacje te będą wykorzystywane tylko w celach badania.
+Przechodząc do kolejnej strony (kilkając przycisk "Zatwierdź" lub Enter) zgadzasz się na przechowywanie w.w. danych.
+Podaj swój nick i kod z Qualtricsa, żeby dołączyć do lobby
+(Podany nick nie musi być Twoim prawdziwym imieniem, możesz w to miejsce wpisać dowolną frazę)
+Podaj swój nick:
+Podaj klucz wygenerowany w Qualtricsie:
+Nieprawidłowy klucz z Qualtricsa
+
+[przyciski]
+
+Zatwierdź
+
+[STRONY LOBBY]
+
+[teksty]
+
+Witaj {{ nick }}, poczekaj na przydzielenie do chatroomu
+Uwaga! Czatu nie można opuścić, kończy się automatycznie po około 8 minutach od dołączenia.
+Ilość osób w lobby: 2
+Czas oczekiwania: - sekund
+
+[STRONA CHATROOMU]
+
+[teksty]
+
+Uwaga
+Czat zakończy się automatycznie za 30 sekund
+OK
+{{user}} pisze
+Uwaga; Czat zakończy się automatycznie za 7 minut
+Odpowiadasz użytkownikowi {{user}}
+Odpowiedź do użytkownika {{user}}
+Czas do zakończenia czatu: {{time}}
+
+[przyciski]
+
+Wyślij
+Zmień rozmiar czcionki (Mały; Średni; Duży)
+Zmień kolor (prototyp)
+
+[KONIEC CZATU PRAWIDLOWY]
+
+[teksty]
+
+Dziękujemy za udział w czacie
+Twój kod do kontynuowania badania to:
+
+[KONIEC CZATU NIEPRAWIDLOWY]
+
+[teksty]
+
+Dziękujemy za udział w czacie
+Z powodu wyjścia z czatu przed jego zakończeniem nie możesz wrócić do badania w programie Qualtrics

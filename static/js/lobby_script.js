@@ -20,7 +20,7 @@ var time_to_another_users = [
 
 for (let i = 0; i < 7; i++) {
     if (time_to_another_users[i] > seconds) {
-        users_counter.innerText = "lość osób w lobby: " + i;
+        users_counter.innerText = "Ilość osób w lobby: " + i;
         break;
     }
 }
@@ -86,7 +86,7 @@ function incrementSeconds() {
 
     while (seconds >= time_to_another_users[users_actual_amount-1]) {
         users_actual_amount++;
-        users_counter.innerText = "lość osób w lobby: " + users_actual_amount;
+        users_counter.innerText = "Ilość osób w lobby: " + users_actual_amount;
 
         document.getElementById('bot-' + (users_actual_amount-1).toString()).innerHTML = avatar_svg + "<br>" + bots_nicks[users_actual_amount-2];
         //if (users_actual_amount < 8) {
