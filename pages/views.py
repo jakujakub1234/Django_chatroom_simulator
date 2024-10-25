@@ -9,8 +9,15 @@ from .models import LikeReactions, HeartReactions, AngryReactions
 from .models import Interactions
 from .utils import lobby_time, chatroom_time
 from .chat_ai import ChatAI
+from django.conf import settings
+import json
 
 from datetime import datetime
+
+language_code = settings.LANGUAGE_CODE
+
+with open(f'static/translations/{language_code}.json', 'r') as f:
+    translations = json.load(f)
 
 class HomePageView(TemplateView):
     template_name = "home.html"
@@ -35,7 +42,9 @@ class HomePageView(TemplateView):
             if survey_time > 1:
                 return HttpResponseRedirect("lobby")
 
-        return render(request, "home.html", {"form": form})
+        
+
+        return render(request, "home.html", {"form": form, 'translations': translations})
 
     def post(self, request, **kwargs):
         form = HomeForm(request.POST)
@@ -52,7 +61,7 @@ class HomePageView(TemplateView):
     
             return HttpResponseRedirect("/lobby/")
 
-        return render(request, 'home.html', {'form':form})
+        return render(request, 'home.html', {'form':form, 'translations': translations})
 
 class LobbyPageView(TemplateView):
     template_name = "lobby.html"
@@ -60,7 +69,7 @@ class LobbyPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form})
+            return render(request, 'home.html', {'form':form, 'translations': translations})
 
         if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -80,6 +89,9 @@ class LobbyPageView(TemplateView):
         context = super(LobbyPageView, self).get_context_data(*args,**kwargs)        
         context['nick'] = self.request.session['nick']
         context['start_timestamp'] = self.request.session['start_timestamp']
+        context['translations'] = translations
+
+        context['lobby_title'] = translations.get('lobby_title').format(nick=self.request.session['nick'])
 
         return context
 
@@ -89,7 +101,7 @@ class ChatroomPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form})
+            return render(request, 'home.html', {'form':form, 'translations': translations})
 
         if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -108,9 +120,10 @@ class ChatroomPageView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ChatroomPageView, self).get_context_data(*args,**kwargs)
         context['nick'] = self.request.session['nick']
-
         context['start_timestamp'] = self.request.session['start_timestamp'] + lobby_time
         context['is_positive_manipulation'] = self.request.session['is_positive_manipulation']
+        context['translations'] = translations
+        context['language_code'] = language_code
 
         return context
 
@@ -120,7 +133,7 @@ class EndChatPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form})
+            return render(request, 'home.html', {'form':form, 'translations': translations})
 
         if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -136,13 +149,19 @@ class EndChatPageView(TemplateView):
 
         return super(EndChatPageView, self).get(request)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(EndChatPageView, self).get_context_data(*args,**kwargs)
+        context['translations'] = translations
+
+        return context
+
 class ReturnQualtricsCodePageView(TemplateView):
     template_name = "return_qualtrics_code.html"
 
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form})
+            return render(request, 'home.html', {'form':form, 'translations': translations})
 
         if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -157,6 +176,12 @@ class ReturnQualtricsCodePageView(TemplateView):
                 return HttpResponseRedirect("../lobby")
 
         return super(ReturnQualtricsCodePageView, self).get(request)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ReturnQualtricsCodePageView, self).get_context_data(*args,**kwargs)
+        context['translations'] = translations
+
+        return context
 
 class AjaxPageView(TemplateView):
     chat_ai = ChatAI()

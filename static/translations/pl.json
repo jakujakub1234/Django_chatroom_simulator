@@ -1,0 +1,57 @@
+{
+    "title": "Chatroom badania",
+    "button_submit": "Zatwierdź",
+    "button_send": "Wyślij",
+    "OK": "OK",
+    "and": "i",
+
+    "seconds_singular": "sekunda",
+    "seconds_few": "sekundy",
+    "seconds_many": "sekund",
+    "minutes_singular": "minuta",
+    "minutes_few": "minuty",
+    "minutes_many": "minut",
+
+    "home_warning_time": "Uwaga! Czatu nie można opuścić, zamyka się automatycznie po około 8 minutach od dołączenia.",
+    "home_info_qualtrics": "Po zakończeniu czatu dostaniesz kod, który musisz wpisać w karcie, w której wypełniałeś badanie w programie Qualtrics. Pamiętaj aby nie zamknąć karty z badaniem w Qualtrics. Wpisanie kodu pozwoli Ci kontynuować badanie.",
+    "home_info_exit": "Wyjście z chatroomu powoduje jego automatyczne zakończenie",
+    "home_info_collecting_data": "Do celu badania wykorzystane będą następujące informacje: Twój wybrany nick, czas wejścia do czatu, wysłane wiadomości i interakcje ze stroną.<br>Informacje te będą wykorzystywane tylko w celach badania.<br>Przechodząc do kolejnej strony (kilkając przycisk &#8220Zatwierdź&#8221 lub Enter) zgadzasz się na przechowywanie w.w. danych.",
+    "home_info_inputs": "Podaj swój nick i kod z Qualtricsa, żeby dołączyć do lobby",
+    "home_info_nick": "(Podany nick nie musi być Twoim prawdziwym imieniem, możesz w to miejsce wpisać dowolną frazę)",
+    "home_form_nick": "Podaj swój nick:",
+    "home_form_qualtrics_key": "Podaj klucz wygenerowany w Qualtricsie:",
+    "home_error_qualtrics_key": "Nieprawidłowy klucz z Qualtricsa",
+
+    "lobby_title": "Witaj {nick}, poczekaj na przydzielenie do chatroomu",
+    "lobby_warning": "Uwaga! Czatu nie można opuścić, kończy się automatycznie po około 8 minutach od dołączenia.",
+    "lobby_users_counter": "Ilość osób w lobby: ",
+    "lobby_timer": "Czas oczekiwania: ",
+
+    "chatroom_end_dialog_warning": "Uwaga",
+    "chatroom_end_dialog_text": "Czat zakończy się automatycznie za",
+    "chatroom_user_singular_typing_text": "pisze",
+    "chatroom_user_plural_typing_text": "piszą",
+    "chatroom_user_responding_to": "Odpowiadasz użytkownikowi",
+    "chatroom_respond_to_user": "Odpowiedź do użytkownika",
+    "chatroom_time_to_end": "Czas do zakończenia czatu:",
+    "chatroom_change_font_button": "Zmień rozmiar czcionki",
+    "chatroom_font_small": "Mały",
+    "chatroom_font_medium": "Średni",
+    "chatroom_font_large": "Duży",
+    "chatroom_change_color_button": "Zmień kolor",
+    "chatroom_leaving_page_warning": "Na pewno chcesz opuścić chatroom? Może to uniemożliwić ukończenie badania",
+    "chatroom_report_box_text": "Wiadomość została zgłoszona do moderatora",
+    "chatroom_report_title": "Report message to moderator of group",
+    "chatroom_report_respect_text": "Message contains content with is not respectful",
+    "chatroom_report_hostile_text": "Message contains hostile and agressive content",
+    "chatroom_report_misinformation_text": "Message spreads misinformation",
+    
+    "ai_curiosity_question_1": "A Ty {nick} , co myślisz?",
+    "ai_curiosity_question_2": "A Ty {nick} , masz może jakiś pomysł?",
+
+    "return_qualtrics_code_title": "Dziękujemy za udział w czacie",
+    "return_qualtrics_code_text": "Twój kod do kontynuowania badania to:",
+
+    "fake_end_page_title": "Dziękujemy za udział w czacie",
+    "fake_end_page_text": "Z powodu wyjścia z czatu przed jego zakończeniem nie możesz wrócić do badania w programie Qualtrics"
+}

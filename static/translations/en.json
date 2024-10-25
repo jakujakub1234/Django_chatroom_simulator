@@ -1,0 +1,58 @@
+{
+    "title": "Welcome to the Chatroom",
+    "button_submit": "Submit",
+    "button_send": "Send",
+    "OK": "OK",
+    "and": "and",
+
+    "seconds_singular": "second",
+    "seconds_few": "seconds",
+    "seconds_many": "seconds",
+    "minutes_singular": "minute",
+    "minutes_few": "minutes",
+    "minutes_many": "minutes",
+
+    "home_warning_time": "Important! You cannot leave the chat once you join. The chat will automatically close after about 8 minutes.",
+    "home_info_qualtrics": "After the chat ends, you&#8217ll receive a unique code. Please enter this code on the Qualtrics survey page you were previously using. Do not close the Qualtrics tab, as entering the code will allow you to continue the survey.",
+    "home_info_exit": "Note: Exiting the chatroom before the end will automatically close the session.",
+    "home_info_collecting_data": "The following data will be collected for research purposes:<br>Your chosen nickname, time of entry, messages you send and your interactions with the chat interface. This data will only be used for the purpose of this study.<br>By moving to the next page (by clicking &#8220Submit&#8221 or pressing Enter), you consent to the collection and storage of this data.",
+    "home_info_inputs": "To join the chatroom lobby, please enter:",
+    "home_info_nick": "Your nickname (does not have to be your real name, feel free to use any phrase)<br>The unique key you received in Qualtrics",
+    "home_form_nick": "Enter your nickname:",
+    "home_form_qualtrics_key": "Enter your Qualtrics key:",
+    "home_error_qualtrics_key": "The key is incorrect, please enter a valid key.",
+
+    "lobby_title": "Welcome {nick}, please wait while the other participants are assigned to the chatroom.",
+    "lobby_warning": "Important: Do not leave the chat; it will automatically close approximately 8 minutes after you join.",
+    "lobby_users_counter": "Number of people in the lobby: ",
+    "lobby_timer": "Waiting time: ",
+
+    "chatroom_end_dialog_warning": "Attention",
+    "chatroom_end_dialog_text": "The chat will automatically close in",
+    "chatroom_user_singular_typing_text": "is writing",
+    "chatroom_user_plural_typing_text": "are writing",
+    "chatroom_user_responding_to": "Reply to user",
+    "chatroom_respond_to_user": "Reply to user",
+    "chatroom_time_to_end": "Time until the chat closes:",
+    "chatroom_change_font_button": "Change font size",
+    "chatroom_font_small": "Small",
+    "chatroom_font_medium": "Medium",
+    "chatroom_font_large": "Large",
+    "chatroom_change_color_button": "Change color",
+    "chatroom_leaving_page_warning": "Are you sure you want to leave the chat? This will enable you from finishing the rest of the survey.",
+    "chatroom_report_box_text": "The message has been reported to the moderator",
+    "chatroom_report_title": "Report message to moderator of group",
+    "chatroom_report_respect_text": "Message contains content with is not respectful",
+    "chatroom_report_hostile_text": "Message contains hostile and agressive content",
+    "chatroom_report_misinformation_text": "Message spreads misinformation",
+    
+    "ai_curiosity_question_1": "{nick} what do you think",
+    "ai_curiosity_question_2": "{nick} any ideas?",
+
+    "return_qualtrics_code_title": "Thank you for your participation in the chat.",
+    "return_qualtrics_code_text": "Your code to continue the study is:",
+
+    "fake_end_page_title": "Thank you for your participation in the chat.",
+    "fake_end_page_text": "Due to leaving the chat before it ended, you cannot return to the study in Qualtrics."
+
+}

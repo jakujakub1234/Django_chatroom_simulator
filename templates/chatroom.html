@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block content %}
-<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-end-url="{% url 'return_qualtrics_code' %}" data-start-timestamp = "{{ start_timestamp}}" data-is-positive = "{{ is_positive_manipulation }}" tabindex="-1">
+<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-end-url="{% url 'return_qualtrics_code' %}" data-start-timestamp = "{{ start_timestamp}}" data-is-positive = "{{ is_positive_manipulation }}" data-translations="{{ translations }}" tabindex="-1">
 </article>
 
 <h1 id="header-text" style="text-align: center; margin-top: 100px;">Chatroom</h1>
@@ -11,16 +11,22 @@
 </div>
 
 <dialog id="dialog-box">
-  <b>Uwaga</b>
-  <p>Czat zakończy się automatycznie za 30 sekund</p>
+  <b>{{ translations.chatroom_end_dialog_warning }}</b>
+  <p>{{ translations.chatroom_end_dialog_text }} 30 {{ translations.second_many }}</p>
   <br>
-  <div class="dialog-buttons"><button id="dialog-button" onclick="closeDialog()">OK</button></div>
+  <div class="dialog-buttons"><button id="dialog-button" onclick="closeDialog()">{{ translations.OK }}</button></div>
+</dialog>
+
+<dialog id="report-box">
+  <b>{{ translations.chatroom_report_box_text }}</b>
+  <br>
+  <div class="dialog-buttons"><button id="dialog-button" onclick="closeReportDialog()">{{ translations.OK }}</button></div>
 </dialog>
 
 <div class="col-3" style="margin: auto;">
   <div class="snippet" data-title="dot-pulse" style="margin: auto;">
     <div id="stage" class="stage" style="margin: auto; margin-top: 2%;  display: none;">
-      <span id="user-writing" class="user_writing" style="margin-left: 2%;">Piotrek pisze</span>
+      <span id="user-writing" class="user_writing" style="margin-left: 2%;">{{ translations.chatroom_user_typing_text }}</span>
       <span class="dot-pulse" style="margin-left: 3%; display: inline-block;"></span>
     </div>
   </div>
@@ -28,7 +34,7 @@
 
 <div id="respond-input-box" class="container container-respond" style="display: none">
   <button class="close-respond" id="close-respond" onclick="closeRespond()"></button>
-  <p id="respond-input-box-nick">Odpowiedź do użytkownika</p>
+  <p id="respond-input-box-nick">{{ translations.chatroom_respond_to_user }}</p>
   <p id="respond-input-box-message">respond_message</p>
 </div> 
 
@@ -38,7 +44,7 @@
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <textarea type="text" placeholder="Napisz wiadomość..." name="message" id="msg_field" maxlength="250" tabindex="0"> </textarea>
-        <button name="send" class="btn btn-success" id="btn-submit" tabindex="1">Wyślij</button>
+        <button name="send" class="btn btn-success" id="btn-submit" tabindex="1">{{ translations.button_send }}</button>
       </div>
     </div>
   </form>
@@ -47,22 +53,22 @@
 <!-- TODO ukryć to -->
 <div class="bottom-bar">
 
-<label for="change-font-size" style="margin-top: auto; margin-bottom: auto;">Zmień rozmiar czcionki</label>
+<label for="change-font-size" style="margin-top: auto; margin-bottom: auto;">{{ translations.chatroom_change_font_button }}</label>
   <select id="change-font-size">
-      <option value="0">Mały</option>
-      <option value="1">Średni</option>
-      <option value="2">Duży</option>
+      <option value="0">{{ translations.chatroom_font_small }}</option>
+      <option value="1">{{ translations.chatroom_font_medium }}</option>
+      <option value="2">{{ translations.chatroom_font_large }}</option>
   </select>
-<button name="send" class="btn btn-success" id="btn-prototype-2" tabindex="1">Zmień kolor (prototyp)</button>
+<button name="send" class="btn btn-success" id="btn-prototype-2" tabindex="1">{{ translations.chatroom_change_color_button }}</button>
 
-<span style="float: right; margin-right: 2%; padding-top: inherit;" id='seconds-counter'>Czas do zakończenia czatu: 4 minuty</span>
+<span style="float: right; margin-right: 2%; padding-top: inherit;" id='seconds-counter'>{{ translations.chatroom_time_to_end }}</span>
 
 </div>
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'js/button_animation.js' %}"></script>
-<script src="{% static 'js/positive_bots_messages.js' %}"></script>
-<script src="{% static 'js/negative_bots_messages.js' %}"></script>
+<script src="{% static 'js/' %}{{ language_code }}/positive_bots_messages.js"></script>
+<script src="{% static 'js/' %}{{ language_code }}/negative_bots_messages.js"></script>
 <script src="{% static 'js/chatroom_script.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'styles/chatroom_style.css' %}">

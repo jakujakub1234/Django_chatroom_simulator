@@ -1,3 +1,5 @@
+var translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
+
 function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "", respond_nick = "", is_respond_to_user=false, is_curiosity_question = false)
 {
     prev_prev_message = prev_message;
@@ -34,6 +36,7 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
     var respond_class;
     var extra_style;
     var message_id;
+    var report_modal_box = "";
     
     if (is_bot) {
         span_class = "time-left";
@@ -56,6 +59,10 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
             dict_draft_message_id_to_message_id[draft_bots_message_id-1] = bots_message_id-1;
         }
 
+        report_modal_box = `<button class="report-button message-button" onclick="openReportModal(this)">
+            <svg class="svg-icon svg-icon-main" width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.852 14.372h10.325c1.14 0 1.852 -0.819 1.852 -1.852 0 -0.309 -0.081 -0.624 -0.248 -0.912L9.609 2.597c-0.349 -0.611 -0.96 -0.939 -1.59 -0.939 -0.624 0 -1.241 0.329 -1.597 0.939l-5.173 9.017a1.775 1.775 0 0 0 -0.248 0.906c0 1.033 0.718 1.852 1.852 1.852m0.014 -1.053c-0.47 0 -0.779 -0.382 -0.779 -0.799 0 -0.121 0.02 -0.262 0.088 -0.402l5.166 -9.011c0.148 -0.255 0.416 -0.376 0.678 -0.376s0.516 0.114 0.664 0.376l5.166 9.017c0.067 0.135 0.1 0.275 0.1 0.396 0 0.416 -0.322 0.799 -0.785 0.799Zm5.152 -3.469c0.322 0 0.51 -0.188 0.516 -0.537l0.094 -3.536c0.007 -0.342 -0.262 -0.597 -0.617 -0.597 -0.362 0 -0.617 0.248 -0.611 0.59l0.087 3.543c0.006 0.342 0.195 0.537 0.53 0.537m0 2.18c0.389 0 0.724 -0.309 0.724 -0.697 0 -0.396 -0.329 -0.698 -0.724 -0.698 -0.396 0 -0.725 0.309 -0.725 0.698 0 0.382 0.335 0.697 0.725 0.697"/></svg>
+        </button>`;
+
     } else {
         span_class = "time-left-user";
         span_user = `<span alt="Avatar" class="right" style="width:100%; font-style: italic; display:none">` + sending_user_name + `</span>`;
@@ -76,7 +83,7 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
     if (respond_message != "") {
         new_message = `
             <div class="container container-respond ` + respond_class + `">
-            <p>Odpowiedź do użytkownika ` + respond_nick + `</p>
+            <p>` + translations.chatroom_respond_to_user + ` ` + respond_nick + `</p>
                 <p>` + respond_message + `</p>
             </div> 
         `;
@@ -102,6 +109,8 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
             <svg class="svg-icon svg-icon-main" width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 7.5c0 .169-.01.336-.027.5h1.005A5.5 5.5 0 1 0 8 12.978v-1.005A4.5 4.5 0 1 1 12 7.5zM5.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2 2.5c.712 0 1.355-.298 1.81-.776l.707.708A3.49 3.49 0 0 1 7.5 10.5a3.49 3.49 0 0 1-2.555-1.108l.707-.708A2.494 2.494 0 0 0 7.5 9.5zm2-2.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2.5 3h1v2h2v1h-2v2h-1v-2h-2v-1h2v-2z"/></svg>
         </button>
 
+        ` + report_modal_box + `
+
         <div class="reactions-modal" id="` + reaction_modal_id + `">
             <button class="like-button message-button" onclick="addReaction(this, 0)">
             ` + like_svg + `
@@ -111,6 +120,19 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
             </button>
             <button class="angry-button message-button" onclick="addReaction(this, 2)">
             ` + angry_svg + `
+            </button>
+        </div>
+
+        <div class="report-modal" id="report-modal-id">
+            <h3>` + translations.chatroom_report_title + `</h3>
+            <button class="report-button" id="report-button" onclick="addReport(this, 0)">
+            ` + translations.chatroom_report_respect_text + `
+            </button>
+            <button class="report-button" id="report-button" onclick="addReport(this, 1)">
+            ` + translations.chatroom_report_hostile_text + `
+            </button>
+            <button class="report-button" id="report-button" onclick="addReport(this, 2)">
+            ` + translations.chatroom_report_misinformation_text + `
             </button>
         </div>
 
@@ -140,21 +162,47 @@ function respondToMessage(el) {
         respond_message_div = message_div;
 
         respond_input_box.style.display = "block";
-        respond_input_box.querySelector("#respond-input-box-nick").innerText = "Odpowiadasz użytkownikowi " + message_div.querySelector(".right").innerText;
+        respond_input_box.querySelector("#respond-input-box-nick").innerText = translations.chatroom_user_responding_to + " " + message_div.querySelector(".right").innerText;
         respond_input_box.querySelector("#respond-input-box-message").innerText = message_div.querySelector(".message-p").innerText;
     }
 
     document.getElementById("msg_field").focus();
 }
 
-function openReactionsModal(el) {
+function closeAllModals() {
     var all_modals = document.getElementsByClassName('reactions-modal');
     
     for (var i = 0; i < all_modals.length; ++i) {
         all_modals[i].style.display = "none";  
     }
 
+    all_modals = document.getElementsByClassName('report-modal');
+    
+    for (var i = 0; i < all_modals.length; ++i) {
+        all_modals[i].style.display = "none";  
+    }
+
+}
+
+function openReactionsModal(el) {
+    closeAllModals();
+
     var modal = el.parentNode.querySelector('.reactions-modal');
+
+    if (modal == opened_modal) {
+        opened_modal = "";
+
+        return;
+    }
+
+    modal.style.display = "inherit";
+    opened_modal = modal;
+}
+
+function openReportModal(el) {
+    closeAllModals();
+
+    var modal = el.parentNode.querySelector('.report-modal');
 
     if (modal == opened_modal) {
         opened_modal = "";
@@ -210,6 +258,20 @@ function addReaction(el, emotion_id) {
                 break;
         }
     }
+}
+
+function addReport(el, report_id) {
+    /*
+        REPORT ID:
+            0 -> message contains content with is not respectful
+            1 -> message contains hostile and agressive content
+            2 -> message spreads misinformation
+    */
+    
+    // TODO dodac logowanie do bazy i (moze) usuwanie wiadomosci
+
+    report_box.open = true;
+    closeAllModals();
 }
 
 function addBotReaction(el_id, emotion_id) {
@@ -378,35 +440,35 @@ function sendUserMessage() {
 
 function printTimeToLeftChat(time_to_left_chat)
 {
-    var new_time = "Czas do zakończenia czatu: "
+    var new_time = translations.chatroom_time_to_end + " ";
     var minutes_to_end = Math.floor(time_to_left_chat / 60);
     var seconds_to_end = time_to_left_chat % 60;
 
     if (minutes_to_end > 0) {
-        var minutes_text = " minut";
+        var minutes_text = translations.minutes_many;
 
         if (minutes_to_end == 1) {
-            minutes_text = " minuta";
+            minutes_text = translations.minutes_singular;
         }
         else if (minutes_to_end < 5) {
-            minutes_text = " minuty";
+            minutes_text = translations.minutes_few;
         }
 
         new_time += minutes_to_end + " " + minutes_text;
     }
 
     if (seconds_to_end > 0) {
-        var seconds_text = " sekund";
+        var seconds_text = translations.seconds_many;
 
         if (seconds_to_end == 1) {
-            seconds_text = " sekunda";
+            seconds_text = translations.seconds_singular;
         }
         else if (seconds_to_end < 5) {
-            seconds_text = " sekundy";
+            seconds_text =  translations.seconds_few;
         }
 
         if (minutes_to_end > 0) {
-            new_time += " i ";
+            new_time += " " + translations.and + " ";
         }
 
         new_time += seconds_to_end + " " + seconds_text;
@@ -541,6 +603,7 @@ submitButton.addEventListener("click", sendUserMessage);
 const chatroom = document.getElementById("chatroom");
 const respond_input_box = document.getElementById("respond-input-box");
 const dialog_box = document.getElementById("dialog-box");
+const report_box = document.getElementById("report-box");
 
 //sendDataToDatabase("nick", "", "", user_name);
 
@@ -591,10 +654,10 @@ function incrementSeconds() {
         }
     });
 
-    var typing_text = " pisze";
+    var typing_text = " " + translations.chatroom_user_singular_typing_text;
 
     if (users_typing.length > 1) {
-        typing_text = " piszą";
+        typing_text = " " + translations.chatroom_user_plural_typing_text;
     }
 
     typing_text = users_typing.join(", ") + typing_text;
@@ -673,8 +736,8 @@ function incrementSeconds() {
         curiosity_question_sended = true;
 
         curiosity_question = [
-            "A Ty " + user_name + ", co myślisz?",
-            "A Ty " + user_name + " masz może jakiś pomysł?"
+            translations.ai_curiosity_question_1.replace("{nick}", user_name),
+            translations.ai_curiosity_question_2.replace("{nick}", user_name)
         ][0];
 
         sendMessageHTML(
@@ -702,22 +765,22 @@ function incrementSeconds() {
         end_chat_alert_displayed = true;
 
         var minutes = Math.floor(time_to_left_chat / 60);
-        var minutes_text = "minut";
+        var minutes_text = translations.minutes_many;
 
         if (minutes < 5) {
-            minutes_text = "minuty";
+            minutes_text = translations.minutes_few;
         }
         if (minutes == 1) {
-            minutes_text = "minuta"
+            minutes_text = translations.minutes_singular;
         }
 
-        dialog_box.querySelector("p").innerText = "Czat zakończy się automatycznie za " + minutes.toString() + " " + minutes_text;
+        dialog_box.querySelector("p").innerText = translations.chatroom_end_dialog_text + " " + minutes.toString() + " " + minutes_text;
         openDialog();
     }
 
     if (false && time_to_left_chat == 30 && !end_chat_alert_displayed) {
         end_chat_alert_displayed = true;
-        dialog_box.querySelector("p").innerText = "Czat zakończy się automatycznie za 30 sekund";
+        dialog_box.querySelector("p").innerText = translations.chatroom_end_dialog_text + " 30 " + translations.seconds_many;
         openDialog();
     }
 
@@ -885,9 +948,9 @@ window.addEventListener('beforeunload', function(e) {
     input_seconds = 0;
 
     e.preventDefault();
-    e.returnValue = 'Na pewno chcesz opuścić chatroom? Może to uniemożliwić ukończenie badania';
+    e.returnValue = translations.chatroom_leaving_page_warning;
 
-    return 'Na pewno chcesz opuścić chatroom? Może to uniemożliwić ukończenie badania';
+    return translations.chatroom_leaving_page_warning;
   });
 
 function openDialog() {
@@ -897,6 +960,11 @@ function openDialog() {
 function closeDialog() {
     dialog_box.open = false;
 }
+
+function closeReportDialog() {
+    report_box.open = false;
+}
+
 
 function closeRespond() {
     respond_message_div = "";

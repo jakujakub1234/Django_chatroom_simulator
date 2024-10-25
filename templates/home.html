@@ -3,38 +3,34 @@
 
 {% block content %}
 
-<h1 style="text-align: center; margin-top: 100px;">Chatroom badania</h1>
+<h1 style="text-align: center; margin-top: 100px;">{{ translations.title }}</h1>
 <h2 style="text-align: center; font-size: 1.3em;">
-    Uwaga! Czatu nie można opuścić, zamyka się automatycznie po około 8 minutach od dołączenia.
+    {{ translations.home_warning_time }}
     <br><br>
 </h2>
 <h2 style="text-align: center; font-size: 1.4em; margin-left: 10%; margin-right: 10%;">
-    <span style="color: #ff0000">Po zakończeniu czatu dostaniesz kod, który musisz wpisać w karcie, w której wypełniałeś badanie w programie Qualtrics. Pamiętaj aby nie zamknąć karty z badaniem w Qualtrics. Wpisanie kodu pozwoli Ci kontynuować badanie.</span>
+    <span style="color: #ff0000">{{ translations.home_info_qualtrics|safe }}</span>
     <br>
     <br>
 </h2>
 <h2 style="text-align: center;">
-    Wyjście z chatroomu powoduje jego automatyczne zakończenie
+    {{ translations.home_info_exit }}
     <br>
 </h2>
 
 <p style="text-align: center; font-size: small;">
-    Do celu badania wykorzystane będą następujące informacje: Twój wybrany nick, czas wejścia do czatu, wysłane wiadomości i interakcje ze stroną.
-    <br>
-    Informacje te będą wykorzystywane tylko w celach badania.
-    <br>
-    Przechodząc do kolejnej strony (kilkając przycisk "Zatwierdź" lub Enter) zgadzasz się na przechowywanie w.w. danych.
+    {{ translations.home_info_collecting_data|safe }}    
 </p>
 
-<h2 style="text-align: center; margin-top: 100px;">Podaj swój nick i kod z Qualtricsa, żeby dołączyć do lobby</h2>
+<h2 style="text-align: center; margin-top: 100px;">{{ translations.home_info_inputs }}</h2>
 <p style="text-align: center; font-size: small;">
-    (Podany nick nie musi być Twoim prawdziwym imieniem, możesz w to miejsce wpisać dowolną frazę)
+    {{ translations.home_info_nick|safe }}
 </p>
 
 <form action="/" method="post" style="text-align: center; margin-top: 50px;">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Zatwierdź" class="btn-submit" id="btn-submit">
+    <input type="submit" value="{{ translations.button_submit }}" class="btn-submit" id="btn-submit">
 </form>
 
 <script src="{% static 'js/button_animation.js' %}"></script>

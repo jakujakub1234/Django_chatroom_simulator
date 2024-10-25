@@ -282,11 +282,11 @@ kbd {
 }
 
 .respond-button {
-  margin-top: 100%;
+  margin-top: 35%;
 }
 
-.reaction-button {
-  margin-bottom: 100%;
+.report-button {
+  margin-bottom: 5%;
 }
 
 .svg-icon {
@@ -343,6 +343,18 @@ kbd {
   margin-left: -40px;
 }
 
+#report-modal-id {
+  display: none;
+  position: absolute;
+  background: #bce9d9;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 10px;
+  margin-top: 20px;
+  margin-left: 40px;
+  padding: 10px;
+  z-index: 9000;
+}
+
 .close-respond {
   border: aliceblue;
   float: right;
@@ -391,4 +403,49 @@ kbd {
   justify-content: center;
   gap: 10px;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+}
+
+#btn-prototype-2 {
+  margin-top: 16px;
+  border: none;
+  height: 40px; 
+  border-radius: 5px;
+  box-shadow: 3px 6px #999;
+  outline-color: transparent;
+  font-size: medium;
+  margin-left: 15px;
+}
+
+#btn-prototype-2:hover {
+  background-color: rgb(193, 200, 207);
+}
+
+#btn-prototype-2:active {
+  background-color: rgb(193, 200, 207);
+  box-shadow: 1px 3px #666;
+  transform: translateY(4px);
+}
+
+#report-button {
+  border: none;
+  height: 40px; 
+  border-radius: 5px;
+  box-shadow: 3px 6px #999;
+  outline-color: transparent;
+  font-size: medium;
+}
+
+#report-button:hover {
+  background-color: rgb(193, 200, 207);
+}
+
+#report-button:active {
+  background-color: rgb(193, 200, 207);
+  box-shadow: 1px 3px #666;
+  transform: translateY(4px);
+}
+
+#report-box {
+  text-align: center;
+  z-index: 10000;
 }
