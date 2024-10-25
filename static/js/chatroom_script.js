@@ -124,7 +124,7 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
         </div>
 
         <div class="report-modal" id="report-modal-id">
-            <h3>` + translations.chatroom_report_title + `</h3>
+            <h3 style="color: black">` + translations.chatroom_report_title + `</h3>
             <button class="report-button" id="report-button" onclick="addReport(this, 0)">
             ` + translations.chatroom_report_respect_text + `
             </button>
@@ -500,13 +500,21 @@ var seconds_counter = document.getElementById('seconds-counter');
 var submitButton = document.querySelector("#btn-submit");
 var msgField = document.querySelector("#msg_field");
 
-const colors = {
-    "julkakulka": "#000080",
-    "Kasia": "#272757",
-    "pixelninja99": "#305CDE",
-    "archi12": "#B5C7EB",
-    "Bartek": "#909EAE",
-    "niedzielkaa": "#B3EBF2"
+const bots_nicks = translations.bots_nicks.split(";");
+
+const only_colors = [
+    "#000080",
+    "#272757",
+    "#305CDE",
+    "#B5C7EB",
+    "#909EAE",
+    "#B3EBF2"
+]
+
+var colors = {};
+
+for (let i = 0; i < bots_nicks.length; i++) {
+    colors[bots_nicks[i]] = only_colors[i];
 }
 
 var bots_message_id = 1;

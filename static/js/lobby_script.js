@@ -29,14 +29,7 @@ for (let i = 0; i < 7; i++) {
 
 var data_from_django = document.getElementById('data-from-django').dataset;
 
-const bots_nicks = [
-    "julkakulka",
-    "Kasia",
-    "pixelninja99",
-    "archi12",
-    "Bartek",
-    "niedzielkaa"
-];
+const bots_nicks = translations.bots_nicks.split(";");
 
 const avatar_svg = `<?xml version="1.0" encoding="UTF-8"?>
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->

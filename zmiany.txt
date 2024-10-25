@@ -6,3 +6,6 @@ user może wybrać 3 opcje: message contains content with is not respectful, mes
 
 po reporcie jest komunikat że "wiadomosc zostala zglsozona do moderatora" czy cos
 i MOŻE po 2-3 sekundach wiadomość zostaje usunieta
+
+TODO
+logowanie wybranej wersji jezykowej
