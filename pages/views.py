@@ -7,6 +7,7 @@ from .models import Nicks
 from .models import Messages
 from .models import LikeReactions, HeartReactions, AngryReactions
 from .models import Interactions
+from .models import Reports
 from .utils import lobby_time, chatroom_time
 from .chat_ai import ChatAI
 from django.conf import settings
@@ -198,7 +199,8 @@ class AjaxPageView(TemplateView):
                 qualtrics_id=request.session['key'],
                 nick=request.session['nick'],
                 chatroom_start=datetime.now().timestamp(),
-                is_manipulation_positive=(request.session['is_positive_manipulation']=="True")
+                is_manipulation_positive=(request.session['is_positive_manipulation']=="True"),
+                language_version=language_code
             )
             '''
 
@@ -279,12 +281,26 @@ class AjaxPageView(TemplateView):
                 mouse_movement_seconds = request.POST.get('mouse_movement_seconds'),
                 scroll_seconds = request.POST.get('scroll_seconds'),
                 input_seconds = request.POST.get('input_seconds'),
-                is_chatroom_finished = request.POST.get('is_chatroom_finished')
+                is_chatroom_finished = request.POST.get('is_chatroom_finished'),
+                chatroom_exit_time = request.POST.get('chatroom_exit_time'),
             )
             '''
             
             # TODO wylaczenie bazy
             #interactions.save()
+
+        if request.POST.get('action') == "reports":
+            # TODO wylaczenie bazy
+            '''
+            reports = Reports(
+                qualtrics_id = request.session['key'],
+                message_id = request.POST.get('message_id'),
+                report_id = request.POST.get('report_id')
+            )
+            '''
+            
+            # TODO wylaczenie bazy
+            #reports.save()
 
         return render(request, 'home.html', {'form':form})
 

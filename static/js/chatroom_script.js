@@ -78,10 +78,10 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
         users_message_id--;
     }
 
-    var new_message = "";
+    var new_message = `<div class="` + wrapper_class + `-outside">`;
 
     if (respond_message != "") {
-        new_message = `
+        new_message += `
             <div class="container container-respond ` + respond_class + `">
             <p>` + translations.chatroom_respond_to_user + ` ` + respond_nick + `</p>
                 <p>` + respond_message + `</p>
@@ -137,6 +137,7 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
         </div>
 
       </div>
+    </div>
     </div>
     `;
 
@@ -272,6 +273,26 @@ function addReport(el, report_id) {
 
     report_box.open = true;
     closeAllModals();
+
+    var message_id = el.parentNode.parentNode.parentNode.parentNode.querySelector(".message-p").dataset.index;
+
+    $.ajax({
+        type: "POST",
+        url: "../ajax/",
+        async: true,
+        data: {
+            csrfmiddlewaretoken: data_from_django.token,
+            action: "reports",
+            message_id: message_id,
+            report_id, report_id
+        },
+        success: function (response) {
+            return response;
+        }
+    });
+
+    reports_remove_messages_queue.push([Math.floor(Math.random() * 5) + 4, message_id]);
+    reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
 }
 
 function addBotReaction(el_id, emotion_id) {
@@ -485,6 +506,7 @@ var start_timestamp = parseInt(document.getElementById('data-from-django').datas
 //var seconds = 0;
 
 var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+console.log(seconds);
 
 var is_positive = document.getElementById('data-from-django').dataset.isPositive;
 
@@ -595,6 +617,7 @@ var bots_names = Object.keys(colors);
 
 var responds_queue = [];
 var reactions_queue = [];
+var reports_remove_messages_queue = [];
 var dict_draft_message_id_to_message_id = {};
 
 var respond_message_div = "";
@@ -645,6 +668,7 @@ function incrementSeconds() {
 
     responds_queue.every((respond) => respond[0]--);
     reactions_queue.every((reaction) => reaction[0]--);
+    reports_remove_messages_queue.every((reaction) => reaction[0]--);
 
     var users_typing = [];
 
@@ -765,6 +789,12 @@ function incrementSeconds() {
         addBotReaction(reaction[1], reaction[2]);
     }
 
+    while (reports_remove_messages_queue.length > 0 && reports_remove_messages_queue[0][0] <= 0) {
+        var report_el = reports_remove_messages_queue.shift();
+        
+        document.querySelector("[data-index='" + report_el[1] + "']").parentNode.parentNode.parentNode.style.display = 'none';
+    }
+
     var time_to_left_chat = 490 - seconds_integer;
 
     printTimeToLeftChat(time_to_left_chat);
@@ -847,7 +877,8 @@ function incrementSeconds() {
                 mouse_movement_seconds: mouse_movement_seconds,
                 scroll_seconds: scroll_seconds,
                 input_seconds: input_seconds,
-                is_chatroom_finished: 1
+                is_chatroom_finished: 1,
+                chatroom_exit_time: seconds
             },
             success: function (response) {
                 return response;
@@ -943,7 +974,8 @@ window.addEventListener('beforeunload', function(e) {
             mouse_movement_seconds: mouse_movement_seconds,
             scroll_seconds: scroll_seconds,
             input_seconds: input_seconds,
-            is_chatroom_finished: 0
+            is_chatroom_finished: 0,
+            chatroom_exit_time: seconds
         },
         success: function (response) {
             return response;

@@ -6,6 +6,7 @@ class Nicks(models.Model):
     nick = models.CharField(max_length=255)
     is_manipulation_positive = models.BooleanField(default=True)
     chatroom_start = models.DateTimeField(auto_now_add=True)
+    language_version = models.CharField(max_length=32, default="pl")
 
 class Messages(models.Model):
     qualtrics_id = models.CharField(max_length=255)
@@ -41,3 +42,9 @@ class Interactions(models.Model):
     scroll_seconds = models.IntegerField()
     input_seconds = models.IntegerField()
     is_chatroom_finished = models.IntegerField(default=0)
+    chatroom_exit_time = models.IntegerField(default=0)
+
+class Reports(models.Model):
+    qualtrics_id = models.CharField(max_length=255)
+    message_id = models.IntegerField()
+    report_id = models.IntegerField()
