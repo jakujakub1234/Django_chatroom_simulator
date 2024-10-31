@@ -449,3 +449,7 @@ kbd {
   text-align: center;
   z-index: 10000;
 }
+
+.moderator-nick {
+  color: red !important;
+}

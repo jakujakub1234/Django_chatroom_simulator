@@ -1,6 +1,6 @@
 var translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
 
-function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "", respond_nick = "", is_respond_to_user=false, is_curiosity_question = false)
+function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "", respond_nick = "", is_respond_to_user=false, is_curiosity_question = false, is_moderator = false)
 {
     prev_prev_message = prev_message;
     prev_message = current_message;
@@ -13,7 +13,9 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
         current_message = "PARTICIPANT: ";
     } else if (is_respond_to_user) {
         current_message = "BOT_REPLY: ";
-    } else {
+    } else if (is_moderator) {
+        current_message = "MODERATOR: ";
+    }else {
         current_message = "STABLE: ";
     }
 
@@ -37,10 +39,15 @@ function sendMessageHTML(sending_user_name, message, is_bot, respond_message = "
     var extra_style;
     var message_id;
     var report_modal_box = "";
+    var span_user_extra_class = "";
+
+    if (is_moderator) {
+        span_user_extra_class = "moderator-nick";
+    }
     
     if (is_bot) {
         span_class = "time-left";
-        span_user = `<span alt="Avatar" class="right span-bot">` + sending_user_name + `</span>`;
+        span_user = `<span alt="Avatar" class="right span-bot ` + span_user_extra_class + `" >` + sending_user_name + `</span>`;
 
         reactions_container_class = "reactions-container";
         reaction_modal_id = "reactions-modal";
@@ -269,12 +276,13 @@ function addReport(el, report_id) {
             2 -> message spreads misinformation
     */
     
-    // TODO dodac logowanie do bazy i (moze) usuwanie wiadomosci
+    var report_times_based_on_id = [3, 3, 4]
 
     report_box.open = true;
     closeAllModals();
 
     var message_id = el.parentNode.parentNode.parentNode.parentNode.querySelector(".message-p").dataset.index;
+    var bot_nick = el.parentNode.parentNode.parentNode.parentNode.querySelector(".span-bot").innerText;
 
     $.ajax({
         type: "POST",
@@ -291,7 +299,7 @@ function addReport(el, report_id) {
         }
     });
 
-    reports_remove_messages_queue.push([Math.floor(Math.random() * 5) + 4, message_id]);
+    reports_remove_messages_queue.push([report_times_based_on_id[report_id], message_id, bot_nick, report_id]);
     reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
 }
 
@@ -365,6 +373,14 @@ jQuery.extend({
 function sendUserMessage() {
     var user_message = document.getElementById("msg_field").value;
     document.getElementById("msg_field").value = "";
+
+    for (var word of user_message.replace(/[^\w\s\']|_/g, "").replace(/\s+/g, " ").toLowerCase().split(" ")) {
+        if (curse_words.has(word)) {
+            reports_remove_messages_queue.push([3, -1, user_name, 0]);
+            reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
+        }
+    }
+
 
     if (user_message.match(/\w+/g).length > 1) {
         users_long_messages_counter++;
@@ -506,7 +522,6 @@ var start_timestamp = parseInt(document.getElementById('data-from-django').datas
 //var seconds = 0;
 
 var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
-console.log(seconds);
 
 var is_positive = document.getElementById('data-from-django').dataset.isPositive;
 
@@ -538,6 +553,20 @@ var colors = {};
 for (let i = 0; i < bots_nicks.length; i++) {
     colors[bots_nicks[i]] = only_colors[i];
 }
+
+var respect_reports_dict = {};
+var hostile_reports_dict = {};
+var misinformation_reports_dict = {};
+
+var reports_messages_size = 4;
+
+for (let i = 0; i < bots_nicks.length; i++) {
+    respect_reports_dict[bots_nicks[i]] = 0;
+    hostile_reports_dict[bots_nicks[i]] = 0;
+    misinformation_reports_dict[bots_nicks[i]] = 0;
+}
+
+respect_reports_dict[user_name] = -99999;
 
 var bots_message_id = 1;
 var draft_bots_message_id = 1;
@@ -791,8 +820,79 @@ function incrementSeconds() {
 
     while (reports_remove_messages_queue.length > 0 && reports_remove_messages_queue[0][0] <= 0) {
         var report_el = reports_remove_messages_queue.shift();
+        var bot_nick = report_el[2];
+
+        if (report_el[3] == 0) { // RESPECT REPORT
+            respect_reports_dict[bot_nick] += 1
+
+            if (respect_reports_dict[bot_nick] <= 1) {
+                sendMessageHTML(
+                    translations.chatroom_moderator_nick,
+                    translations["chatroom_moderator_respect_first_time_" + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", report_el[2]),
+                    true,
+                    "",
+                    "",
+                    false,
+                    false,
+                    true
+                )
+            }
+
+            else if (respect_reports_dict[bot_nick] == 2) {
+                sendMessageHTML(
+                    translations.chatroom_moderator_nick,
+                    translations["chatroom_moderator_respect_second_time_" + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", report_el[2]),
+                    true,
+                    "",
+                    "",
+                    false,
+                    false,
+                    true
+                )
+            }
+
+            else {
+                document.querySelector("[data-index='" + report_el[1] + "']").parentNode.parentNode.parentNode.style.display = 'none';
+            }
+        }
         
-        document.querySelector("[data-index='" + report_el[1] + "']").parentNode.parentNode.parentNode.style.display = 'none';
+        if (report_el[3] == 1) { // HOSTILE REPORT
+            hostile_reports_dict[bot_nick] += 1
+
+            if (hostile_reports_dict[bot_nick] == 1) {
+                sendMessageHTML(
+                    translations.chatroom_moderator_nick,
+                    translations["chatroom_moderator_hostile_first_time_" + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", report_el[2]),
+                    true,
+                    "",
+                    "",
+                    false,
+                    false,
+                    true
+                )
+            }
+
+            else if (hostile_reports_dict[bot_nick] == 2) {
+                sendMessageHTML(
+                    translations.chatroom_moderator_nick,
+                    translations["chatroom_moderator_hostile_second_time_" + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", report_el[2]),
+                    true,
+                    "",
+                    "",
+                    false,
+                    false,
+                    true
+                )
+            }
+
+            else {
+                document.querySelector("[data-index='" + report_el[1] + "']").parentNode.parentNode.parentNode.style.display = 'none';
+            }
+        }
+
+        if (report_el[3] == 2) { // MISINFORMATION REPORT
+            document.querySelector("[data-index='" + report_el[1] + "']").parentNode.parentNode.parentNode.style.display = 'none';
+        }
     }
 
     var time_to_left_chat = 490 - seconds_integer;

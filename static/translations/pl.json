@@ -46,7 +46,25 @@
     "chatroom_report_respect_text": "Wiadomość zawiera treść, która wyraża brak szacunku",
     "chatroom_report_hostile_text": "Wiadomość zawiera wulgarne i agresywne treści",
     "chatroom_report_misinformation_text": "Wiadomość rozpowszechnia błędne lub fałszywe informacje",
-    
+
+    "chatroom_moderator_nick": "Moderator",
+    "chatroom_moderator_respect_first_time_1": "Trzymajmy nasze rozmowy na poziomie konstruktywnym @{nick}! Pamiętaj, aby komunikować się z szacunkiem, zgodnie z zasadami naszej grupy.",
+    "chatroom_moderator_respect_first_time_2": "Cenimy sobie tutaj pełne szacunku dyskusje @{nick}",
+    "chatroom_moderator_respect_first_time_3": "@{nick} Proszę pamiętać, że komunikacja pełna szacunku jest kluczowa w naszej grupie. Dbajmy o to, by nasze wiadomości były uprzejme!",
+    "chatroom_moderator_respect_first_time_4": "Zachęcamy do stosowania pełnego szacunku tonu we wszystkich interakcjach. @{nick}. Proszę o zwrócenie uwagi na dobór słów, aby grupa była przyjemna dla wszystkich.",
+    "chatroom_moderator_respect_second_time_1": "Przypomnienie @{nick}: zachowujmy szacunek w naszych rozmowach, aby tworzyć przyjazne środowisko.",
+    "chatroom_moderator_respect_second_time_2": "Przypominam @{nick}! Pracujmy razem, aby nasze wiadomości były pełne szacunku i uprzejmości wobec wszystkich członków.",
+    "chatroom_moderator_respect_second_time_3": "Pamiętaj, że nasza grupa ceni sobie pełną szacunku komunikację. To już twoje drugie przypomnienie @{nick}.",
+    "chatroom_moderator_respect_second_time_4": "@{nick} kontynuując rozmowę miej to na uwadze podstawowe zasady związane z szacunkiem.",
+    "chatroom_moderator_hostile_first_time_1": "Proszę zwrócić uwagę na zasady grupy. Dbajmy o to, by przestrzeń była bezpieczna dla wszystkich uczestników. To jest Twoje pierwsze ostrzeżenie @{nick}.",
+    "chatroom_moderator_hostile_first_time_2": "Pierwsze upomnienie @{nick}: wrogi język nie jest zgodny ze standardami naszego czatu.",
+    "chatroom_moderator_hostile_first_time_3": "To jest Twoje pierwsze ostrzeżenie @{nick}. Kolejne wrogie wiadomości mogą prowadzić do dodatkowych działań.",
+    "chatroom_moderator_hostile_first_time_4": "Pierwsze upomnienie @{nick}: Proszę pamiętać, że wrogi język jest sprzeczny z naszymi zasadami. Dbajmy o cywilizowany ton, aby każdy czuł się mile widziany.",
+    "chatroom_moderator_hostile_second_time_1": "To jest Twoje drugie ostrzeżenie @{nick}. Prosimy o dostosowanie tonu wiadomości, aby uniknąć dalszej eskalacji. Dziękujemy za współpracę!",
+    "chatroom_moderator_hostile_second_time_2": "Wrogie komentarze nie są tolerowane @{nick}. Dbajmy o to, aby nasz czat był bezpieczną przestrzenią dla wszystkich.",
+    "chatroom_moderator_hostile_second_time_3": "Przypomnienie, że nasza grupa ma politykę zerowej tolerancji wobec takiego języka. Prosimy o dostosowanie stylu komunikacji @{nick}.",
+    "chatroom_moderator_hostile_second_time_4": "Drugie ostrzeżenie @{nick}: pisanie takich wiadomości spowoduje usunięcie dalszych komentarzy. Dążymy do stworzenia bezpiecznej przestrzeni.",
+
     "ai_curiosity_question_1": "A Ty {nick} , co myślisz?",
     "ai_curiosity_question_2": "A Ty {nick} , masz może jakiś pomysł?",
 
