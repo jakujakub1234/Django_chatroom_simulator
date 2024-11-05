@@ -276,7 +276,7 @@ function addReport(el, report_id) {
             2 -> message spreads misinformation
     */
     
-    var report_times_based_on_id = [3, 3, 4]
+    var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
 
     report_box.open = true;
     closeAllModals();
@@ -299,7 +299,7 @@ function addReport(el, report_id) {
         }
     });
 
-    reports_remove_messages_queue.push([report_times_based_on_id[report_id], message_id, bot_nick, report_id]);
+    reports_remove_messages_queue.push([random_time, message_id, bot_nick, report_id]);
     reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
 }
 
@@ -376,7 +376,7 @@ function sendUserMessage() {
 
     for (var word of user_message.replace(/[^\w\s\']|_/g, "").replace(/\s+/g, " ").toLowerCase().split(" ")) {
         if (curse_words.has(word)) {
-            reports_remove_messages_queue.push([3, -1, user_name, 0]);
+            reports_remove_messages_queue.push([Math.floor(Math.random() * (25 - 15 + 1)) + 15, -1, user_name, 0]);
             reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
         }
     }
