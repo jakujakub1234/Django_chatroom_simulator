@@ -3,6 +3,9 @@ import random
 import os
 import json
 import string
+from django.conf import settings
+
+language_code = settings.LANGUAGE_CODE
 
 class Gender(Enum):
     MALE=1
@@ -27,7 +30,7 @@ class ChatAI:
             "niedzielkaa"
         ]
 
-        keywords = open(os.path.join(module_dir, 'jsons_for_ai/keywords.json'))
+        keywords = open(os.path.join(module_dir, f'jsons_for_ai/{language_code}/keywords.json'))
         keywords = json.load(keywords)
 
         self.questions = keywords["questions"]
@@ -44,7 +47,7 @@ class ChatAI:
         self.vowels = "aeoiuy"
         self.consonants = "qwrtpsdfghjklzxcvbnm"
 
-        self.responds = open(os.path.join(module_dir, 'jsons_for_ai/responds.json'))
+        self.responds = open(os.path.join(module_dir, f'jsons_for_ai/{language_code}/responds.json'))
         self.responds = json.load(self.responds)
 
         self.what_should_we_do_counter = 0

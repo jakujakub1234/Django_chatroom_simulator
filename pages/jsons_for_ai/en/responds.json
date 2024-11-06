@@ -1,0 +1,85 @@
+{
+    "SPAM": [
+        "lol",
+        "....",
+        "ok...",
+        "xd"
+    ],
+    "GIBBERISH": [
+        "?",
+        "...",
+        "I don't get it",
+        "ok?..",
+        "🤔",
+        "???", 
+        "what are you saying?...", 
+        "I'm not sure if we are being evaluated here {NEW_MESSAGE}} so maybe it would make sense to write something that makes sense?", 
+        "It would be nice if you wrote something that makes sense? 😃", 
+        "xd?"
+    ],
+    "TL_DR": [
+        "tl;dr",
+        "can you summarize this? :)"
+    ],
+    "QUESTION": [
+        "🤔",
+        "hmm... maybe?", 
+        ":P", 
+        "good question", 
+        "I think it may depend", 
+        "right? XD",
+        "xd",
+        "I'm not sure",
+        "I was thinking the same thing",
+        "Yeah same",
+        "hm..."
+    ],
+    "GREETINGS": [
+        "Hi", 
+        "Hey!",
+        "Wazzup!",
+        "what's up",
+        "Ello!",
+        ":)"
+    ],
+    "FAREWELLS": [
+        "See ya", 
+        "bye", 
+        "it was a pleasure :P",
+        "Thanks for the chat! Bye :)"
+    ],
+    "WHAT_SHOULD_WE_DO": [
+        "We are supposed to talk about inclusive education",
+		"probably give some ideas on how to improve the system so that no one is excluded",
+		"Tell us what do you think about inclusive education"
+    ],
+    "GENERIC": [
+        "🤔",
+        "makes sense",
+        "It depends on the context",
+        "It may be worth considering" ,
+        "It's hard to say unequivocally",
+        "It could be different",
+        "it's all complicated..",
+        "xd", 
+        "well, I don't know", 
+        "I don't know what to think about it", 
+        "can you elaborate on the thought?",
+        "cool that you point this out", 
+        "fair point", 
+        "very interesting", 
+        "What do you mean?", 
+        "can you explain?", 
+        "well not bad", 
+        "oh well ❤️", 
+	    "xd exactly..."
+    ],
+    "EXPLAIN_MORE": [
+		"can you elaborate?",
+		"would love to hear how exactly you see it"],
+		
+    "CURIOSITY_QUESTIONS": [
+		"and you {{nick}}, what do you think?",
+		" {{nick}} any idea's?"
+	]
+}
