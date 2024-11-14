@@ -28,6 +28,7 @@
     "lobby_users_counter": "Ilość osób w lobby: ",
     "lobby_timer": "Czas oczekiwania: ",
 
+    "chatroom_input_placeholder": "Napisz wiadomość...",
     "chatroom_end_dialog_warning": "Uwaga",
     "chatroom_end_dialog_text": "Czat zakończy się automatycznie za",
     "chatroom_user_singular_typing_text": "pisze",

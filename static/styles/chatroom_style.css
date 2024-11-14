@@ -219,6 +219,8 @@ kbd {
 #dialog-box {
   text-align: center;
   z-index: 1000;
+  background-color: #333333;
+  color: white;
 }
 
 #dialog-button {
@@ -448,6 +450,8 @@ kbd {
 #report-box {
   text-align: center;
   z-index: 10000;
+  background-color: #333333;
+  color: white;
 }
 
 .moderator-nick {
