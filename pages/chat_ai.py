@@ -33,8 +33,8 @@ class ChatAI:
         keywords = open(os.path.join(module_dir, f'jsons_for_ai/{language_code}/keywords.json'))
         keywords = json.load(keywords)
 
-        self.questions = keywords["questions"]
-        self.what_should_we_do = keywords["what_should_we_do"]
+        self.questions = keywords["QUESTIONS"]
+        self.what_should_we_do = keywords["WHAT_SHOULD_WE_DO"]
 
         self.never_existing_2_letters = set([
             'vq', 'qa', 'nq', 'hq', 'cv', 'dq', 'vk', 'vb', 'xg', 'vv', 'qh', 'xt', 'qv', 'vx', 'qe', 'cf', 'vh', 'qf', 'xl', 'bq', 'eq', 'vp', 'cx', 'uv', 'qr', 'fq', 'wv', 'hx', 'qb', 'jx', 'gv', 'px', 'tx', 'xj', 'fx', 'qp', 'xz', 'lx', 'fj', 'tv', 'vm', 'tq', 'xs', 'xw', 'yx', 'mq', 'qi', 'oq', 'yv', 'qw', 'sv', 'qy', 'zv', 'xk', 'qk', 'sx', 'pz', 'kx', 'qj', 'lv', 'vf', 'xv', 'rv', 'vg', 'qt', 'zq', 'qx', 'qc', 'rq', 'vj', 'xr', 'vw', 'vs', 'dx', 'mv', 'lq', 'ev', 'uq', 'xn', 'yq', 'xc', 'rx', 'vd', 'xh', 'pq', 'kq', 'vn', 'qg', 'cq', 'qz', 'wq', 'jv', 'dv', 'vc', 'pv', 'xf', 'sq', 'xm', 'bv', 'vr', 'vt', 'ql', 'qo', 'gx', 'gq', 'zx', 'aq', 'qn', 'wx', 'qm', 'fv', 'jq', 'xq', 'nv', 'kv', 'hv', 'vl', 'nx', 'xx', 'hf', 'bx', 'mx', 'xb', 'qs', 'qd', 'vz', 'fz', 'qq', 'kz'
@@ -50,7 +50,18 @@ class ChatAI:
         self.responds = open(os.path.join(module_dir, f'jsons_for_ai/{language_code}/responds.json'))
         self.responds = json.load(self.responds)
 
+        self.responds_in_specific_place = open(os.path.join(module_dir, f'jsons_for_ai/{language_code}/responds_in_specific_place.json'))
+        self.responds_in_specific_place = json.load(self.responds_in_specific_place)
+
         self.what_should_we_do_counter = 0
+
+        self.keywords_from_excel = {}
+
+        self.MAX_EXCEL_INEDX = 361
+
+        for i in range(self.MAX_EXCEL_INEDX + 1):
+            if str(i) in keywords:
+                self.keywords_from_excel[str(i)] = keywords[str(i)]
 
     def preprocessMessage(self, message):
         message = message.lower()
@@ -63,6 +74,7 @@ class ChatAI:
         message = message.replace("ź","z")
         message = message.replace("ć","c")
         message = message.replace("ń","n")
+        message = message.replace("ł","l")
 
         message = message.translate(str.maketrans('', '', string.punctuation)) # TODO maybe not best idea, user can forgot about space after comma
 
@@ -140,6 +152,16 @@ class ChatAI:
 
         if len(message) > 300:
             return self.responds["TL_DR"]
+        
+        for key in self.keywords_from_excel:
+            tmp_keywords = self.keywords_from_excel[key]
+            
+            for tmp_keyword in tmp_keywords:
+                if tmp_keyword in message:
+                    if key in self.responds_in_specific_place and int(key)-2 == prev_message_id:
+                        return self.responds_in_specific_place[key]
+                    if key in self.responds:
+                        return self.responds[key]
 
         if prev_message_id > 11 and prev_message_id < 17 and self.what_should_we_do_counter < 3:
             if any(what_should_we_do_elem in message for what_should_we_do_elem in self.what_should_we_do):
@@ -152,7 +174,7 @@ class ChatAI:
                 return self.responds["EXPLAIN_MORE"]
 
         if any(question in message.split() for question in self.questions) or "?" in message:
-            return self.responds["QUESTION"]
+            return self.responds["QUESTIONS"]
 
         return self.responds["GENERIC"]
 
