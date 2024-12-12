@@ -1,12 +1,12 @@
 {
-    "greetings": [
+    "GREETINGS": [
         "hey",
         "hello",
         "hi",
         "hi everyone",
         "ello"
     ],
-    "questions": [
+    "QUESTIONS": [
         "if",
         "whether",
         "why",
@@ -16,12 +16,12 @@
         "how",
         "?"
     ],
-    "farewells": [
+    "FAREWELLS": [
         "see ya",
         "see you",
         "bye"
     ],
-    "what_should_we_do": [
+    "WHAT_SHOULD_WE_DO": [
         "what should we do",
         "wat should we do",
         "what are we supposed to do",
