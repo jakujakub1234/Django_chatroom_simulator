@@ -4,7 +4,6 @@ import os
 import json
 import string
 from django.conf import settings
-import requests
 
 language_code = settings.LANGUAGE_CODE
 
@@ -131,32 +130,6 @@ class ChatAI:
         return random.choice(self.bots_names)
 
     def generateRepondMessage(self, message, responding_bot, prev_message_id):
-        if language_code != "pl":
-            self.user_messages_counter += 1
-            API_GEMINI = "AIzaSyCx1_BW_KH3m2S2VWTnF7smNJaZrbvV4lQ"
-            url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-            api_key = API_GEMINI
-
-            headers = {
-                "Content-Type": "application/json"
-            }
-
-            payload = {
-                "contents": [
-                    {
-                        "parts": [{"text": "RESPONSE TO THIS MESSAGE AS PARTICIPANT OF CHATROOM IN PSYCHOLOGY STUDY, DONT SHOW OPTIONS HOW TO REPONSE OR SOMETHING, JUST RESPOND PRETENDING TO BE PARTICIPANT OF THIS STUDY, NOT AN AI MODEL: " + message}]
-                    }
-                ]
-            }
-
-            response = requests.post(url, headers=headers, json=payload, params={"key": api_key})
-
-            if response.status_code == 200:
-                return([response.json()['candidates'][0]['content']['parts'][0]['text']])
-            else:
-                return([f"Error {response.status_code}: {response.text}"])
-
-
         #responding_bot_gender = Gender.MALE
 
         #if responding_bot[-1] == "a":
@@ -213,8 +186,6 @@ class ChatAI:
         responding_bot = self.getRespondingBot(message)
 
         responding_message = random.choice(self.generateRepondMessage(message, responding_bot, prev_message_id))
-
-        responding_message = "AI RESPOND: " + responding_message
 
         if self.user_messages_counter % 3 == 0:
             responding_message = ""
