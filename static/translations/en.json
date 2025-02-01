@@ -1,10 +1,12 @@
 {
+    "default_user_name": "Survey Participant",
+
     "title": "Welcome to the Chatroom",
     "button_submit": "Submit",
     "button_send": "Send",
     "OK": "OK",
     "and": "and",
-    "bots_nicks": "julz;Katie;pixelninja99;archi12;Ben;Protatoes",
+    "bots_nicks": "julz;Sara;pixelninja99;archi12;Tomek;Protatoes",
 
     "seconds_singular": "second",
     "seconds_few": "seconds",

@@ -85,21 +85,21 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 # TODO wylaczenie bazy (zakomentowac)
-DATABASES = {
-    'default': dj_database_url.config(
-    default='postgresql://postgres:postgres@localhost:5432/mysite',
-    conn_max_age=600
-)}
-
 #DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'HOST': '104.197.57.248',
-#        'USER': 'postgres',
-#        'PASSWORD': 'efC3XZ3456hBCVw4Z',
-#        'NAME': 'ManipulationDB',
-#    }
-#}
+#    'default': dj_database_url.config(
+#    default='postgresql://postgres:postgres@localhost:5432/mysite',
+#    conn_max_age=600
+#)}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': '104.197.57.248',
+        'USER': 'postgres',
+        'PASSWORD': 'efC3XZ3456hBCVw4Z',
+        'NAME': 'ManipulationDB',
+    }
+}
 
 # TODO wylaczenie bazy
 #DATABASES = {
