@@ -18,7 +18,7 @@
     "home_warning_time": "Important! You cannot leave the chat once you join. The chat will automatically close after about 8 minutes.",
     "home_info_qualtrics": "After the chat ends, you&#8217ll receive a unique code. Please enter this code on the Qualtrics survey page you were previously using. Do not close the Qualtrics tab, as entering the code will allow you to continue the survey.",
     "home_info_exit": "Note: Exiting the chatroom before the end will automatically close the session.",
-    "home_info_collecting_data": "The following data will be collected for research purposes:<br>Your chosen nickname, time of entry, messages you send and your interactions with the chat interface. This data will only be used for the purpose of this study.<br>By moving to the next page (by clicking &#8220Submit&#8221 or pressing Enter), you consent to the collection and storage of this data.",
+    "home_info_collecting_data": "The following data will be collected for research purposes:<br>Your chosen nickname, time of entry, messages you send and your interactions with the chat interface. This data will only be used for the purpose of this study.<br>By moving to the next page (by clicking &#8220Submit&#8221 or pressing Enter), you consent to the collection and storage of this data.<br><br><strong>Since members in the chat are added based on the similarity of your responses in the study, there may be a slight delay in finding like-minded participants. We appreciate your patience.</strong>",
     "home_info_inputs": "To join the chatroom lobby, please enter:",
     "home_info_nick": "Your nickname (does not have to be your real name, feel free to use any phrase)<br>The unique key you received in Qualtrics",
     "home_form_nick": "Enter your nickname:",

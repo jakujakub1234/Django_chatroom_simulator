@@ -1,4 +1,6 @@
 {
+    "default_user_name": "Uczestnik badania",
+    
     "title": "Chatroom badania",
     "button_submit": "Zatwierdź",
     "button_send": "Wyślij",
