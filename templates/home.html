@@ -51,4 +51,174 @@ window.addEventListener( "pageshow", function ( event ) {
 });
 </script>
 
+
+<!-- TODO POLL DIALOG BOX PROTOTYPE -->
+<style>
+    #chatroom-poll-dialog-box {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        box-shadow: 0px 0px 10px gray;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    #chatroom-poll-yes {
+        background: #2196F3;
+        display: none;
+    }
+
+    #chatroom-poll-no {
+        background: #f1f1f1;
+        display: none;
+    }
+
+    .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            position: relative;
+            border-radius: 25px;
+            height: 30px;
+            overflow: hidden;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #2196F3;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            border-radius: 25px 0 0 25px;
+            position: relative;
+            transition: width 0.15s ease-in-out;
+        }
+
+        .remaining-text {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            line-height: 30px;
+            color: #f1f1f1;
+            font-size: 14px;
+        }
+</style>
+
+
+<button onclick="chatroomPollDialog()">Open Dialog</button>
+    
+<div id="chatroom-poll-dialog-box">
+    <h3>{{ translations.chatroom_poll_dialog_text }}</h3>
+    <p id="poll-users-amount">{{ translations.chatroom_poll_users_amount }}</p>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar" style="width: 50%;">50%</div>
+        <span class="remaining-text" id="remaining-text">50%</span>
+    </div>
+
+    <button class="btn-submit" id="chatroom-poll-yes" onclick="chatroomPollDialogClick(true)">{{ translations.yes }}</button>
+    <button class="btn-submit" id="chatroom-poll-no" onclick="chatroomPollDialogClick(false)">{{ translations.no }}</button>
+</div>
+
+<script>
+    var translations = {"out_of": "out of", "chatroom_poll_users_amount": translations.chatroom_poll_users_amount}; 
+    var chatroom_poll_percantage = 50;
+
+    function chatroomPollBarMove(target) {
+        return new Promise((resolve) => {
+            var elem = document.getElementById("progress-bar");
+            let remaining_text = document.getElementById("remaining-text");
+
+            var id = setInterval(frame, 80);
+
+            function frame() {
+                if (chatroom_poll_percantage == target) {
+                    clearInterval(id);
+                    resolve(); // Resolve the promise when animation is complete
+                } else {
+                    if (chatroom_poll_percantage < target) {
+                        chatroom_poll_percantage++;
+                    } else {
+                        chatroom_poll_percantage--;
+                    }
+
+                    elem.style.width = chatroom_poll_percantage + '%'; 
+                    elem.innerHTML = chatroom_poll_percantage + '%';
+
+                    remaining_text.innerText = (100 - chatroom_poll_percantage) + "%";
+                }
+            }
+        });
+    }
+
+    async function pollChangeUserAmount(user_amount) {
+        document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 7 " + translations.chatroom_poll_users_amount;
+    }
+
+    async function chatroomPollDialog() {
+        document.getElementById("chatroom-poll-dialog-box").style.display = "block";
+
+        pollChangeUserAmount(0);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        pollChangeUserAmount(1);
+        await chatroomPollBarMove(100);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(2);
+        await chatroomPollBarMove(50);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(3);
+        await chatroomPollBarMove(67);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(4);
+        await chatroomPollBarMove(75);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(5);
+        await chatroomPollBarMove(60);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(6);
+        await chatroomPollBarMove(67);
+
+        showPollButtons();
+    }
+
+    function showPollButtons() {
+        document.getElementById("chatroom-poll-yes").style.display = "inline";
+        document.getElementById("chatroom-poll-no").style.display = "inline";
+    }
+    
+    function removePollButtons() {
+        document.getElementById("chatroom-poll-yes").style.display = "none";
+        document.getElementById("chatroom-poll-no").style.display = "none";
+    }
+    
+    async function chatroomPollDialogClick(is_yes) {
+        removePollButtons();
+        pollChangeUserAmount(7);
+
+        if (is_yes) {
+            sendDataThroughAjax(true, {
+                csrfmiddlewaretoken: data_from_django.token,
+                action: "exit_poll",
+                is_yes: "True"
+            });
+
+           await chatroomPollBarMove(71);
+        } else {
+            sendDataThroughAjax(true, {
+                csrfmiddlewaretoken: data_from_django.token,
+                action: "exit_poll",
+                is_yes: "False"
+            });
+
+            await chatroomPollBarMove(57);
+        }
+    }
+</script>
+
 {% endblock content %}

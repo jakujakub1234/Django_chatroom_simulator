@@ -407,7 +407,7 @@ kbd {
   box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
 }
 
-#btn-prototype-2 {
+#change-color-button {
   margin-top: 16px;
   border: none;
   height: 40px; 
@@ -418,11 +418,11 @@ kbd {
   margin-left: 15px;
 }
 
-#btn-prototype-2:hover {
+#change-color-button:hover {
   background-color: rgb(193, 200, 207);
 }
 
-#btn-prototype-2:active {
+#change-color-button:active {
   background-color: rgb(193, 200, 207);
   box-shadow: 1px 3px #666;
   transform: translateY(4px);

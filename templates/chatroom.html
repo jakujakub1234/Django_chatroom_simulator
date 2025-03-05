@@ -59,7 +59,7 @@
       <option value="1">{{ translations.chatroom_font_medium }}</option>
       <option value="2">{{ translations.chatroom_font_large }}</option>
   </select>
-<button name="send" class="btn btn-success" id="btn-prototype-2" tabindex="1">{{ translations.chatroom_change_color_button }}</button>
+<button name="send" class="btn btn-success" id="change-color-button" tabindex="1">{{ translations.chatroom_change_color_button }}</button>
 
 <span style="float: right; margin-right: 2%; padding-top: inherit;" id='seconds-counter'>{{ translations.chatroom_time_to_end }}</span>
 
@@ -70,7 +70,9 @@
 <script src="{% static 'js/' %}{{ language_code }}/positive_bots_messages.js"></script>
 <script src="{% static 'js/' %}{{ language_code }}/negative_bots_messages.js"></script>
 <script src="{% static 'js/' %}{{ language_code }}/curse_words.js"></script>
-<script src="{% static 'js/chatroom_script.js' %}"></script>
+<script src="{% static 'js/svgs.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/consts.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/chatroom_script.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'styles/chatroom_style.css' %}">
 

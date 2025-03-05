@@ -8,8 +8,9 @@ from .models import Messages
 from .models import LikeReactions, HeartReactions, AngryReactions
 from .models import Interactions
 from .models import Reports
+from .models import ExitPoll
 from .utils import lobby_time, chatroom_time
-from .chat_ai import ChatAI
+from .chat_ai.chat_ai import ChatAI
 from django.conf import settings
 import json
 
@@ -26,11 +27,6 @@ class HomePageView(TemplateView):
     def get(self, request):
         form = HomeForm()
 
-        if 1 > 2: # TODO session clearing
-            for key in list(request.session.keys()):
-                if not key.startswith("_"): # skip keys set by the django system
-                    del request.session[key]
-
         if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
@@ -43,8 +39,6 @@ class HomePageView(TemplateView):
             if survey_time > 1:
                 return HttpResponseRedirect("lobby")
 
-        
-
         return render(request, "home.html", {"form": form, 'translations': translations})
 
     def post(self, request, **kwargs):
@@ -54,13 +48,13 @@ class HomePageView(TemplateView):
             request.session['nick'] = form.cleaned_data['nick']
 
             if form.cleaned_data['nick'] == "":
-                request.session['nick'] = "Uczestnik badania"
+                request.session['nick'] = translations.get('default_user_name')
 
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
             request.session['is_positive_manipulation'] = form.data['is_positive_manipulation']
             request.session['start_timestamp'] = datetime.now().timestamp()
     
-            return HttpResponseRedirect("/lobby/")
+            return HttpResponseRedirect("/lobby")
 
         return render(request, 'home.html', {'form':form, 'translations': translations})
 
@@ -136,18 +130,6 @@ class EndChatPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form, 'translations': translations})
 
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
-            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
-
-            #if survey_time > lobby_time + chatroom_time:
-            #    return HttpResponseRedirect("../end_chat")
-
-            if survey_time < lobby_time + chatroom_time:
-                return HttpResponseRedirect("../chatroom")
-
-            if survey_time < lobby_time:
-                return HttpResponseRedirect("../lobby")
-
         return super(EndChatPageView, self).get(request)
 
     def get_context_data(self, *args, **kwargs):
@@ -163,18 +145,6 @@ class ReturnQualtricsCodePageView(TemplateView):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
             return render(request, 'home.html', {'form':form, 'translations': translations})
-
-        if False and 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
-            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
-
-            #if survey_time > lobby_time + chatroom_time:
-            #    return HttpResponseRedirect("../end_chat")
-
-            if survey_time < lobby_time + chatroom_time:
-                return HttpResponseRedirect("../chatroom")
-
-            if survey_time < lobby_time:
-                return HttpResponseRedirect("../lobby")
 
         return super(ReturnQualtricsCodePageView, self).get(request)
 
@@ -302,12 +272,25 @@ class AjaxPageView(TemplateView):
             # TODO wylaczenie bazy
             #reports.save()
 
+        if request.POST.get('action') == "exit_poll":
+            # TODO wylaczenie bazy
+            '''
+            exit_poll = ExitPoll(
+                qualtrics_id = request.session['key'],
+                is_yes = request.POST.get('is_yes')=="True"
+            )
+            '''
+            
+            # TODO wylaczenie bazy
+            #exit_poll.save()
+
         return render(request, 'home.html', {'form':form})
 
     def get(self, request):
-        respond, responding_bot = self.chat_ai.generateRespond(
+        respond, respond_type = self.chat_ai.generateRespond(
             request.GET['message'],
-            request.GET['prev_message_id']
+            request.GET['prev_message_id'],
+            request.GET['message_timestamp']
         )
 
-        return JsonResponse({'respond': respond, "responding_bot": responding_bot}, status=200, content_type="application/json")
+        return JsonResponse({'respond': respond, "respond_type": respond_type}, status=200, content_type="application/json")

@@ -7,6 +7,9 @@
     "OK": "OK",
     "and": "and",
     "bots_nicks": "julz;Sara;pixelninja99;archi12;Tomek;Protatoes",
+    "yes": "Yes",
+    "no": "No",
+    "out_of": "out of",
 
     "seconds_singular": "second",
     "seconds_few": "seconds",
@@ -75,6 +78,8 @@
     "return_qualtrics_code_text": "Your code to continue the study is:",
 
     "fake_end_page_title": "Thank you for your participation in the chat.",
-    "fake_end_page_text": "Due to leaving the chat before it ended, you cannot return to the study in Qualtrics."
+    "fake_end_page_text": "Due to leaving the chat before it ended, you cannot return to the study in Qualtrics.",
 
+    "chatroom_poll_dialog_text": "Do you agree that refugees from Ukraine should be treated equally to polish citizens?",
+    "chatroom_poll_users_amount": "users have voted"
 }

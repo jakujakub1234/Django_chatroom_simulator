@@ -18,11 +18,6 @@ class Messages(models.Model):
     message_respond_to = models.IntegerField(default=0)
     typing_time = models.IntegerField(default=0)
 
-#class Reactions(models.Model):
-#    qualtrics_id = models.CharField(max_length=255)
-#    message_id = models.IntegerField()
-#    reaction_id = models.IntegerField()
-
 class LikeReactions(models.Model):
     qualtrics_id = models.CharField(max_length=255)
     message_id = models.IntegerField()
@@ -48,3 +43,7 @@ class Reports(models.Model):
     qualtrics_id = models.CharField(max_length=255)
     message_id = models.IntegerField()
     report_id = models.IntegerField()
+
+class ExitPoll(models.Model):
+    qualtrics_id = models.CharField(max_length=255)
+    is_yes = models.BooleanField(default=True)
