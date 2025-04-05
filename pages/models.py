@@ -47,3 +47,4 @@ class Reports(models.Model):
 class ExitPoll(models.Model):
     qualtrics_id = models.CharField(max_length=255)
     is_yes = models.BooleanField(default=True)
+    vote_seconds = models.IntegerField(default=0)

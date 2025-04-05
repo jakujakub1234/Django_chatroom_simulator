@@ -67,7 +67,21 @@ var prev_prev_message = "NONE";
 var prev_message = "NONE";
 var current_message = "NONE";
 
+var seconds_from_last_message = 0;
+var exit_poll_after_vote_seconds = 0;
+var exit_poll_votings_possible_seconds = 0;
+var exit_poll_opened = false;
+var exit_poll_buttons_visible = false;
+var exit_poll_user_voted = false;
+var chatroom_poll_percantage = 50;
+
+var chatroom_speed = parseInt(data_from_django.chatSpeedHidden);
+var not_exit_chatroom_at_the_end = parseInt(data_from_django.notExitChatHidden) == 1;
+var dont_scroll_chat_after_message = parseInt(data_from_django.dontScrollChatHidden) == 1;
+
 var end_chatroom = false;
+
+var last_curse_timestamp = -1000;
 
 submit_button.addEventListener("click", sendUserMessage);
 
@@ -94,7 +108,7 @@ change_color_button.addEventListener("click", function() {
     change_layout_color(1);
 });
 
-sendDataToDatabase("nick", "", "", user_name);
+//sendDataToDatabase("nick", "", "", user_name);
 
 document.getElementById("msg_field").focus();
 
@@ -111,7 +125,7 @@ jQuery.extend({
                 message_timestamp: message_timestamp
             },
             success: function (data) {
-                callback(data.respond, data.respond_type);
+                callback(data.respond, data.respond_type, data.responding_bot);
             }
         });
     }
@@ -335,10 +349,12 @@ function createAndSendMessageHTML(
 
     chatroom.appendChild(outside_message_wrapper);
 
-    window.scroll({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-    });
+    if (!dont_scroll_chat_after_message) {
+        window.scroll({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
 
     change_font_size(font_size_change);
     change_layout_color(0);
@@ -483,8 +499,14 @@ function sendUserMessage() {
     var user_message = document.getElementById("msg_field").value;
     document.getElementById("msg_field").value = "";
 
+    var is_curse = false;
+
     for (var word of user_message.replace(/[^\w\s\']|_/g, "").replace(/\s+/g, " ").toLowerCase().split(" ")) {
-        if (curse_words.has(word)) {
+        if (curse_words.has(word) && Math.ceil(seconds) - last_curse_timestamp > 60) {
+            is_curse = true;
+
+            last_curse_timestamp = Math.ceil(seconds);
+
             var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
 
             reports_remove_messages_queue.push([random_time, -1, user_name, RESPECT_REPORT_ID]);
@@ -504,7 +526,6 @@ function sendUserMessage() {
         return;
     }
 
-    var true_responding_bot = "";
     var respond_message_id = 0;
 
     if (respond_message_div == "") {
@@ -519,22 +540,20 @@ function sendUserMessage() {
         );
 
         respond_message_id = respond_message_div.querySelector(".message-p").dataset.index;
-
-        true_responding_bot = respond_message_div.querySelector(".right").innerText;
         
         respond_message_div = "";
         respond_input_box.style.display = "none";
     }
 
-    $.generateRespond(user_message, Math.ceil(seconds), function(respond, respond_type) {
+    if (is_curse) {
+        sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id, "NONE");
+
+        return;
+    }
+
+    $.generateRespond(user_message, Math.ceil(seconds), function(respond, respond_type, responding_bot) {
         if (respond && respond != "") {
-            responding_bot = bots_nicks[Math.floor(Math.random() * bots_nicks.length)];
-
-            if (true_responding_bot != "" && true_responding_bot != user_name) {
-                responding_bot = true_responding_bot;
-            }
-
-            var times = [0, 2, 2, 3, 3, 7, 7, 9, 10, 10, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12];
+            var times = [0, 4, 4, 5, 5, 7, 7, 9, 10, 10, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12];
 
             if (!respond.includes("{{NEW_MESSAGE}}")) {
                 var respond_len = 1;
@@ -583,8 +602,6 @@ function sendUserMessage() {
                 respond_to_save_to_db = "NONE";
             }
 
-            console.log(respond_to_save_to_db);
-
             sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id, respond_to_save_to_db);
 
             typing_time = 0;
@@ -631,7 +648,7 @@ function printTimeToLeftChat(time_to_left_chat)
     seconds_counter.innerText = new_time;
 }
 
-function sendReactionsAndInteractionsData()
+function sendReactionsAndInteractionsData(is_chatroom_finished_1_0)
 {
     sendDataThroughAjax(true, {
         csrfmiddlewaretoken: data_from_django.token,
@@ -658,7 +675,7 @@ function sendReactionsAndInteractionsData()
         mouse_movement_seconds: mouse_movement_seconds,
         scroll_seconds: scroll_seconds,
         input_seconds: input_seconds,
-        is_chatroom_finished: 0,
+        is_chatroom_finished: is_chatroom_finished_1_0,
         chatroom_exit_time: seconds
     });
 }
@@ -900,8 +917,158 @@ function handleReports() {
     }
 }
 
+function chatroomPollBarMove(target) {
+    return new Promise((resolve) => {
+        var elem = document.getElementById("progress-bar");
+        let remaining_text = document.getElementById("remaining-text");
+
+        var id = setInterval(frame, 80);
+
+        function frame() {
+            if (chatroom_poll_percantage == target) {
+                clearInterval(id);
+                resolve(); // Resolve the promise when animation is complete
+            } else {
+                if (chatroom_poll_percantage < target) {
+                    chatroom_poll_percantage++;
+                } else {
+                    chatroom_poll_percantage--;
+                }
+
+                elem.style.width = chatroom_poll_percantage + '%'; 
+                elem.innerHTML = chatroom_poll_percantage + '% ' + translations.yes;
+
+                remaining_text.innerText = (100 - chatroom_poll_percantage) + "% " + translations.no;
+            }
+        }
+    });
+}
+
+function closeChatroomPollDialog() {
+    document.getElementById("chatroom-poll-dialog-box").style.display = "none";
+}
+
+async function pollChangeUserAmount(user_amount) {
+    document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 7 " + translations.chatroom_poll_users_amount;
+}
+
+async function chatroomPollDialog() {
+    document.getElementById("chatroom-poll-dialog-box").style.display = "block";
+
+    pollChangeUserAmount(0);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    pollChangeUserAmount(1);
+    await chatroomPollBarMove(100);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    pollChangeUserAmount(2);
+    await chatroomPollBarMove(50);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    pollChangeUserAmount(3);
+    await chatroomPollBarMove(67);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    pollChangeUserAmount(4);
+    await chatroomPollBarMove(75);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    pollChangeUserAmount(5);
+    await chatroomPollBarMove(60);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    pollChangeUserAmount(6);
+    await chatroomPollBarMove(67);
+
+    showPollButtons();
+}
+
+function showPollButtons() {
+    document.getElementById("chatroom-poll-yes").style.display = "inline";
+    document.getElementById("chatroom-poll-no").style.display = "inline";
+
+    exit_poll_buttons_visible = true;
+}
+
+function removePollButtonsAndShowThanks() {
+    document.getElementById("chatroom-poll-yes").style.display = "none";
+    document.getElementById("chatroom-poll-no").style.display = "none";
+
+    document.getElementById("chatroom-poll-thanks").style.display = "block";
+}
+
+async function chatroomPollDialogClick(is_yes) {
+    exit_poll_user_voted = true;
+
+    removePollButtonsAndShowThanks();
+    pollChangeUserAmount(7);
+
+    if (is_yes) {
+        sendDataThroughAjax(true, {
+            csrfmiddlewaretoken: data_from_django.token,
+            action: "exit_poll",
+            is_yes: "True",
+            vote_seconds: exit_poll_votings_possible_seconds
+        });
+
+       //await chatroomPollBarMove(67);
+    } else {
+        sendDataThroughAjax(true, {
+            csrfmiddlewaretoken: data_from_django.token,
+            action: "exit_poll",
+            is_yes: "False",
+            vote_seconds: exit_poll_votings_possible_seconds
+        });
+
+        //await chatroomPollBarMove(67);
+    }
+}
+
+function handleExitPoll() {
+    seconds_from_last_message++;
+
+    if (seconds_from_last_message >= SECONDS_FROM_LAST_MESSAGE_TO_POLL_DIALOG && !exit_poll_opened) {
+        exit_poll_opened = true;
+        chatroomPollDialog();
+    }
+
+    if (exit_poll_buttons_visible && !exit_poll_user_voted) {
+        exit_poll_votings_possible_seconds++;
+    }
+
+    if (exit_poll_user_voted) {
+        exit_poll_after_vote_seconds++;
+    }
+}
+
 function incrementSeconds() {
+    /*
     if (seconds > 490) {
+        return;
+    }
+    */
+
+    if (end_chatroom) {
+        return;
+    }
+
+    if (exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
+        end_chatroom = true;
+        sendReactionsAndInteractionsData(1);
+        closeChatroomPollDialog();
+        
+        if (!not_exit_chatroom_at_the_end) {
+            window.location.href = data_from_django.endUrl;
+        }
+    }
+
+    if (exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
+        end_chatroom = true;
+        sendReactionsAndInteractionsData(0);
+        closeChatroomPollDialog();
+        
+        if (!not_exit_chatroom_at_the_end) {
+            window.location.href = data_from_django.badEndNoExitpollUrl;
+        }
+    }
+
+    if (bots_message_id >= 2 + Object.keys(bots_messages).length) {
+        handleExitPoll();
         return;
     }
 
@@ -957,11 +1124,12 @@ function incrementSeconds() {
         var reaction = reactions_queue.shift();
 
         addBotReaction(reaction[1], reaction[2]);
+        change_layout_color(0);
     }
 
     handleReports();
 
-    var time_to_left_chat = 490 - seconds_integer;
+    var time_to_left_chat = 420 - seconds_integer;
 
     printTimeToLeftChat(time_to_left_chat);
 
@@ -982,15 +1150,17 @@ function incrementSeconds() {
 
     if (time_to_left_chat == 0) {
         end_chatroom = true;
+        sendReactionsAndInteractionsData(1);
+        closeChatroomPollDialog();
 
-        sendReactionsAndInteractionsData();
-
-        window.location.href = data_from_django.endUrl;
+        if (!not_exit_chatroom_at_the_end) {
+            window.location.href = data_from_django.endUrl;
+        }
     }
 }
 
 incrementSeconds();
-setInterval(incrementSeconds, 1000);
+setInterval(incrementSeconds, chatroom_speed);
 
 // Reload on browser "previous" button
 window.addEventListener( "pageshow", function ( event ) {
@@ -1021,7 +1191,7 @@ window.addEventListener('beforeunload', function(e) {
         return;
     }
 
-    sendReactionsAndInteractionsData();
+    sendReactionsAndInteractionsData(0);
 
     hesitation = 0;
     mouse_movement_seconds = 0;

@@ -23,7 +23,6 @@ class HomeForm(forms.Form):
         translations = load_translations()
 
         key_from_qualtrics = self.cleaned_data['key_from_qualtrics']
-        is_positive_manipulation = self.data['is_positive_manipulation']
 
         key_from_qualtrics = key_from_qualtrics[:-2]
 
@@ -45,8 +44,8 @@ class HomeForm(forms.Form):
 
 
         # TODO wylaczenie bazy
-        #is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
-        #if is_key_in_db != None:
-        #    self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
+        is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
+        if is_key_in_db != None:
+            self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
 
         return key_from_qualtrics

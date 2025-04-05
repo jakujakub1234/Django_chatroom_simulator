@@ -39,7 +39,7 @@ class HomePageView(TemplateView):
             if survey_time > 1:
                 return HttpResponseRedirect("lobby")
 
-        return render(request, "home.html", {"form": form, 'translations': translations})
+        return render(request, "home.html", {"form": form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
     def post(self, request, **kwargs):
         form = HomeForm(request.POST)
@@ -53,10 +53,15 @@ class HomePageView(TemplateView):
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
             request.session['is_positive_manipulation'] = form.data['is_positive_manipulation']
             request.session['start_timestamp'] = datetime.now().timestamp()
+
+            if settings.DEBUG_MODE:
+                request.session['chat_speed_hidden'] = request.POST.get("chat_speed_hidden")
+                request.session['not_exit_chat_hidden'] = request.POST.get("not_exit_chat_hidden")
+                request.session['dont_scroll_chat_hidden'] = request.POST.get("dont_scroll_chat_hidden")
     
             return HttpResponseRedirect("/lobby")
 
-        return render(request, 'home.html', {'form':form, 'translations': translations})
+        return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
 class LobbyPageView(TemplateView):
     template_name = "lobby.html"
@@ -64,7 +69,7 @@ class LobbyPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
         if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -96,7 +101,7 @@ class ChatroomPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
         if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -120,6 +125,31 @@ class ChatroomPageView(TemplateView):
         context['translations'] = translations
         context['language_code'] = language_code
 
+        if settings.DEBUG_MODE:
+            context['chat_speed_hidden'] = self.request.session['chat_speed_hidden']
+            context['not_exit_chat_hidden'] = self.request.session['not_exit_chat_hidden']
+            context['dont_scroll_chat_hidden'] = self.request.session['dont_scroll_chat_hidden']
+        else:
+            context['chat_speed_hidden'] = 1000
+            context['not_exit_chat_hidden'] = 0
+            context['dont_scroll_chat_hidden'] = 0
+
+        return context
+
+class EndChatNoExitPollPageView(TemplateView):
+    template_name = "end_chat_no_exitpoll.html"
+
+    def get(self, request):
+        if 'key' not in request.session or request.session['key'] == "":
+            form = HomeForm()
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+
+        return super(EndChatNoExitPollPageView, self).get(request)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EndChatNoExitPollPageView, self).get_context_data(*args,**kwargs)
+        context['translations'] = translations
+
         return context
 
 class EndChatPageView(TemplateView):
@@ -128,7 +158,7 @@ class EndChatPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
         return super(EndChatPageView, self).get(request)
 
@@ -144,7 +174,7 @@ class ReturnQualtricsCodePageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
         return super(ReturnQualtricsCodePageView, self).get(request)
 
@@ -164,7 +194,7 @@ class AjaxPageView(TemplateView):
             self.chat_ai.setNick(request.POST.get('nick'))
 
             # TODO wylaczenie bazy
-            '''
+            
             nick = Nicks(
                 qualtrics_id=request.session['key'],
                 nick=request.session['nick'],
@@ -172,14 +202,13 @@ class AjaxPageView(TemplateView):
                 is_manipulation_positive=(request.session['is_positive_manipulation']=="True"),
                 language_version=language_code
             )
-            '''
-
+            
             # TODO wylaczenie bazy
-            #nick.save()        
+            nick.save()        
 
         if request.POST.get('action') == "message":
             # TODO wylaczenie bazy
-            '''
+            
             messages = Messages(
                 qualtrics_id = request.session['key'],
                 message = request.POST.get('message'),
@@ -190,16 +219,14 @@ class AjaxPageView(TemplateView):
                 message_respond_to = request.POST.get('respond_message_id'),
                 typing_time = request.POST.get('typing_time')
             )
-            '''
             
             # TODO wylaczenie bazy
-            #messages.save()
+            messages.save()
         
         if request.POST.get('action') == "like_reactions":
             reactions_array = []
 
             # TODO wylaczenie bazy
-            '''
 
             for elem in request.POST.get('reactions').split():
                 reactions_array.append({
@@ -209,13 +236,12 @@ class AjaxPageView(TemplateView):
 
             django_list = [LikeReactions(**vals) for vals in reactions_array]
             LikeReactions.objects.bulk_create(django_list)
-            '''
+            
 
         if request.POST.get('action') == "heart_reactions":
             reactions_array = []
 
             # TODO wylaczenie bazy
-            '''
 
             for elem in request.POST.get('reactions').split():
                 reactions_array.append({
@@ -225,13 +251,11 @@ class AjaxPageView(TemplateView):
 
             django_list = [HeartReactions(**vals) for vals in reactions_array]
             HeartReactions.objects.bulk_create(django_list)
-            '''
 
         if request.POST.get('action') == "angry_reactions":
             reactions_array = []
 
             # TODO wylaczenie bazy
-            '''
             for elem in request.POST.get('reactions').split():
                 reactions_array.append({
                        "qualtrics_id": request.session['key'],
@@ -240,11 +264,9 @@ class AjaxPageView(TemplateView):
 
             django_list = [AngryReactions(**vals) for vals in reactions_array]
             AngryReactions.objects.bulk_create(django_list)
-            '''
             
         if request.POST.get('action') == "interactions":
             # TODO wylaczenie bazy
-            '''
             interactions = Interactions(
                 qualtrics_id = request.session['key'],
                 hesitation = request.POST.get('hesitation'),
@@ -254,43 +276,39 @@ class AjaxPageView(TemplateView):
                 is_chatroom_finished = request.POST.get('is_chatroom_finished'),
                 chatroom_exit_time = request.POST.get('chatroom_exit_time'),
             )
-            '''
-            
+
             # TODO wylaczenie bazy
-            #interactions.save()
+            interactions.save()
 
         if request.POST.get('action') == "reports":
             # TODO wylaczenie bazy
-            '''
             reports = Reports(
                 qualtrics_id = request.session['key'],
                 message_id = request.POST.get('message_id'),
                 report_id = request.POST.get('report_id')
             )
-            '''
             
             # TODO wylaczenie bazy
-            #reports.save()
+            reports.save()
 
         if request.POST.get('action') == "exit_poll":
             # TODO wylaczenie bazy
-            '''
             exit_poll = ExitPoll(
                 qualtrics_id = request.session['key'],
-                is_yes = request.POST.get('is_yes')=="True"
+                is_yes = request.POST.get('is_yes')=="True",
+                vote_seconds = request.POST.get('vote_seconds'),
             )
-            '''
             
             # TODO wylaczenie bazy
-            #exit_poll.save()
+            exit_poll.save()
 
-        return render(request, 'home.html', {'form':form})
+        return render(request, 'home.html', {'form': form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
     def get(self, request):
-        respond, respond_type = self.chat_ai.generateRespond(
+        respond, respond_type, responding_bot = self.chat_ai.generateRespond(
             request.GET['message'],
             request.GET['prev_message_id'],
             request.GET['message_timestamp']
         )
 
-        return JsonResponse({'respond': respond, "respond_type": respond_type}, status=200, content_type="application/json")
+        return JsonResponse({'respond': respond, "respond_type": respond_type, "responding_bot": responding_bot}, status=200, content_type="application/json")

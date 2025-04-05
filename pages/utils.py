@@ -3,7 +3,7 @@ import os
 from django.conf import settings
 
 lobby_time = 19
-chatroom_time = 490
+chatroom_time = 420
 
 def load_translations():
     language_code = settings.LANGUAGE_CODE

@@ -11,7 +11,6 @@ language_code = settings.LANGUAGE_CODE
 
 class ChatAI:
     def __init__(self):
-        random.seed(96423650032)
         module_dir = os.path.dirname(__file__)  
         directory_for_current_lang = f'files_for_ai/{language_code}'
 
@@ -21,6 +20,7 @@ class ChatAI:
         with open(os.path.join(module_dir, f'{directory_for_current_lang}/keywords.json')) as file:
             keywords = json.load(file)
 
+        self.greetings = keywords["GREETINGS"]
         self.questions = keywords["QUESTIONS"]
         self.what_should_we_do = keywords["WHAT_SHOULD_WE_DO"]
 
@@ -35,8 +35,10 @@ class ChatAI:
                 self.keywords_from_excel[str(i)] = keywords[str(i)]
 
         self.gemini_api_key = "error: secrets not found"
-
+        self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent"
+        
         self.previous_message_timestamp = -100
+        self.previous_gibberish_message_timestamp = -1000
 
         with open('secrets.yaml', 'r') as file:
             self.gemini_api_key = yaml.safe_load(file)['API_GEMINI']
@@ -47,8 +49,19 @@ class ChatAI:
         with open(os.path.join(module_dir, f'{directory_for_current_lang}/responds_in_specific_place.json')) as file:
             self.responds_in_specific_place = json.load(file)
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/gemini_prompt.txt'), 'r') as file:
-            self.gemini_prompt = file.read()
+        with open(os.path.join(module_dir, f'{directory_for_current_lang}/gemini_prompts.json'), 'r') as file:
+            gemini_json = json.load(file)
+            
+            self.gemini_prompt_for_males = gemini_json["general_for_males"]
+            self.gemini_prompt_for_females = gemini_json["general_for_females"]
+            self.gemini_prompt_gibberish_detector = gemini_json["gibberish_detector"]
+            self.gemini_prompt_curse_detector = gemini_json["curse_detector"]
+
+            self.gemini_prompt_yes = gemini_json["yes"]
+            self.gemini_prompt_no = gemini_json["no"]
+
+            self.bots = gemini_json["bots_nicks"].split(";")
+            self.female_bots = gemini_json["bots_nicks_females"].split(";")
 
         with open(os.path.join(module_dir, f'{directory_for_current_lang}/never_existing_2_letters_combos.txt'), 'r') as file:
             self.never_existing_2_letters = set(file.read().split())
@@ -85,32 +98,102 @@ class ChatAI:
             return True
         if sum(letters in message for letters in self.never_existing_3_letters) > 3:
             return True
-
-        return False
-
-    def generateRespondUsingGemini(self, message):
-        self.user_messages_counter += 1
-
-        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-        api_key = self.gemini_api_key
-
+        
         headers = {
             "Content-Type": "application/json"
         }
 
         payload = {
             "contents": [{
-                "parts": [{"text": self.gemini_prompt + message}]
+                "parts": [{"text": self.gemini_prompt_gibberish_detector + message}]
             }]
         }
 
         try:
-            response = requests.post(url, headers=headers, json=payload, params={"key": api_key})
+            response = requests.post(self.gemini_url, headers=headers, json=payload, params={"key": self.gemini_api_key})
         except:
             return False
 
         if response.status_code == 200:
-            return([response.json()['candidates'][0]['content']['parts'][0]['text']])
+            if self.gemini_prompt_yes == response.json()['candidates'][0]['content']['parts'][0]['text'].lower():
+                print("AI twierdzi ze " + message + " to gibberish")
+                return True
+
+        return False
+
+    def generateRespondUsingGemini(self, message, is_female):
+        self.user_messages_counter += 1
+
+        prompt = self.gemini_prompt_for_males
+
+        if is_female:
+            prompt = self.gemini_prompt_for_females
+
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        chain_of_prompts = ["Odpisz na te wiadomosc zgodnie z przykładowymi odpowiedziami na przykładowe wiadomości, badz kreatywny i uprzejmy: wiadomość 1 'nie lubie ludzi' odpowiedz 'okej...' wiaodmosc 2 'co u was' odpowiedz 'git' wiadomosc 3 'niech ukraincy wracaja do siebie nie mamy tyle kasy' odpowiedz 'wow... troche ostro nie uwazasz?', wiadomość 4 'polska dla polaków' odpowiedz 'trochę ostro nie myślisz?'wiaodmość 5 'trzeba ukraincom pomagac i tyle' odpowiedz 'nom', wiadomość 6 'ej' odpowiedz 'XD' wiaodmość 7 ' a jak putin nas zaatakuje' odpowiedz 'wole o tym nie myslec szczerz', wiaodmosc 8 'uwazam, ze polska nie jest w dobrej sytaucji finansowej' odpowiedz ' nom racja moze nie jest',wiaodmosc 9 ' ludzie ogarnicie się to z naszych podatkow idzie' odpowiedz 'tez racja ale po to sa podatki'wiadomosc 10 ' co myslicie o ukraincach' odpowiedz 'sa git',wiaodmosc 11 'jestes botem' odpowiedz 'chyba ty'. Okej teraz twoja kolej!", 'wybierz jedną wiadomośc, która jest najbardziej naturalna i napisz TYLKO tą wiaodmość ', 'zmień tą wiadomość aby nie miała podwójnych form (np. zacząłeś/aś) i napisz TYLKO tą wiaodmość']
+
+
+        for prompt in chain_of_prompts:
+            payload = {
+                "contents": [
+                    {
+                        "parts": [{"text": prompt + ": " + message}]
+                    }
+                ]
+            }
+
+            try:
+                response = requests.post(self.gemini_url, headers=headers, json=payload, params={"key": self.gemini_api_key})
+            except:
+                return False
+
+            if response.status_code == 200:
+                respond_text = response.json()['candidates'][0]['content']['parts'][0]['text']
+                
+                message = respond_text
+
+                print(message)
+            else:
+                return False
+
+        #payload = {
+        #    "contents": [{
+        #        "parts": [{"text": prompt + ": " + message}]
+        #    }]
+        #}
+
+        #try:
+        #    response = requests.post(self.gemini_url, headers=headers, json=payload, params={"key": self.gemini_api_key})
+        #except:
+        #    return False
+
+        if response.status_code == 200:
+            response_text = response.json()['candidates'][0]['content']['parts'][0]['text']
+
+            if response_text.count("**") >= 2:
+                response_text = response_text[response_text.index("**")+2:]
+                response_text = response_text[:response_text.index("**")]
+
+            if response_text.count("\"\"") >= 2:
+                response_text = response_text[response_text.index("\"\"")+2:]
+                response_text = response_text[:response_text.index("\"\"")]
+
+            if "odp:" in response_text.lower():
+                response_text[response_text.lower().index("odp:")+4:]
+            if "odpowiedz:" in response_text.lower():
+                response_text[response_text.lower().index("odpowiedz:")+10:]
+            if "odpowiedź:" in response_text.lower():
+                response_text[response_text.lower().index("odpowiedź:")+10:]
+
+            response_text.replace("\"", "")
+
+            print(response_text)
+
+            return [response_text]
+
         else:
             return False
 
@@ -158,8 +241,8 @@ class ChatAI:
     def generateRespond(self, message, prev_message_id, message_timestamp):
         message_timestamp = int(message_timestamp)
 
-        if message_timestamp - self.previous_message_timestamp < 15:
-            return ["", ""]
+        if message_timestamp - self.previous_message_timestamp < 7:
+            return ["", "", ""]
 
         self.previous_message_timestamp = message_timestamp        
 
@@ -168,7 +251,25 @@ class ChatAI:
 
         message = self.preprocessMessage(message)
 
-        gemini_respond = self.generateRespondUsingGemini(message)
+        responding_bot = random.choice(self.bots)
+
+        if self.detectGibberish(message):
+            print("GIBBERISH")
+            if message_timestamp - self.previous_gibberish_message_timestamp < 120:
+                return ["", "", ""]
+            else:
+                return [random.choice(self.responds["GIBBERISH"]), "GEMINI", responding_bot]
+            
+        if any(greeting in message.lower().split() for greeting in self.greetings):
+            print("GREETING")
+            return ["", "", ""]
+        
+        if any(bot_word in message.lower().split() for bot_word in ["bot", "boty", "bots", "ai", "bota"]):
+            print("BOTS")
+            return ["", "", ""]
+        
+        
+        gemini_respond = self.generateRespondUsingGemini(message, responding_bot in self.female_bots)
 
         if gemini_respond:
             responding_message, responding_message_type = [gemini_respond, "GEMINI"]
@@ -177,11 +278,10 @@ class ChatAI:
 
         responding_message = random.choice(responding_message)
 
-        if responding_message in ["gibberish", "curse", "random"]:
-            responding_message = ""
-
         #if self.user_messages_counter % 3 == 0: TODO remove comments
         #    responding_message = ""
 
-        return [responding_message, responding_message_type]
+        print("RESPOND: " + responding_message)
+
+        return [responding_message, responding_message_type, responding_bot]
         

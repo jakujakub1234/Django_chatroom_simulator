@@ -84,7 +84,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# TODO wylaczenie bazy (zakomentowac)
+# TODO wylaczenie bazy (wywalic kiedys chyba, to chyba stara baza)
 #DATABASES = {
 #    'default': dj_database_url.config(
 #    default='postgresql://postgres:postgres@localhost:5432/mysite',
@@ -101,7 +101,32 @@ DATABASES = {
     }
 }
 
-# TODO wylaczenie bazy
+# CONNECT TO DB VIA TERMINAL
+# psql -h 104.197.57.248 -d ManipulationDB -U postgres 
+# efC3XZ3456hBCVw4Z
+# \c ManipulationDB
+# SELECT * FROM pages_nicks;
+
+# COPY (SELECT xmin, * FROM pages_nicks ) TO stdout WITH (FORMAT CSV, HEADER);
+# COPY (SELECT * FROM pages_nicks ) TO stdout WITH (FORMAT CSV, HEADER);
+# select xmin, * from pages_nicks limit(1);
+
+# WHERE LENGTH(qualtrics_id) < 7
+
+'''
+delete from pages_angryreactions ;
+delete from pages_exitpoll       ;
+delete from pages_heartreactions ;
+delete from pages_interactions   ;
+delete from pages_likereactions  ;
+delete from pages_messages       ;
+delete from pages_nicks          ;
+delete from pages_reports ;
+
+'''
+
+
+# TODO wylaczenie bazy (to samo chyba jest na gorze nie?)
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.postgresql',
@@ -165,4 +190,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+DEBUG_MODE = False
 LANGUAGE_CODE = 'pl'

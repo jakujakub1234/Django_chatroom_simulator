@@ -2,7 +2,19 @@
 
 {% load static %}
 {% block content %}
-<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-end-url="{% url 'return_qualtrics_code' %}" data-start-timestamp = "{{ start_timestamp}}" data-is-positive = "{{ is_positive_manipulation }}" data-translations="{{ translations }}" tabindex="-1">
+<article id="data-from-django"
+	data-nick="{{ nick }}"
+	data-token="{{ csrf_token }}"
+	data-end-url="{% url 'return_qualtrics_code' %}"
+	data-start-timestamp = "{{ start_timestamp}}"
+	data-is-positive = "{{ is_positive_manipulation }}"
+	data-translations="{{ translations }}"
+	data-bad-end-url="{% url 'end_chat' %}"
+  data-bad-end-no-exitpoll-url="{% url 'end_chat_no_exitpoll' %}"
+	data-chat-speed-hidden="{{ chat_speed_hidden }}"
+	data-not-exit-chat-hidden="{{ not_exit_chat_hidden }}"
+	data-dont-scroll-chat-hidden="{{ dont_scroll_chat_hidden }}"
+  tabindex="-1">  
 </article>
 
 <h1 id="header-text" style="text-align: center; margin-top: 100px;">Chatroom</h1>
@@ -63,6 +75,21 @@
 
 <span style="float: right; margin-right: 2%; padding-top: inherit;" id='seconds-counter'>{{ translations.chatroom_time_to_end }}</span>
 
+</div>
+
+<div id="chatroom-poll-dialog-box">
+  <h3>{{ translations.chatroom_poll_dialog_text }}</h3>
+  <p id="poll-users-amount">{{ translations.chatroom_poll_users_amount }}</p>
+
+  <div class="progress-container">
+      <div class="progress-bar" id="progress-bar" style="width: 50%;">50% {{ translations.yes }}</div>
+      <span class="remaining-text" id="remaining-text">50% {{ translations.no }}</span>
+  </div>
+
+  <h3 id="chatroom-poll-thanks">{{ translations.chatroom_poll_thanks }}</h3>
+
+  <button class="poll-btn-submit" id="chatroom-poll-yes" onclick="chatroomPollDialogClick(true)">{{ translations.yes }}</button>
+  <button class="poll-btn-submit" id="chatroom-poll-no" onclick="chatroomPollDialogClick(false)">{{ translations.no }}</button>
 </div>
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>

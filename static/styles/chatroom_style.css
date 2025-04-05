@@ -457,3 +457,93 @@ kbd {
 .moderator-nick {
   color: red !important;
 }
+
+#chatroom-poll-dialog-box {
+  background: #333333;
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  box-shadow: 0px 0px 10px gray;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.progress-container {
+  width: 100%;
+  background-color: #ddd;
+  position: relative;
+  border-radius: 25px;
+  height: 30px;
+  overflow: hidden;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #2196F3;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+  border-radius: 25px 0 0 25px;
+  position: relative;
+  transition: width 0.15s ease-in-out;
+}
+
+.remaining-text {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  line-height: 30px;
+  color: #f1f1f1;
+  font-size: 14px;
+}
+
+.poll-btn-submit {
+  width: 10%;
+  height: 50px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 2px 3px #999;
+  outline-color: transparent;
+  font-size: larger;
+  margin-top: 2%;
+}
+
+#chatroom-poll-yes {
+  background: #2196F3;
+  display: none;
+}
+
+#chatroom-poll-yes:hover {
+  background-color: #135388;
+}
+
+#chatroom-poll-yes:active {
+  background-color: #135388;
+  box-shadow: 1px 3px #666;
+  transform: translateY(4px);
+}
+
+#chatroom-poll-no {
+  background: #f1f1f1;
+  display: none;
+}
+
+#chatroom-poll-no:hover {
+  background-color: #b3b3b3;
+}
+
+#chatroom-poll-no:active {
+  background-color: #b3b3b3;
+  box-shadow: 1px 3px #666;
+  transform: translateY(4px);
+}
+
+#chatroom-poll-thanks {
+  display: none;
+}
