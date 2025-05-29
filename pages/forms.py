@@ -1,11 +1,19 @@
 from django import forms
 from .models import Nicks
 from .utils import load_translations
+from django.conf import settings
 
 class HomeForm(forms.Form):
     translations = load_translations()
 
-    nick = forms.CharField(label=translations.get('home_form_nick'), max_length=100, required=False, widget=forms.TextInput(attrs={"class": "form-input"}))
+    nick = forms.CharField(
+        label=translations.get('home_form_nick'),
+        max_length=100,
+        required=False,
+        #widget=forms.TextInput(attrs={"class": "form-input"})
+        # TODO remove chatroom interactions
+        widget=forms.HiddenInput()
+    )
     
     key_from_qualtrics = forms.CharField(
         label=translations.get('home_form_qualtrics_key'),
@@ -23,6 +31,9 @@ class HomeForm(forms.Form):
         translations = load_translations()
 
         key_from_qualtrics = self.cleaned_data['key_from_qualtrics']
+
+        if settings.DEBUG_MODE:
+            key_from_qualtrics = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxss76392ss"
 
         key_from_qualtrics = key_from_qualtrics[:-2]
 

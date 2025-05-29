@@ -38,6 +38,8 @@
 body {
   background-color: #ffffff !important;
   color: black !important;
+  margin-right: 10%;
+  margin-left: 10%;
 }
 
 p {
@@ -45,4 +47,36 @@ p {
   /* font-family: monospace; */
   color: black !important;
 
+}
+
+.debug-box {
+  border: 1px solid #000;
+  padding: 10px;
+  width: fit-content;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: sans-serif;
+  background-color: #f9f9f9;
+  margin-left: 40%;
+}
+
+.debug-box label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.debug-box select {
+  margin-top: 4px;
+}
+
+.debug-box input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+.debug-box label[for] {
+  flex-direction: row;
+  align-items: center;
 }

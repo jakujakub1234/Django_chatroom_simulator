@@ -78,6 +78,7 @@ var chatroom_poll_percantage = 50;
 var chatroom_speed = parseInt(data_from_django.chatSpeedHidden);
 var not_exit_chatroom_at_the_end = parseInt(data_from_django.notExitChatHidden) == 1;
 var dont_scroll_chat_after_message = parseInt(data_from_django.dontScrollChatHidden) == 1;
+var no_user_interaction = parseInt(data_from_django.noUserInteractionHidden) == 1;
 
 var end_chatroom = false;
 
@@ -270,10 +271,18 @@ function createAndSendMessageHTML(
     respond_button.addEventListener("click", (event) => respondToMessage(event.currentTarget));
     respond_button.innerHTML = respond_svg;
 
+    if (no_user_interaction) {
+        respond_button.classList.add("hidden");
+    }
+
     var reaction_button =  document.createElement("button");
     reaction_button.classList.add("reaction-button", "message-button");
     reaction_button.addEventListener("click", (event) => openOrCloseModal(event.currentTarget, "reactions"));
     reaction_button.innerHTML = reaction_svg;
+
+    if (no_user_interaction) {
+        reaction_button.classList.add("hidden");
+    }
 
     var report_button =  document.createElement("button");
     report_button.classList.add("report-button", "message-button");
@@ -350,10 +359,13 @@ function createAndSendMessageHTML(
     chatroom.appendChild(outside_message_wrapper);
 
     if (!dont_scroll_chat_after_message) {
-        window.scroll({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-        });
+
+        if (message_id % 2 == 0) {
+            window.scroll({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
     }
 
     change_font_size(font_size_change);
@@ -457,11 +469,13 @@ function addReport(report_button_dom, report_id) {
 
     var message_id = report_button_dom.parentNode.parentNode.parentNode.parentNode.querySelector(".message-p").dataset.index;
     var bot_nick = report_button_dom.parentNode.parentNode.parentNode.parentNode.querySelector(".span-bot").innerText;
+    var message_text = report_button_dom.parentNode.parentNode.parentNode.parentNode.querySelector(".message-p").innerText;
 
     sendDataThroughAjax(true, {
         csrfmiddlewaretoken: data_from_django.token,
         action: "reports",
         message_id: message_id,
+        message_text: message_text,
         report_id, report_id
     });
 
@@ -834,6 +848,10 @@ function showTypingBotsNicks(seconds_integer) {
 }
 
 function sendCuriosityQuestion() {
+    if (no_user_interaction) {
+        return;
+    }
+
     if (!curiosity_question_sended && draft_bots_message_id == 29) {
         curiosity_question_sended = true;
 
@@ -855,6 +873,10 @@ function sendCuriosityQuestion() {
 }
 
 function handleReports() {
+    if (no_user_interaction) {
+        return;
+    }
+    
     while (reports_remove_messages_queue.length > 0 && reports_remove_messages_queue[0][0] <= 0) {
         var report_data = reports_remove_messages_queue.shift();
         var reported_message_id = report_data[1];
@@ -1020,6 +1042,12 @@ async function chatroomPollDialogClick(is_yes) {
 }
 
 function handleExitPoll() {
+    if (no_user_interaction) {
+        exit_poll_after_vote_seconds += 999999;
+        
+        return;
+    }
+
     seconds_from_last_message++;
 
     if (seconds_from_last_message >= SECONDS_FROM_LAST_MESSAGE_TO_POLL_DIALOG && !exit_poll_opened) {
@@ -1067,7 +1095,7 @@ function incrementSeconds() {
         }
     }
 
-    if (bots_message_id >= 2 + Object.keys(bots_messages).length) {
+    if (bots_message_id >= 1 + Object.keys(bots_messages).length) {
         handleExitPoll();
         return;
     }

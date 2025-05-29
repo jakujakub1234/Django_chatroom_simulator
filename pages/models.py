@@ -42,6 +42,7 @@ class Interactions(models.Model):
 class Reports(models.Model):
     qualtrics_id = models.CharField(max_length=255)
     message_id = models.IntegerField()
+    message_text = models.CharField(max_length=2550, default="DEFAULT")
     report_id = models.IntegerField()
 
 class ExitPoll(models.Model):

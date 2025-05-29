@@ -14,6 +14,7 @@
 	data-chat-speed-hidden="{{ chat_speed_hidden }}"
 	data-not-exit-chat-hidden="{{ not_exit_chat_hidden }}"
 	data-dont-scroll-chat-hidden="{{ dont_scroll_chat_hidden }}"
+  data-no-user-interaction-hidden="{{ no_user_interaction_hidden }}"
   tabindex="-1">  
 </article>
 
@@ -50,7 +51,7 @@
   <p id="respond-input-box-message">respond_message</p>
 </div> 
 
-<div class="row">
+<div class="row {% if no_user_interaction_hidden == 1 %}hidden{% endif %}">
   <form class="form-group" id="chat-box" onsubmit="return false">
     {% csrf_token %}
     <div class="input-group mb-3">

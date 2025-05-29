@@ -29,22 +29,29 @@
 
 {% if debug_mode %}
 
-<label for="chat-speed">Chat Speed:</label>
-<select id="chat-speed" name="chat-speed">
-    <option value="1000">1x</option>
-    <option value="500">2x</option>
-    <option value="200">5x</option>
-    <option value="100">10x</option>
-    <option value="10">100x</option>
-</select>
+<div class="debug-box">
+    <h3>DEBUG OPTIONS</h3>
+    <label for="chat-speed">Chat Speed:</label>
+    <select id="chat-speed" name="chat-speed">
+        <option value="1000">1x</option>
+        <option value="500">2x</option>
+        <option value="200">5x</option>
+        <option value="100">10x</option>
+        <option value="10">100x</option>
+    </select>
 
-<label for="not-exit-chat">
-    <input type="checkbox" id="not-exit-chat"> NOT exit chatroom at the end
-</label>
+    <label for="not-exit-chat">
+        <input type="checkbox" id="not-exit-chat"> NOT exit chatroom at the end
+    </label>
 
-<label for="dont-scroll-chat">
-    <input type="checkbox" id="dont-scroll-chat" checked> DONT scroll chat after bot send message
-</label>
+    <label for="dont-scroll-chat">
+        <input type="checkbox" id="dont-scroll-chat"> DONT scroll chat after bot send message
+    </label>
+
+    <label for="no-user-interaction">
+        <input type="checkbox" id="no-user-interaction" checked> Remove all user interaction functions (e.g. input field)
+    </label>
+</div>
 
 {% endif %}
 
@@ -53,7 +60,8 @@
     {{ form.as_p }}
     <input type="hidden" name="chat_speed_hidden" id="chat-speed-hidden">
     <input type="hidden" name="not_exit_chat_hidden" id="not-exit-chat-hidden" value="0">
-    <input type="hidden" name="dont_scroll_chat_hidden" id="dont-scroll-chat-hidden" value="1">
+    <input type="hidden" name="dont_scroll_chat_hidden" id="dont-scroll-chat-hidden" value="0">
+    <input type="hidden" name="no_user_interaction_hidden" id="no-user-interaction-hidden" value="1">
 
     <input type="submit" value="{{ translations.button_submit }}" class="btn-submit" id="btn-submit">
 </form>
@@ -87,9 +95,15 @@ document.getElementById("dont-scroll-chat").addEventListener("change", function(
     document.getElementById("dont-scroll-chat-hidden").value = this.checked ? "1" : "0";
 });
 
+document.getElementById("no-user-interaction").addEventListener("change", function() {
+    document.getElementById("no-user-interaction-hidden").value = this.checked ? "1" : "0";
+});
+
 document.getElementById("btn-submit").addEventListener("click", function() {
     document.getElementById("chat-speed-hidden").value = document.getElementById("chat-speed").value;
+    document.getElementById("not-exit-chat-hidden").value = document.getElementById("not-exit-chat").checked ? "1" : "0";
     document.getElementById("dont-scroll-chat-hidden").value = document.getElementById("dont-scroll-chat").checked ? "1" : "0";
+    document.getElementById("no-user-interaction-hidden").value = document.getElementById("no-user-interaction").checked ? "1" : "0";
 });
 </script>
 

@@ -58,6 +58,7 @@ class HomePageView(TemplateView):
                 request.session['chat_speed_hidden'] = request.POST.get("chat_speed_hidden")
                 request.session['not_exit_chat_hidden'] = request.POST.get("not_exit_chat_hidden")
                 request.session['dont_scroll_chat_hidden'] = request.POST.get("dont_scroll_chat_hidden")
+                request.session['no_user_interaction_hidden'] = request.POST.get("no_user_interaction_hidden")
     
             return HttpResponseRedirect("/lobby")
 
@@ -129,10 +130,12 @@ class ChatroomPageView(TemplateView):
             context['chat_speed_hidden'] = self.request.session['chat_speed_hidden']
             context['not_exit_chat_hidden'] = self.request.session['not_exit_chat_hidden']
             context['dont_scroll_chat_hidden'] = self.request.session['dont_scroll_chat_hidden']
+            context['no_user_interaction_hidden'] = self.request.session['no_user_interaction_hidden']
         else:
             context['chat_speed_hidden'] = 1000
             context['not_exit_chat_hidden'] = 0
             context['dont_scroll_chat_hidden'] = 0
+            context['no_user_interaction_hidden'] = 1
 
         return context
 
@@ -285,6 +288,7 @@ class AjaxPageView(TemplateView):
             reports = Reports(
                 qualtrics_id = request.session['key'],
                 message_id = request.POST.get('message_id'),
+                message_text = request.POST.get('message_text'),
                 report_id = request.POST.get('report_id')
             )
             
