@@ -971,7 +971,7 @@ function closeChatroomPollDialog() {
 }
 
 async function pollChangeUserAmount(user_amount) {
-    document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 7 " + translations.chatroom_poll_users_amount;
+    document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 6 " + translations.chatroom_poll_users_amount;
 }
 
 async function chatroomPollDialog() {
@@ -1001,8 +1001,9 @@ async function chatroomPollDialog() {
 }
 
 function showPollButtons() {
-    document.getElementById("chatroom-poll-yes").style.display = "inline";
-    document.getElementById("chatroom-poll-no").style.display = "inline";
+    // TODO remove voting in exit poll
+    // document.getElementById("chatroom-poll-yes").style.display = "inline";
+    // document.getElementById("chatroom-poll-no").style.display = "inline";
 
     exit_poll_buttons_visible = true;
 }
@@ -1042,11 +1043,11 @@ async function chatroomPollDialogClick(is_yes) {
 }
 
 function handleExitPoll() {
-    if (no_user_interaction) {
-        exit_poll_after_vote_seconds += 999999;
+    // if (no_user_interaction) {
+    //     exit_poll_after_vote_seconds += 999999;
         
-        return;
-    }
+    //     return;
+    // }
 
     seconds_from_last_message++;
 
@@ -1056,6 +1057,11 @@ function handleExitPoll() {
     }
 
     if (exit_poll_buttons_visible && !exit_poll_user_voted) {
+        // TODO remove voting in exit poll
+        exit_poll_user_voted = true
+        exit_poll_after_vote_seconds = 9999;
+        // TODO remove voting in exit poll
+
         exit_poll_votings_possible_seconds++;
     }
 

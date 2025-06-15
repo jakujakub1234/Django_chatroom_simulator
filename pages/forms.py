@@ -53,6 +53,8 @@ class HomeForm(forms.Form):
 
         key_from_qualtrics = key_from_qualtrics[:-5]
 
+        if settings.DEBUG_MODE:
+            return key_from_qualtrics
 
         # TODO wylaczenie bazy
         is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
