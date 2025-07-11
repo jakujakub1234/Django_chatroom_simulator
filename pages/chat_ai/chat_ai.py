@@ -12,62 +12,62 @@ language_code = settings.LANGUAGE_CODE
 class ChatAI:
     def __init__(self):
         module_dir = os.path.dirname(__file__)  
-        directory_for_current_lang = f'files_for_ai/{language_code}'
+        # directory_for_current_lang = f'files_for_ai/{language_code}'
 
-        self.user_nick = ""
-        self.user_messages_counter = 0
+        # self.user_nick = ""
+        # self.user_messages_counter = 0
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/keywords.json')) as file:
-            keywords = json.load(file)
+        # with open(os.path.join(module_dir, f'{directory_for_current_lang}/keywords.json')) as file:
+        #     keywords = json.load(file)
 
-        self.greetings = keywords["GREETINGS"]
-        self.questions = keywords["QUESTIONS"]
-        self.what_should_we_do = keywords["WHAT_SHOULD_WE_DO"]
+        # self.greetings = keywords["GREETINGS"]
+        # self.questions = keywords["QUESTIONS"]
+        # self.what_should_we_do = keywords["WHAT_SHOULD_WE_DO"]
 
-        self.what_should_we_do_counter = 0
+        # self.what_should_we_do_counter = 0
 
-        self.keywords_from_excel = {}
+        # self.keywords_from_excel = {}
 
-        self.MAX_EXCEL_INEDX = 361
+        # self.MAX_EXCEL_INEDX = 361
 
-        for i in range(self.MAX_EXCEL_INEDX + 1):
-            if str(i) in keywords:
-                self.keywords_from_excel[str(i)] = keywords[str(i)]
+        # for i in range(self.MAX_EXCEL_INEDX + 1):
+        #     if str(i) in keywords:
+        #         self.keywords_from_excel[str(i)] = keywords[str(i)]
 
-        self.gemini_api_key = "error: secrets not found"
-        self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent"
+        # self.gemini_api_key = "error: secrets not found"
+        # self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent"
         
-        self.previous_message_timestamp = -100
-        self.previous_gibberish_message_timestamp = -1000
+        # self.previous_message_timestamp = -100
+        # self.previous_gibberish_message_timestamp = -1000
 
-        with open('secrets.yaml', 'r') as file:
-            self.gemini_api_key = yaml.safe_load(file)['API_GEMINI']
+        # with open('secrets.yaml', 'r') as file:
+        #     self.gemini_api_key = yaml.safe_load(file)['API_GEMINI']
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/responds.json')) as file:
-            self.responds = json.load(file)
+        # with open(os.path.join(module_dir, f'{directory_for_current_lang}/responds.json')) as file:
+        #     self.responds = json.load(file)
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/responds_in_specific_place.json')) as file:
-            self.responds_in_specific_place = json.load(file)
+        # with open(os.path.join(module_dir, f'{directory_for_current_lang}/responds_in_specific_place.json')) as file:
+        #     self.responds_in_specific_place = json.load(file)
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/gemini_prompts.json'), 'r') as file:
-            gemini_json = json.load(file)
+        # with open(os.path.join(module_dir, f'{directory_for_current_lang}/gemini_prompts.json'), 'r') as file:
+        #     gemini_json = json.load(file)
             
-            self.gemini_prompt_for_males = gemini_json["general_for_males"]
-            self.gemini_prompt_for_females = gemini_json["general_for_females"]
-            self.gemini_prompt_gibberish_detector = gemini_json["gibberish_detector"]
-            self.gemini_prompt_curse_detector = gemini_json["curse_detector"]
+        #     self.gemini_prompt_for_males = gemini_json["general_for_males"]
+        #     self.gemini_prompt_for_females = gemini_json["general_for_females"]
+        #     self.gemini_prompt_gibberish_detector = gemini_json["gibberish_detector"]
+        #     self.gemini_prompt_curse_detector = gemini_json["curse_detector"]
 
-            self.gemini_prompt_yes = gemini_json["yes"]
-            self.gemini_prompt_no = gemini_json["no"]
+        #     self.gemini_prompt_yes = gemini_json["yes"]
+        #     self.gemini_prompt_no = gemini_json["no"]
 
-            self.bots = gemini_json["bots_nicks"].split(";")
-            self.female_bots = gemini_json["bots_nicks_females"].split(";")
+        #     self.bots = gemini_json["bots_nicks"].split(";")
+        #     self.female_bots = gemini_json["bots_nicks_females"].split(";")
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/never_existing_2_letters_combos.txt'), 'r') as file:
-            self.never_existing_2_letters = set(file.read().split())
+        # with open(os.path.join(module_dir, f'{directory_for_current_lang}/never_existing_2_letters_combos.txt'), 'r') as file:
+        #     self.never_existing_2_letters = set(file.read().split())
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/never_existing_3_letters_combos.txt'), 'r') as file:
-            self.never_existing_3_letters = set(file.read().split())
+        # with open(os.path.join(module_dir, f'{directory_for_current_lang}/never_existing_3_letters_combos.txt'), 'r') as file:
+        #     self.never_existing_3_letters = set(file.read().split())
 
     def preprocessMessage(self, message):
         message = message.lower()

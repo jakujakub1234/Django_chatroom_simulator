@@ -203,10 +203,11 @@ class AjaxPageView(TemplateView):
                 nick=request.session['nick'],
                 chatroom_start=datetime.now().timestamp(),
                 is_manipulation_positive=(request.session['is_positive_manipulation']=="True"),
-                language_version=language_code
+                language_version=language_code,
+                manipulation_type=request.session['is_positive_manipulation']
             )
             
-            # TODO wylaczenie bazy
+            # # TODO wylaczenie bazy
             nick.save()        
 
         if request.POST.get('action') == "message":
@@ -223,7 +224,7 @@ class AjaxPageView(TemplateView):
                 typing_time = request.POST.get('typing_time')
             )
             
-            # TODO wylaczenie bazy
+            # # TODO wylaczenie bazy
             messages.save()
         
         if request.POST.get('action') == "like_reactions":

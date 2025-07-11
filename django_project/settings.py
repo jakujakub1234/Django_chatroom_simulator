@@ -85,12 +85,13 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 # TODO wylaczenie bazy (wywalic kiedys chyba, to chyba stara baza)
-#DATABASES = {
+# DATABASES = {
 #    'default': dj_database_url.config(
 #    default='postgresql://postgres:postgres@localhost:5432/mysite',
 #    conn_max_age=600
-#)}
+# )}
 
+# TODO wylaczenie bazy o kurwa odkomentowac
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

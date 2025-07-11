@@ -39,15 +39,18 @@ class HomeForm(forms.Form):
 
         control_number = key_from_qualtrics[-5:]
 
-        if control_number != "76392" and control_number != "76393":
+        if control_number != "76392" and control_number != "76393" and control_number != "76391":
             self._errors["key_from_qualtrics"] = [translations.get('home_error_qualtrics_key')]
 
         if control_number == "76392":
             self.data = self.data.copy()
-            self.data['is_positive_manipulation'] = "True"
+            self.data['is_positive_manipulation'] = "RESPECT"
         elif control_number == "76393":
             self.data = self.data.copy()
-            self.data['is_positive_manipulation'] = "False"
+            self.data['is_positive_manipulation'] = "CONTROL"
+        elif control_number == "76391":
+            self.data = self.data.copy()
+            self.data['is_positive_manipulation'] = "NONRESPECT"
         else:
             self._errors["key_from_qualtrics"] = [translations.get('home_error_qualtrics_key')]
 
@@ -59,6 +62,6 @@ class HomeForm(forms.Form):
         # TODO wylaczenie bazy
         is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
         if is_key_in_db != None:
-            self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
+           self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
 
         return key_from_qualtrics

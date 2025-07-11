@@ -1,7 +1,7 @@
 positive_bots_messages = {
 7:["Moderator", "Witamy Państwa na czacie! Zachęcamy do merytorycznej i wyważonej dyskusji", "", "", "", ""],
-13:["Moderator", "Ten czat jest przeznaczony wyłącznie dla uczestników, którzy w badaniu wyrazili poglądy zbliżone do Twoich, aby umożliwić bardziej szczegółową i ukierunkowaną dyskusję. Z tego powodu czas oczekiwania może być nieco dłuższy — przepraszamy za niedogodności.", "", "", "", ""],
-19:["Moderator", "Chcielibyśmy zaprosić Państwa do dyskusji na temat sytuacji uchodźców z Ukrainy w Polsce. Jakie jest Państwa zdanie na temat dostępu uchodźców z Ukrainy do programów socjalnych w Polsce? Prosimy o formułowanie opinii z szacunkiem wobec tej grupy.", "", "", "", ""],
+13:["Moderator", "Chcielibyśmy zaprosić Państwa do dyskusji na temat sytuacji uchodźców z Ukrainy w Polsce. ", "", "", "", ""],
+19:["Moderator", "Jakie jest Państwa zdanie na temat dostępu uchodźców z Ukrainy do programów socjalnych w Polsce? Prosimy o formułowanie opinii z szacunkiem wobec tej grupy.", "", "", "", ""],
 24:["tomek", "Troche mi brakuje wiedzy w tym temacie", "", "", "", ""],
 30:["Sara", "Moim zdaniem wielu Ukraińców przyczynia się do rozwoju gospodarki", "", "", "", ""],
 35:["Protatoes", "nie podoba mi się ogólnie ta sytuacja...", "", "", "", ""],

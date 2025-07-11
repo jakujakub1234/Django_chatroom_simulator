@@ -8,10 +8,15 @@ var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
 var bots_messages = [];
 
-if (document.getElementById('data-from-django').dataset.isPositive == "True") {
+if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
+    console.log("positive_bots_messages file");
     bots_messages = positive_bots_messages;
-} else {
+} else if (document.getElementById('data-from-django').dataset.isPositive == "NONRESPECT") {
+    console.log("negative_bots_messages file");
     bots_messages = negative_bots_messages;
+} else {
+    console.log("control_bots_messages file");
+    bots_messages = control_bots_messages;
 }
 
 const seconds_counter = document.getElementById('seconds-counter');
@@ -143,6 +148,17 @@ function sendDataThroughAjax(async, data)
             return response;
         }
     });
+}
+
+function sendDataThroughBeacon(data) {
+    // Use FormData since sendBeacon prefers it for POST
+    const formData = new FormData();
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            formData.append(key, data[key]);
+        }
+    }
+    navigator.sendBeacon("../ajax/", formData);
 }
 
 function createAndSendMessageHTML(
@@ -664,25 +680,27 @@ function printTimeToLeftChat(time_to_left_chat)
 
 function sendReactionsAndInteractionsData(is_chatroom_finished_1_0)
 {
-    sendDataThroughAjax(true, {
-        csrfmiddlewaretoken: data_from_django.token,
-        action: "like_reactions",
-        reactions: Array.from(like_reactions_memory).join(' ')
-    });
+    console.log("WHOA WHOA WHOA")
 
-    sendDataThroughAjax(true, {
-        csrfmiddlewaretoken: data_from_django.token,
-        action: "heart_reactions",
-        reactions: Array.from(heart_reactions_memory).join(' ')
-    });
+    // sendDataThroughAjax(true, {
+    //     csrfmiddlewaretoken: data_from_django.token,
+    //     action: "like_reactions",
+    //     reactions: Array.from(like_reactions_memory).join(' ')
+    // });
 
-    sendDataThroughAjax(true, {
-        csrfmiddlewaretoken: data_from_django.token,
-        action: "angry_reactions",
-        reactions: Array.from(angry_reactions_memory).join(' ')
-    });
+    // sendDataThroughAjax(true, {
+    //     csrfmiddlewaretoken: data_from_django.token,
+    //     action: "heart_reactions",
+    //     reactions: Array.from(heart_reactions_memory).join(' ')
+    // });
 
-    sendDataThroughAjax(true, {
+    // sendDataThroughAjax(true, {
+    //     csrfmiddlewaretoken: data_from_django.token,
+    //     action: "angry_reactions",
+    //     reactions: Array.from(angry_reactions_memory).join(' ')
+    // });
+
+    sendDataThroughBeacon( {
         csrfmiddlewaretoken: data_from_django.token,
         action: "interactions",
         hesitation: hesitation,
@@ -692,6 +710,17 @@ function sendReactionsAndInteractionsData(is_chatroom_finished_1_0)
         is_chatroom_finished: is_chatroom_finished_1_0,
         chatroom_exit_time: seconds
     });
+
+    // sendDataThroughAjax(true, {
+    //     csrfmiddlewaretoken: data_from_django.token,
+    //     action: "interactions",
+    //     hesitation: hesitation,
+    //     mouse_movement_seconds: mouse_movement_seconds,
+    //     scroll_seconds: scroll_seconds,
+    //     input_seconds: input_seconds,
+    //     is_chatroom_finished: is_chatroom_finished_1_0,
+    //     chatroom_exit_time: seconds
+    // });
 }
 
 function openDialog() {
@@ -1004,6 +1033,7 @@ function showPollButtons() {
     // TODO remove voting in exit poll
     // document.getElementById("chatroom-poll-yes").style.display = "inline";
     // document.getElementById("chatroom-poll-no").style.display = "inline";
+    // TODO remove voting in exit poll
 
     exit_poll_buttons_visible = true;
 }
@@ -1083,6 +1113,7 @@ function incrementSeconds() {
 
     if (exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
         end_chatroom = true;
+        console.log("XD 1")
         sendReactionsAndInteractionsData(1);
         closeChatroomPollDialog();
         
@@ -1093,6 +1124,7 @@ function incrementSeconds() {
 
     if (exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
         end_chatroom = true;
+        console.log("XD 2")
         sendReactionsAndInteractionsData(0);
         closeChatroomPollDialog();
         
@@ -1184,6 +1216,7 @@ function incrementSeconds() {
 
     if (time_to_left_chat == 0) {
         end_chatroom = true;
+        console.log("XD 3")
         sendReactionsAndInteractionsData(1);
         closeChatroomPollDialog();
 
@@ -1222,8 +1255,11 @@ window.addEventListener("scroll", (e) => {
 
 window.addEventListener('beforeunload', function(e) {
     if (end_chatroom) {
+        console.log("WOLOLOLOL")
         return;
     }
+
+    console.log("XD 4")
 
     sendReactionsAndInteractionsData(0);
 
