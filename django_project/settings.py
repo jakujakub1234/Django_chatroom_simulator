@@ -9,9 +9,18 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import yaml
 import dj_database_url
 from pathlib import Path
 import os
+
+DATABASES_ACTIVE = True
+
+with open('secrets.yaml', 'r') as file:
+    yaml_file = yaml.safe_load(file)
+    secret_secret_key = yaml_file['SECRET_KEY']
+    database_ip = yaml_file['DATABASE_IP']
+    database_password = yaml_file['DATABASE_PASSWORD']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,8 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-p#*uurcoc@u!sxc%0x0xprv&bu0(-mfj78!4k6h)elc)!7%$kv"
+SECRET_KEY = secret_secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -72,39 +80,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "django_project.wsgi.application"
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.wp.pl'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 465
-EMAIL_HOST_USER = "kubax1234210@wp.pl"
-EMAIL_HOST_PASSWORD = "Konsola1"
-
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# TODO wylaczenie bazy (wywalic kiedys chyba, to chyba stara baza)
-# DATABASES = {
-#    'default': dj_database_url.config(
-#    default='postgresql://postgres:postgres@localhost:5432/mysite',
-#    conn_max_age=600
-# )}
-
-# TODO wylaczenie bazy o kurwa odkomentowac
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': '104.197.57.248',
-        'USER': 'postgres',
-        'PASSWORD': 'efC3XZ3456hBCVw4Z',
-        'NAME': 'ManipulationDB',
+if DATABASES_ACTIVE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': database_ip,
+            'USER': 'postgres',
+            'PASSWORD': database_password,
+            'NAME': 'ManipulationDB',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        conn_max_age=600
+    )}
 
 # CONNECT TO DB VIA TERMINAL
-# psql -h 104.197.57.248 -d ManipulationDB -U postgres 
-# efC3XZ3456hBCVw4Z
+# psql -h database_ip -d ManipulationDB -U postgres 
+# database_password
 # \c ManipulationDB
 # SELECT * FROM pages_nicks;
 
@@ -126,19 +126,6 @@ delete from pages_reports ;
 
 '''
 
-
-# TODO wylaczenie bazy (to samo chyba jest na gorze nie?)
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'HOST': '104.197.57.248',
-#        'USER': 'postgres',
-#        'PASSWORD': 'efC3XZ3456hBCVw4Z',
-#        'NAME': 'ManipulationDB'
-#    }
-#}
-
-#DATABASE_URL="postgres://postgres:efC3XZ3456hBCVw4Z@//cloudsql/reliable-byte-428411-d8:us-central1:manipulationpretest/ManipulationDB"
 #GS_BUCKET_NAME="reliable-byte-428411-d8_reliable-byte-428411-d8.appspot.com"
 
 #DATABASES = {

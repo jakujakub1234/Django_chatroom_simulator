@@ -59,9 +59,9 @@ class HomeForm(forms.Form):
         if settings.DEBUG_MODE:
             return key_from_qualtrics
 
-        # TODO wylaczenie bazy
-        is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
-        if is_key_in_db != None:
-           self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
+        if settings.DATABASES_ACTIVE:
+            is_key_in_db = Nicks.objects.filter(qualtrics_id=key_from_qualtrics).first()
+            if is_key_in_db != None:
+                self._errors["key_from_qualtrics"] = ["Klucz z Qualtricsa został już wcześniej użyty - w badaniu można wziąć udział tylko raz"]
 
         return key_from_qualtrics

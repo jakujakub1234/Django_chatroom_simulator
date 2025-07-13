@@ -195,117 +195,108 @@ class AjaxPageView(TemplateView):
                 
         if request.POST.get('action') == "nick":
             self.chat_ai.setNick(request.POST.get('nick'))
-
-            # TODO wylaczenie bazy
             
-            nick = Nicks(
-                qualtrics_id=request.session['key'],
-                nick=request.session['nick'],
-                chatroom_start=datetime.now().timestamp(),
-                is_manipulation_positive=(request.session['is_positive_manipulation']=="True"),
-                language_version=language_code,
-                manipulation_type=request.session['is_positive_manipulation']
-            )
+            if settings.DATABASES_ACTIVE:
+                nick = Nicks(
+                    qualtrics_id=request.session['key'],
+                    nick=request.session['nick'],
+                    chatroom_start=datetime.now().timestamp(),
+                    is_manipulation_positive=(request.session['is_positive_manipulation']=="True"),
+                    language_version=language_code,
+                    manipulation_type=request.session['is_positive_manipulation']
+                )
             
-            # # TODO wylaczenie bazy
-            nick.save()        
+                nick.save()        
 
         if request.POST.get('action') == "message":
-            # TODO wylaczenie bazy
-            
-            messages = Messages(
-                qualtrics_id = request.session['key'],
-                message = request.POST.get('message'),
-                prev_message = request.POST.get('prev_message'),
-                prev_prev_message = request.POST.get('prev_prev_message'),
-                bot_response = request.POST.get('bot_response'),
-                message_time = request.POST.get('message_time'),
-                message_respond_to = request.POST.get('respond_message_id'),
-                typing_time = request.POST.get('typing_time')
-            )
-            
-            # # TODO wylaczenie bazy
-            messages.save()
+            if settings.DATABASES_ACTIVE:
+                messages = Messages(
+                    qualtrics_id = request.session['key'],
+                    message = request.POST.get('message'),
+                    prev_message = request.POST.get('prev_message'),
+                    prev_prev_message = request.POST.get('prev_prev_message'),
+                    bot_response = request.POST.get('bot_response'),
+                    message_time = request.POST.get('message_time'),
+                    message_respond_to = request.POST.get('respond_message_id'),
+                    typing_time = request.POST.get('typing_time')
+                )
+
+                messages.save()
         
         if request.POST.get('action') == "like_reactions":
             reactions_array = []
 
-            # TODO wylaczenie bazy
+            if settings.DATABASES_ACTIVE:
+                for elem in request.POST.get('reactions').split():
+                    reactions_array.append({
+                        "qualtrics_id": request.session['key'],
+                            "message_id": int(elem),
+                    })
 
-            for elem in request.POST.get('reactions').split():
-                reactions_array.append({
-                       "qualtrics_id": request.session['key'],
-                        "message_id": int(elem),
-                })
-
-            django_list = [LikeReactions(**vals) for vals in reactions_array]
-            LikeReactions.objects.bulk_create(django_list)
+                django_list = [LikeReactions(**vals) for vals in reactions_array]
+                LikeReactions.objects.bulk_create(django_list)
             
 
         if request.POST.get('action') == "heart_reactions":
             reactions_array = []
 
-            # TODO wylaczenie bazy
+            if settings.DATABASES_ACTIVE:
+                for elem in request.POST.get('reactions').split():
+                    reactions_array.append({
+                        "qualtrics_id": request.session['key'],
+                            "message_id": int(elem),
+                    })
 
-            for elem in request.POST.get('reactions').split():
-                reactions_array.append({
-                       "qualtrics_id": request.session['key'],
-                        "message_id": int(elem),
-                })
-
-            django_list = [HeartReactions(**vals) for vals in reactions_array]
-            HeartReactions.objects.bulk_create(django_list)
+                django_list = [HeartReactions(**vals) for vals in reactions_array]
+                HeartReactions.objects.bulk_create(django_list)
 
         if request.POST.get('action') == "angry_reactions":
             reactions_array = []
 
-            # TODO wylaczenie bazy
-            for elem in request.POST.get('reactions').split():
-                reactions_array.append({
-                       "qualtrics_id": request.session['key'],
-                        "message_id": int(elem),
-                })
+            if settings.DATABASES_ACTIVE:
+                for elem in request.POST.get('reactions').split():
+                    reactions_array.append({
+                        "qualtrics_id": request.session['key'],
+                            "message_id": int(elem),
+                    })
 
-            django_list = [AngryReactions(**vals) for vals in reactions_array]
-            AngryReactions.objects.bulk_create(django_list)
+                django_list = [AngryReactions(**vals) for vals in reactions_array]
+                AngryReactions.objects.bulk_create(django_list)
             
         if request.POST.get('action') == "interactions":
-            # TODO wylaczenie bazy
-            interactions = Interactions(
-                qualtrics_id = request.session['key'],
-                hesitation = request.POST.get('hesitation'),
-                mouse_movement_seconds = request.POST.get('mouse_movement_seconds'),
-                scroll_seconds = request.POST.get('scroll_seconds'),
-                input_seconds = request.POST.get('input_seconds'),
-                is_chatroom_finished = request.POST.get('is_chatroom_finished'),
-                chatroom_exit_time = request.POST.get('chatroom_exit_time'),
-            )
+            if settings.DATABASES_ACTIVE:
+                interactions = Interactions(
+                    qualtrics_id = request.session['key'],
+                    hesitation = request.POST.get('hesitation'),
+                    mouse_movement_seconds = request.POST.get('mouse_movement_seconds'),
+                    scroll_seconds = request.POST.get('scroll_seconds'),
+                    input_seconds = request.POST.get('input_seconds'),
+                    is_chatroom_finished = request.POST.get('is_chatroom_finished'),
+                    chatroom_exit_time = request.POST.get('chatroom_exit_time'),
+                )
 
-            # TODO wylaczenie bazy
-            interactions.save()
+                interactions.save()
 
         if request.POST.get('action') == "reports":
-            # TODO wylaczenie bazy
-            reports = Reports(
-                qualtrics_id = request.session['key'],
-                message_id = request.POST.get('message_id'),
-                message_text = request.POST.get('message_text'),
-                report_id = request.POST.get('report_id')
-            )
-            
-            # TODO wylaczenie bazy
-            reports.save()
+            if settings.DATABASES_ACTIVE:
+                reports = Reports(
+                    qualtrics_id = request.session['key'],
+                    message_id = request.POST.get('message_id'),
+                    message_text = request.POST.get('message_text'),
+                    report_id = request.POST.get('report_id')
+                )
+                
+                reports.save()
 
         if request.POST.get('action') == "exit_poll":
-            # TODO wylaczenie bazy
-            exit_poll = ExitPoll(
-                qualtrics_id = request.session['key'],
-                is_yes = request.POST.get('is_yes')=="True",
-                vote_seconds = request.POST.get('vote_seconds'),
-            )
-            
-            # TODO wylaczenie bazy
-            exit_poll.save()
+            if settings.DATABASES_ACTIVE:
+                exit_poll = ExitPoll(
+                    qualtrics_id = request.session['key'],
+                    is_yes = request.POST.get('is_yes')=="True",
+                    vote_seconds = request.POST.get('vote_seconds'),
+                )
+                
+                exit_poll.save()
 
         return render(request, 'home.html', {'form': form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 

@@ -9,13 +9,13 @@ var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 var bots_messages = [];
 
 if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
-    console.log("positive_bots_messages file");
+    //console.log("positive_bots_messages file");
     bots_messages = positive_bots_messages;
 } else if (document.getElementById('data-from-django').dataset.isPositive == "NONRESPECT") {
-    console.log("negative_bots_messages file");
+    //console.log("negative_bots_messages file");
     bots_messages = negative_bots_messages;
 } else {
-    console.log("control_bots_messages file");
+    //console.log("control_bots_messages file");
     bots_messages = control_bots_messages;
 }
 
@@ -114,7 +114,8 @@ change_color_button.addEventListener("click", function() {
     change_layout_color(1);
 });
 
-//sendDataToDatabase("nick", "", "", user_name);
+// TODO remove chatroom interactions 
+sendDataToDatabase("nick", "", "", user_name);
 
 document.getElementById("msg_field").focus();
 
@@ -680,8 +681,6 @@ function printTimeToLeftChat(time_to_left_chat)
 
 function sendReactionsAndInteractionsData(is_chatroom_finished_1_0)
 {
-    console.log("WHOA WHOA WHOA")
-
     // sendDataThroughAjax(true, {
     //     csrfmiddlewaretoken: data_from_django.token,
     //     action: "like_reactions",
@@ -1113,7 +1112,6 @@ function incrementSeconds() {
 
     if (exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
         end_chatroom = true;
-        console.log("XD 1")
         sendReactionsAndInteractionsData(1);
         closeChatroomPollDialog();
         
@@ -1124,7 +1122,6 @@ function incrementSeconds() {
 
     if (exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
         end_chatroom = true;
-        console.log("XD 2")
         sendReactionsAndInteractionsData(0);
         closeChatroomPollDialog();
         
@@ -1216,7 +1213,6 @@ function incrementSeconds() {
 
     if (time_to_left_chat == 0) {
         end_chatroom = true;
-        console.log("XD 3")
         sendReactionsAndInteractionsData(1);
         closeChatroomPollDialog();
 
@@ -1255,11 +1251,8 @@ window.addEventListener("scroll", (e) => {
 
 window.addEventListener('beforeunload', function(e) {
     if (end_chatroom) {
-        console.log("WOLOLOLOL")
         return;
     }
-
-    console.log("XD 4")
 
     sendReactionsAndInteractionsData(0);
 
