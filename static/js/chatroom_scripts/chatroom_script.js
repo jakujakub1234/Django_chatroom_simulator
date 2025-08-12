@@ -340,25 +340,27 @@ function createAndSendMessageHTML(
     var report_respect_button =  document.createElement("button");
     report_respect_button.classList.add("report-button");
     report_respect_button.id = "report-button";
-    report_respect_button.addEventListener("click", (event) => addReport(event.currentTarget, RESPECT_REPORT_ID));
+    report_respect_button.addEventListener("click", (event) => addReport(event.currentTarget, RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID));
     report_respect_button.innerText = translations.chatroom_report_respect_text;
 
     var report_hostile_button =  document.createElement("button");
     report_hostile_button.classList.add("report-button");
     report_hostile_button.id = "report-button";
-    report_hostile_button.addEventListener("click", (event) => addReport(event.currentTarget, HOSTILE_REPORT_ID));
+    report_hostile_button.addEventListener("click", (event) => addReport(event.currentTarget, HOSTILE_REPORT_ID_OR_RESPECT_NORM_DENY_ID));
     report_hostile_button.innerText = translations.chatroom_report_hostile_text;
 
+    /*
     var report_misinformation_button =  document.createElement("button");
     report_misinformation_button.classList.add("report-button");
     report_misinformation_button.id = "report-button";
     report_misinformation_button.addEventListener("click", (event) => addReport(event.currentTarget, MISINFORMATION_REPORT_ID));
     report_misinformation_button.innerText = translations.chatroom_report_misinformation_text;
+    */
 
     report_modal.appendChild(report_modal_header);
     report_modal.appendChild(report_respect_button);
     report_modal.appendChild(report_hostile_button);
-    report_modal.appendChild(report_misinformation_button);
+    //report_modal.appendChild(report_misinformation_button);
 
     buttons_container.appendChild(respond_button);
     buttons_container.appendChild(reaction_button);
@@ -540,7 +542,7 @@ function sendUserMessage() {
 
             var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
 
-            reports_remove_messages_queue.push([random_time, -1, user_name, RESPECT_REPORT_ID]);
+            reports_remove_messages_queue.push([random_time, -1, user_name, RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID]);
             reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
         }
     }
@@ -911,7 +913,7 @@ function handleReports() {
         var reported_bot_nick = report_data[2];
         var report_type_id = report_data[3];
 
-        if (report_type_id == RESPECT_REPORT_ID) {
+        if (report_type_id == RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID) {
             respect_reports_dict[reported_bot_nick] += 1
 
             var respect_translation_index = [
@@ -938,7 +940,7 @@ function handleReports() {
             }
         }
         
-        if (report_type_id == HOSTILE_REPORT_ID) {
+        if (report_type_id == HOSTILE_REPORT_ID_OR_RESPECT_NORM_DENY_ID) {
             hostile_reports_dict[reported_bot_nick] += 1
             
             var hostile_translation_index = ["", "chatroom_moderator_hostile_first_time_", "chatroom_moderator_hostile_second_time_"][hostile_reports_dict[reported_bot_nick]];

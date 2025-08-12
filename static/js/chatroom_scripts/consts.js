@@ -4,8 +4,8 @@ const LIKE_REACTION_ID = 0;
 const HEART_REACTION_ID = 1;
 const ANGRY_REACTION_ID = 2;
 
-const RESPECT_REPORT_ID = 0;
-const HOSTILE_REPORT_ID = 1;
+const RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID = 0;
+const HOSTILE_REPORT_ID_OR_RESPECT_NORM_DENY_ID = 1; 
 const MISINFORMATION_REPORT_ID = 2;
 
 const bots_nicks = translations.bots_nicks.split(";");
