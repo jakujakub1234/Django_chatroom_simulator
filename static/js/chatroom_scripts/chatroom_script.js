@@ -379,7 +379,7 @@ function createAndSendMessageHTML(
 
     if (!dont_scroll_chat_after_message) {
 
-        if (message_id % 2 == 0) {
+        if (message_id % 2 == 0 || true) {
             window.scroll({
                 top: document.body.scrollHeight,
                 behavior: 'smooth'
