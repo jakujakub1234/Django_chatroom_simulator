@@ -1001,31 +1001,50 @@ function closeChatroomPollDialog() {
 }
 
 async function pollChangeUserAmount(user_amount) {
-    document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 6 " + translations.chatroom_poll_users_amount;
+    document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 5 " + translations.chatroom_poll_users_amount;
 }
 
 async function chatroomPollDialog() {
     document.getElementById("chatroom-poll-dialog-box").style.display = "block";
 
-    pollChangeUserAmount(0);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    pollChangeUserAmount(1);
-    await chatroomPollBarMove(100);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    pollChangeUserAmount(2);
-    await chatroomPollBarMove(50);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    pollChangeUserAmount(3);
-    await chatroomPollBarMove(67);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    pollChangeUserAmount(4);
-    await chatroomPollBarMove(75);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    pollChangeUserAmount(5);
-    await chatroomPollBarMove(60);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    pollChangeUserAmount(6);
-    await chatroomPollBarMove(67);
+    if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
+        pollChangeUserAmount(0);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        pollChangeUserAmount(1);
+        await chatroomPollBarMove(100);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(2);
+        await chatroomPollBarMove(100);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(3);
+        await chatroomPollBarMove(67);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(4);
+        await chatroomPollBarMove(75);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(5);
+        await chatroomPollBarMove(80);
+        //await new Promise(resolve => setTimeout(resolve, 800));
+        //pollChangeUserAmount(6);
+        //await chatroomPollBarMove(67);
+    } else {
+        pollChangeUserAmount(0);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        pollChangeUserAmount(1);
+        await chatroomPollBarMove(0);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(2);
+        await chatroomPollBarMove(50);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(3);
+        await chatroomPollBarMove(33);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(4);
+        await chatroomPollBarMove(25);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        pollChangeUserAmount(5);
+        await chatroomPollBarMove(20);
+    }
 
     showPollButtons();
 }
