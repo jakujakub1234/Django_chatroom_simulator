@@ -51,8 +51,8 @@
   <p id="respond-input-box-message">respond_message</p>
 </div> 
 
-<div class="row {% if no_user_interaction_hidden == 1 %}hidden{% endif %}">
-  <form class="form-group" id="chat-box" onsubmit="return false">
+<div class="row {% if no_user_interaction_hidden == 1 %}height-60{% endif %}">
+  <form class="form-group {% if no_user_interaction_hidden == 1 %}hidden{% endif %}" id="chat-box" onsubmit="return false">
     {% csrf_token %}
     <div class="input-group mb-3">
       <div class="input-group-prepend">

@@ -217,6 +217,7 @@ kbd {
 }
 
 #dialog-box {
+  margin-top: -100px;
   text-align: center;
   z-index: 1000;
   background-color: #333333;
@@ -551,4 +552,8 @@ kbd {
 
 .hidden {
   display: none;
+}
+
+.height-60 {
+  height: 60px;
 }
