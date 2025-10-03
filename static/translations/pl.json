@@ -78,7 +78,7 @@
     "ai_curiosity_question_1": "A Ty {nick} , co myślisz?",
     "ai_curiosity_question_2": "A Ty {nick} , masz może jakiś pomysł?",
 
-    "return_qualtrics_code_title": "Koniec odtwarzania czatu. Twoje zgłoszenia zostały zapisane.",
+    "return_qualtrics_code_title": "Koniec odtwarzania czatu. Twoje zgłoszenia zostały zapisane. Teraz możesz wrócić do poprzedniej zakładki i kontynuować badanie.",
     "return_qualtrics_code_text": "Twój kod do kontynuowania badania to:",
 
     "fake_end_page_title": "Dziękujemy za udział w czacie",
