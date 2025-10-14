@@ -10,9 +10,9 @@ class HomeForm(forms.Form):
         label=translations.get('home_form_nick'),
         max_length=100,
         required=False,
-        #widget=forms.TextInput(attrs={"class": "form-input"})
+        widget=forms.TextInput(attrs={"class": "form-input"})
         # TODO remove chatroom interactions
-        widget=forms.HiddenInput()
+        #widget=forms.HiddenInput()
     )
     
     key_from_qualtrics = forms.CharField(

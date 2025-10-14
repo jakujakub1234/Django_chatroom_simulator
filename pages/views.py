@@ -135,7 +135,7 @@ class ChatroomPageView(TemplateView):
             context['chat_speed_hidden'] = 1000
             context['not_exit_chat_hidden'] = 0
             context['dont_scroll_chat_hidden'] = 0
-            context['no_user_interaction_hidden'] = 1
+            context['no_user_interaction_hidden'] = 0
 
         return context
 

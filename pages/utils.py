@@ -2,10 +2,10 @@ import json
 import os
 from django.conf import settings
 
-#lobby_time = 19
+lobby_time = 14
 # TODO remove chatroom interactions 
+#lobby_time = 0
 
-lobby_time = 0
 chatroom_time = 490
 
 def load_translations():

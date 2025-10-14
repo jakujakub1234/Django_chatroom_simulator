@@ -4,7 +4,7 @@ var start_timestamp = parseInt(document.getElementById('data-from-django').datas
 
 var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
-var wait_time = 19;
+var wait_time = 14;
 
 var timer_text = document.getElementById('seconds-counter');
 var users_counter = document.getElementById('users-counter');
@@ -16,10 +16,9 @@ var time_to_another_users = [
     4,
     7,
     13,
-    17,
 ];
 
-for (let i = 0; i < 7; i++) {
+for (let i = 0; i < 6; i++) {
     if (time_to_another_users[i] > seconds) {
         users_counter.innerText = translations.lobby_users_counter + i;
         break;
@@ -38,7 +37,7 @@ document.getElementById('bot-2').innerHTML = loading_circle;
 document.getElementById('bot-3').innerHTML = loading_circle;
 document.getElementById('bot-4').innerHTML = loading_circle;
 document.getElementById('bot-5').innerHTML = loading_circle;
-document.getElementById('bot-6').innerHTML = loading_circle;
+//document.getElementById('bot-6').innerHTML = loading_circle;
 
 $.ajax({
     type: "POST",

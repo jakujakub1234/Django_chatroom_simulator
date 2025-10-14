@@ -115,7 +115,7 @@ change_color_button.addEventListener("click", function() {
 });
 
 // TODO remove chatroom interactions 
-sendDataToDatabase("nick", "", "", user_name);
+//sendDataToDatabase("nick", "", "", user_name);
 
 document.getElementById("msg_field").focus();
 
@@ -903,7 +903,7 @@ function sendCuriosityQuestion() {
 }
 
 function handleReports() {
-    if (no_user_interaction) {
+    if (no_user_interaction || true) {
         return;
     }
     
@@ -1051,8 +1051,8 @@ async function chatroomPollDialog() {
 
 function showPollButtons() {
     // TODO remove voting in exit poll
-    // document.getElementById("chatroom-poll-yes").style.display = "inline";
-    // document.getElementById("chatroom-poll-no").style.display = "inline";
+    document.getElementById("chatroom-poll-yes").style.display = "inline";
+    document.getElementById("chatroom-poll-no").style.display = "inline";
     // TODO remove voting in exit poll
 
     exit_poll_buttons_visible = true;
@@ -1108,8 +1108,8 @@ function handleExitPoll() {
 
     if (exit_poll_buttons_visible && !exit_poll_user_voted) {
         // TODO remove voting in exit poll
-        exit_poll_user_voted = true
-        exit_poll_after_vote_seconds = 9999;
+        //exit_poll_user_voted = true
+        //exit_poll_after_vote_seconds = 9999;
         // TODO remove voting in exit poll
 
         exit_poll_votings_possible_seconds++;
