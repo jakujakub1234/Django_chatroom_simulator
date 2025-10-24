@@ -11,13 +11,15 @@ language_code = settings.LANGUAGE_CODE
 
 class ChatAI:
     def __init__(self):
-        module_dir = os.path.dirname(__file__)  
+        self.module_dir = os.path.dirname(__file__)  
         directory_for_current_lang = f'files_for_ai/{language_code}'
+
+        self.chatroom_script_dir = f'../../static/js/{language_code}'
 
         self.user_nick = ""
         self.user_messages_counter = 0
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/keywords.json')) as file:
+        with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/keywords.json')) as file:
             keywords = json.load(file)
 
         self.greetings = keywords["GREETINGS"]
@@ -40,20 +42,21 @@ class ChatAI:
         self.previous_message_timestamp = -100
         self.previous_gibberish_message_timestamp = -1000
 
+        self.chatroom_history = []
+        self.sended_messages_history = []
+
         with open('secrets.yaml', 'r') as file:
             self.gemini_api_key = yaml.safe_load(file)['API_GEMINI']
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/responds.json')) as file:
+        with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/responds.json')) as file:
             self.responds = json.load(file)
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/responds_in_specific_place.json')) as file:
+        with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/responds_in_specific_place.json')) as file:
             self.responds_in_specific_place = json.load(file)
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/gemini_prompts.json'), 'r') as file:
+        with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/gemini_prompts.json'), 'r') as file:
             gemini_json = json.load(file)
             
-            self.gemini_prompt_for_males = gemini_json["general_for_males"]
-            self.gemini_prompt_for_females = gemini_json["general_for_females"]
             self.gemini_prompt_gibberish_detector = gemini_json["gibberish_detector"]
             self.gemini_prompt_curse_detector = gemini_json["curse_detector"]
 
@@ -61,12 +64,11 @@ class ChatAI:
             self.gemini_prompt_no = gemini_json["no"]
 
             self.bots = gemini_json["bots_nicks"].split(";")
-            self.female_bots = gemini_json["bots_nicks_females"].split(";")
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/never_existing_2_letters_combos.txt'), 'r') as file:
+        with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/never_existing_2_letters_combos.txt'), 'r') as file:
             self.never_existing_2_letters = set(file.read().split())
 
-        with open(os.path.join(module_dir, f'{directory_for_current_lang}/never_existing_3_letters_combos.txt'), 'r') as file:
+        with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/never_existing_3_letters_combos.txt'), 'r') as file:
             self.never_existing_3_letters = set(file.read().split())
 
     def preprocessMessage(self, message):
@@ -121,22 +123,33 @@ class ChatAI:
 
         return False
 
-    def generateRespondUsingGemini(self, message, is_female):
+    def generateRespondUsingGemini(self, message):
+        final_bot = None
         self.user_messages_counter += 1
 
-        prompt = self.gemini_prompt_for_males
-
-        if is_female:
-            prompt = self.gemini_prompt_for_females
+        result_message = ""
 
         headers = {
             "Content-Type": "application/json"
         }
 
-        chain_of_prompts = ["Odpisz na te wiadomosc zgodnie z przykładowymi odpowiedziami na przykładowe wiadomości, badz kreatywny i uprzejmy: wiadomość 1 'nie lubie ludzi' odpowiedz 'okej...' wiaodmosc 2 'co u was' odpowiedz 'git' wiadomosc 3 'niech ukraincy wracaja do siebie nie mamy tyle kasy' odpowiedz 'wow... troche ostro nie uwazasz?', wiadomość 4 'polska dla polaków' odpowiedz 'trochę ostro nie myślisz?'wiaodmość 5 'trzeba ukraincom pomagac i tyle' odpowiedz 'nom', wiadomość 6 'ej' odpowiedz 'XD' wiaodmość 7 ' a jak putin nas zaatakuje' odpowiedz 'wole o tym nie myslec szczerz', wiaodmosc 8 'uwazam, ze polska nie jest w dobrej sytaucji finansowej' odpowiedz ' nom racja moze nie jest',wiaodmosc 9 ' ludzie ogarnicie się to z naszych podatkow idzie' odpowiedz 'tez racja ale po to sa podatki'wiadomosc 10 ' co myslicie o ukraincach' odpowiedz 'sa git',wiaodmosc 11 'jestes botem' odpowiedz 'chyba ty'. Okej teraz twoja kolej!", 'wybierz jedną wiadomośc, która jest najbardziej naturalna i napisz TYLKO tą wiaodmość ', 'zmień tą wiadomość aby nie miała podwójnych form (np. zacząłeś/aś) i napisz TYLKO tą wiaodmość']
+        chain_of_prompts = ["Odpisz na te wiadomosc zgodnie z przykładowymi odpowiedziami na przykładowe wiadomości, \
+badz kreatywny i uprzejmy: wiadomość 1 'nie lubie ludzi' odpowiedz 'okej...' wiaodmosc 2 \
+'co u was' odpowiedz 'git' wiadomosc 3 'niech ukraincy wracaja do siebie nie mamy tyle kasy' \
+odpowiedz 'wow... troche ostro nie uwazasz?', wiadomość 4 'polska dla polaków' odpowiedz \
+'trochę ostro nie myślisz?'wiaodmość 5 'trzeba ukraincom pomagac i tyle' odpowiedz 'nom', \
+wiadomość 6 'ej' odpowiedz 'XD' wiaodmość 7 ' a jak putin nas zaatakuje' odpowiedz \
+'wole o tym nie myslec szczerz', wiaodmosc 8 'uwazam, ze polska nie jest w dobrej sytaucji finansowej' \
+odpowiedz ' nom racja moze nie jest',wiaodmosc 9 ' ludzie ogarnicie się to z naszych podatkow idzie' \
+odpowiedz 'tez racja ale po to sa podatki'wiadomosc 10 ' co myslicie o ukraincach' odpowiedz 'sa git',wiaodmosc 11 \
+'jestes botem' odpowiedz 'chyba ty'. Okej teraz twoja kolej! Tu jest historia rozmowy na czacie, odpowiadasz jako jeden z botow, a \
+user jest uzytkownikiem czatu ktory nie wie, ze rozmawia z botami: \n" + "\n".join(self.chatroom_history) + ". Odpowiedz w formacie <nazwa bota> -> <odpowiedz>. \
+Wiadomosc na ktora masz odpisac to"]#,
+# 'wybierz jedną wiadomośc, która jest najbardziej naturalna i napisz TYLKO tą wiadomość ',
+# 'zmień tą wiadomość aby nie miała podwójnych form (np. zacząłeś/aś) i napisz TYLKO tą wiadomość']
 
-
-        for prompt in chain_of_prompts:
+        for i, prompt in enumerate(chain_of_prompts):
+            print("Prompt: " + str(prompt))
             payload = {
                 "contents": [
                     {
@@ -155,7 +168,21 @@ class ChatAI:
                 
                 message = respond_text
 
-                print(message)
+                print("Response: " + message)
+
+                if i == 0:
+                    if "->" in message:
+                        bot_nick, msg_tmp = message.split("->")
+
+                        bot_nick = bot_nick.strip()
+                        bot_nick = bot_nick.split()[-1]
+
+                        result_message = msg_tmp.strip()
+
+                        for bot_name in self.bots:
+                            if bot_name.lower() == bot_nick.lower():
+                                final_bot = bot_name
+                                break
             else:
                 return False
 
@@ -171,7 +198,7 @@ class ChatAI:
         #    return False
 
         if response.status_code == 200:
-            response_text = response.json()['candidates'][0]['content']['parts'][0]['text']
+            response_text = result_message # response.json()['candidates'][0]['content']['parts'][0]['text']
 
             if response_text.count("**") >= 2:
                 response_text = response_text[response_text.index("**")+2:]
@@ -190,9 +217,9 @@ class ChatAI:
 
             response_text.replace("\"", "")
 
-            print(response_text)
+            print("Final response: " + response_text)
 
-            return [response_text]
+            return [final_bot, response_text]
 
         else:
             return False
@@ -237,9 +264,46 @@ class ChatAI:
             return self.responds["QUESTIONS"]
 
         return self.responds["GENERIC"]
+    
+    def getBotsChatroomHistory(self, message_timestamp, is_manipulation_positive):
+        self.chatroom_history = []
 
-    def generateRespond(self, message, prev_message_id, message_timestamp):
+        filename = "ERROR"
+
+        if is_manipulation_positive == "RESPECT":
+            filename = "positive_bots_messages.js"
+        elif is_manipulation_positive == "NONRESPECT":
+            filename = "negative_bots_messages.js"
+        else:
+            print("ERROR!!! INCORRECT IS_MANIPULATION_POSITIVE VALUE IN CHAT AI")
+
+        actual_sended_messages_history_index = 0
+
+        with open(os.path.join(self.module_dir, f'{self.chatroom_script_dir}/{filename}')) as file:
+            for line in file:
+                line = line.rstrip()
+
+                if ":" in line:
+                    timestamp, msg_array = line.split(':', 1)
+                    if msg_array[-1] == ",":
+                        msg_array = msg_array[:-1]
+
+                    msg_array = eval(msg_array)
+
+                    while actual_sended_messages_history_index < len(self.sended_messages_history) and int(timestamp) >= self.sended_messages_history[actual_sended_messages_history_index][0]:
+                        self.chatroom_history.append(self.sended_messages_history[actual_sended_messages_history_index][1])
+                        actual_sended_messages_history_index += 1
+
+                    if int(timestamp) <= message_timestamp:
+                        self.chatroom_history.append("bot " + msg_array[0] + " - " + msg_array[1])
+                    else:
+                        break
+
+    def generateRespond(self, message, prev_message_id, message_timestamp, is_manipulation_positive):
         message_timestamp = int(message_timestamp)
+
+        self.getBotsChatroomHistory(message_timestamp, is_manipulation_positive)
+        self.chatroom_history.append("user - " + message)
 
         if message_timestamp - self.previous_message_timestamp < 7:
             return ["", "", ""]
@@ -268,11 +332,16 @@ class ChatAI:
             print("BOTS")
             return ["", "", ""]
         
-        
-        gemini_respond = self.generateRespondUsingGemini(message, responding_bot in self.female_bots)
+        gemini_respond = self.generateRespondUsingGemini(message)
 
         if gemini_respond:
-            responding_message, responding_message_type = [gemini_respond, "GEMINI"]
+            responding_message_pair, responding_message_type = [gemini_respond, "GEMINI"]
+            responding_message = [responding_message_pair[1]]
+
+            if responding_message_pair[0] != None:
+                responding_bot = responding_message_pair[0]
+                print("LLM chose bot with nick: " + responding_bot)
+
         else:
             responding_message, responding_message_type = [self.generateRespondUsingAlgorithm(message, prev_message_id), "ALGORITHM"]
 
@@ -282,6 +351,9 @@ class ChatAI:
         #    responding_message = ""
 
         print("RESPOND: " + responding_message)
+
+        self.sended_messages_history.append([message_timestamp + 1, "user - " + message])
+        self.sended_messages_history.append([message_timestamp + 2, responding_bot + " - " + responding_message])
 
         return [responding_message, responding_message_type, responding_bot]
         

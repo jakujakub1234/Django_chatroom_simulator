@@ -304,7 +304,8 @@ class AjaxPageView(TemplateView):
         respond, respond_type, responding_bot = self.chat_ai.generateRespond(
             request.GET['message'],
             request.GET['prev_message_id'],
-            request.GET['message_timestamp']
+            request.GET['message_timestamp'],
+            request.session['is_positive_manipulation']
         )
 
         return JsonResponse({'respond': respond, "respond_type": respond_type, "responding_bot": responding_bot}, status=200, content_type="application/json")
