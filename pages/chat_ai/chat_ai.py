@@ -12,6 +12,7 @@ language_code = settings.LANGUAGE_CODE
 class ChatAI:
     def __init__(self):
         self.module_dir = os.path.dirname(__file__)  
+        
         directory_for_current_lang = f'files_for_ai/{language_code}'
 
         self.chatroom_script_dir = f'../../static/js/{language_code}'
@@ -56,6 +57,8 @@ class ChatAI:
 
         with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/gemini_prompts.json'), 'r') as file:
             gemini_json = json.load(file)
+
+            self.gemini_prompt_main = gemini_json["main_prompt"]
             
             self.gemini_prompt_gibberish_detector = gemini_json["gibberish_detector"]
             self.gemini_prompt_curse_detector = gemini_json["curse_detector"]
@@ -93,6 +96,7 @@ class ChatAI:
 
     def detectGibberish(self, message):
         words = message.split()
+
         if any(len(word) > 20 for word in words):
             return True
 
@@ -133,96 +137,64 @@ class ChatAI:
             "Content-Type": "application/json"
         }
 
-        chain_of_prompts = ["Odpisz na te wiadomosc zgodnie z przykładowymi odpowiedziami na przykładowe wiadomości, \
-badz kreatywny i uprzejmy: wiadomość 1 'nie lubie ludzi' odpowiedz 'okej...' wiaodmosc 2 \
-'co u was' odpowiedz 'git' wiadomosc 3 'niech ukraincy wracaja do siebie nie mamy tyle kasy' \
-odpowiedz 'wow... troche ostro nie uwazasz?', wiadomość 4 'polska dla polaków' odpowiedz \
-'trochę ostro nie myślisz?'wiaodmość 5 'trzeba ukraincom pomagac i tyle' odpowiedz 'nom', \
-wiadomość 6 'ej' odpowiedz 'XD' wiaodmość 7 ' a jak putin nas zaatakuje' odpowiedz \
-'wole o tym nie myslec szczerz', wiaodmosc 8 'uwazam, ze polska nie jest w dobrej sytaucji finansowej' \
-odpowiedz ' nom racja moze nie jest',wiaodmosc 9 ' ludzie ogarnicie się to z naszych podatkow idzie' \
-odpowiedz 'tez racja ale po to sa podatki'wiadomosc 10 ' co myslicie o ukraincach' odpowiedz 'sa git',wiaodmosc 11 \
-'jestes botem' odpowiedz 'chyba ty'. Okej teraz twoja kolej! Tu jest historia rozmowy na czacie, odpowiadasz jako jeden z botow, a \
-user jest uzytkownikiem czatu ktory nie wie, ze rozmawia z botami: \n" + "\n".join(self.chatroom_history) + ". Odpowiedz w formacie <nazwa bota> -> <odpowiedz>. \
-Wiadomosc na ktora masz odpisac to"]#,
-# 'wybierz jedną wiadomośc, która jest najbardziej naturalna i napisz TYLKO tą wiadomość ',
-# 'zmień tą wiadomość aby nie miała podwójnych form (np. zacząłeś/aś) i napisz TYLKO tą wiadomość']
+        gemini_prompt = self.gemini_prompt_main.replace("CHATROOM_HISTORY", "\n" + "\n".join(self.chatroom_history))
+        print("Prompt: " + gemini_prompt + ": " + message)
+        
+        payload = {
+            "contents": [
+                {
+                    "parts": [{"text": gemini_prompt + ": " + message}]
+                }
+            ]
+        }
 
-        for i, prompt in enumerate(chain_of_prompts):
-            print("Prompt: " + str(prompt))
-            payload = {
-                "contents": [
-                    {
-                        "parts": [{"text": prompt + ": " + message}]
-                    }
-                ]
-            }
-
-            try:
-                response = requests.post(self.gemini_url, headers=headers, json=payload, params={"key": self.gemini_api_key})
-            except:
-                return False
-
-            if response.status_code == 200:
-                respond_text = response.json()['candidates'][0]['content']['parts'][0]['text']
-                
-                message = respond_text
-
-                print("Response: " + message)
-
-                if i == 0:
-                    if "->" in message:
-                        bot_nick, msg_tmp = message.split("->")
-
-                        bot_nick = bot_nick.strip()
-                        bot_nick = bot_nick.split()[-1]
-
-                        result_message = msg_tmp.strip()
-
-                        for bot_name in self.bots:
-                            if bot_name.lower() == bot_nick.lower():
-                                final_bot = bot_name
-                                break
-            else:
-                return False
-
-        #payload = {
-        #    "contents": [{
-        #        "parts": [{"text": prompt + ": " + message}]
-        #    }]
-        #}
-
-        #try:
-        #    response = requests.post(self.gemini_url, headers=headers, json=payload, params={"key": self.gemini_api_key})
-        #except:
-        #    return False
+        try:
+            response = requests.post(self.gemini_url, headers=headers, json=payload, params={"key": self.gemini_api_key})
+        except:
+            return False
 
         if response.status_code == 200:
-            response_text = result_message # response.json()['candidates'][0]['content']['parts'][0]['text']
+            respond_text = response.json()['candidates'][0]['content']['parts'][0]['text']
+            
+            print("Response: " + respond_text)
 
-            if response_text.count("**") >= 2:
-                response_text = response_text[response_text.index("**")+2:]
-                response_text = response_text[:response_text.index("**")]
+            if "->" in respond_text:
+                bot_nick, msg_tmp = respond_text.split("->")
 
-            if response_text.count("\"\"") >= 2:
-                response_text = response_text[response_text.index("\"\"")+2:]
-                response_text = response_text[:response_text.index("\"\"")]
+                bot_nick = bot_nick.strip()
+                bot_nick = bot_nick.split()[-1]
 
-            if "odp:" in response_text.lower():
-                response_text[response_text.lower().index("odp:")+4:]
-            if "odpowiedz:" in response_text.lower():
-                response_text[response_text.lower().index("odpowiedz:")+10:]
-            if "odpowiedź:" in response_text.lower():
-                response_text[response_text.lower().index("odpowiedź:")+10:]
+                result_message = msg_tmp.strip()
 
-            response_text.replace("\"", "")
-
-            print("Final response: " + response_text)
-
-            return [final_bot, response_text]
-
+                for bot_name in self.bots:
+                    if bot_name.lower() == bot_nick.lower():
+                        final_bot = bot_name
+                        break
+            else:
+                result_message = respond_text
         else:
-            return False
+            return False 
+
+        if result_message.count("**") >= 2:
+            result_message = result_message[result_message.index("**")+2:]
+            result_message = result_message[:result_message.index("**")]
+
+        if result_message.count("\"\"") >= 2:
+            result_message = result_message[result_message.index("\"\"")+2:]
+            result_message = result_message[:result_message.index("\"\"")]
+
+        if "odp:" in result_message.lower():
+            result_message[result_message.lower().index("odp:")+4:]
+        if "odpowiedz:" in result_message.lower():
+            result_message[result_message.lower().index("odpowiedz:")+10:]
+        if "odpowiedź:" in result_message.lower():
+            result_message[result_message.lower().index("odpowiedź:")+10:]
+
+        result_message.replace("\"", "")
+
+        print("Final response: " + result_message)
+
+        return [final_bot, result_message]
 
     def generateRespondUsingAlgorithm(self, message, prev_message_id):
         if prev_message_id < 5 or prev_message_id > 48:
@@ -353,7 +325,7 @@ Wiadomosc na ktora masz odpisac to"]#,
         print("RESPOND: " + responding_message)
 
         self.sended_messages_history.append([message_timestamp + 1, "user - " + message])
-        self.sended_messages_history.append([message_timestamp + 2, responding_bot + " - " + responding_message])
+        self.sended_messages_history.append([message_timestamp + 2, "bot " + responding_bot + " - " + responding_message])
 
         return [responding_message, responding_message_type, responding_bot]
         
