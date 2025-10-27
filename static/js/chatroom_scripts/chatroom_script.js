@@ -1001,7 +1001,7 @@ function closeChatroomPollDialog() {
 }
 
 async function pollChangeUserAmount(user_amount) {
-    document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 5 " + translations.chatroom_poll_users_amount;
+    document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 6 " + translations.chatroom_poll_users_amount;
 }
 
 async function chatroomPollDialog() {
@@ -1069,7 +1069,7 @@ async function chatroomPollDialogClick(is_yes) {
     exit_poll_user_voted = true;
 
     removePollButtonsAndShowThanks();
-    pollChangeUserAmount(7);
+    pollChangeUserAmount(6);
 
     if (is_yes) {
         sendDataThroughAjax(true, {
@@ -1079,7 +1079,11 @@ async function chatroomPollDialogClick(is_yes) {
             vote_seconds: exit_poll_votings_possible_seconds
         });
 
-       //await chatroomPollBarMove(67);
+        if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
+            await chatroomPollBarMove(83);
+        } else {
+            await chatroomPollBarMove(33);
+        }
     } else {
         sendDataThroughAjax(true, {
             csrfmiddlewaretoken: data_from_django.token,
@@ -1088,7 +1092,11 @@ async function chatroomPollDialogClick(is_yes) {
             vote_seconds: exit_poll_votings_possible_seconds
         });
 
-        //await chatroomPollBarMove(67);
+        if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
+            await chatroomPollBarMove(67);
+        } else {
+            await chatroomPollBarMove(17);
+        }
     }
 }
 
