@@ -18,7 +18,7 @@
     "minutes_few": "minuty",
     "minutes_many": "minut",
 
-    "home_warning_time": "Wkrótce zostaną Państwo połączeni z innymi uczestnikami czatu. Rozmowa potrwa do 7 minut.",
+    "home_warning_time": "Wkrótce zostaną Państwo połączeni z innymi uczestnikami czatu. Rozmowa potrwa do około 6 minut.",
     "home_info_qualtrics": "Po zakończeniu czatu otrzymają Państwo kod, który należy wpisać w karcie, w której wypełniali Państwo badanie w programie Qualtrics. Proszę pamiętać, aby nie zamknąć karty z badaniem w Qualtrics. Wpisanie kodu umożliwi kontynuowanie badania.",
     "home_info_exit": "Wyjście z chatroomu spowoduje jego automatyczne zakończenie.",
     "home_info_collecting_data": "Do celu badania wykorzystane będą następujące informacje: czas wejścia do czatu oraz interakcje ze stroną. Informacje te będą wykorzystywane wyłącznie w celach badania. Przechodząc do kolejnej strony (kilkając przycisk “Zatwierdź” lub Enter), zgadzają się Państwo na przechowywanie powyższych danych.",

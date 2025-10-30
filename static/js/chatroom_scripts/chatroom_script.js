@@ -878,6 +878,7 @@ function showTypingBotsNicks(seconds_integer) {
 }
 
 function sendCuriosityQuestion() {
+    return;
     if (no_user_interaction) {
         return;
     }
