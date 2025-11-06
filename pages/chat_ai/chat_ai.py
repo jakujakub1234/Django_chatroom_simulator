@@ -58,7 +58,8 @@ class ChatAI:
         with open(os.path.join(self.module_dir, f'{directory_for_current_lang}/gemini_prompts.json'), 'r') as file:
             gemini_json = json.load(file)
 
-            self.gemini_prompt_main = gemini_json["main_prompt"]
+            self.gemini_prompt_main_positive = gemini_json["main_prompt_positive"]
+            self.gemini_prompt_main_negative = gemini_json["main_prompt_negative"]
             
             self.gemini_prompt_gibberish_detector = gemini_json["gibberish_detector"]
             self.gemini_prompt_curse_detector = gemini_json["curse_detector"]
@@ -127,7 +128,7 @@ class ChatAI:
 
         return False
 
-    def generateRespondUsingGemini(self, message):
+    def generateRespondUsingGemini(self, message, is_manipulation_positive):
         final_bot = None
         self.user_messages_counter += 1
 
@@ -137,7 +138,13 @@ class ChatAI:
             "Content-Type": "application/json"
         }
 
-        gemini_prompt = self.gemini_prompt_main.replace("CHATROOM_HISTORY", "\n" + "\n".join(self.chatroom_history))
+        if is_manipulation_positive == "RESPECT":
+            gemini_prompt = self.gemini_prompt_main_positive.replace("CHATROOM_HISTORY", "\n" + "\n".join(self.chatroom_history))
+        elif is_manipulation_positive == "NONRESPECT":
+            gemini_prompt = self.gemini_prompt_main_negative.replace("CHATROOM_HISTORY", "\n" + "\n".join(self.chatroom_history))
+        else:
+            print("ERROR!!! INCORRECT IS_MANIPULATION_POSITIVE VALUE IN CHAT AI")
+
         print("Prompt: " + gemini_prompt + ": " + message)
         
         payload = {
@@ -304,7 +311,7 @@ class ChatAI:
             print("BOTS")
             return ["", "", ""]
         
-        gemini_respond = self.generateRespondUsingGemini(message)
+        gemini_respond = self.generateRespondUsingGemini(message, is_manipulation_positive)
 
         if gemini_respond:
             responding_message_pair, responding_message_type = [gemini_respond, "GEMINI"]
