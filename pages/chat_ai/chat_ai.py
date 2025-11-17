@@ -284,8 +284,8 @@ class ChatAI:
         self.getBotsChatroomHistory(message_timestamp, is_manipulation_positive)
         self.chatroom_history.append("user - " + message)
 
-        if message_timestamp - self.previous_message_timestamp < 4:
-            return ["", "", ""]
+        # if message_timestamp - self.previous_message_timestamp < 4:
+        #     return ["", "", ""]
 
         self.previous_message_timestamp = message_timestamp        
 
