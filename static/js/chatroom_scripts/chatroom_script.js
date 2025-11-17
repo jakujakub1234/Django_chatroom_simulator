@@ -87,6 +87,7 @@ var no_user_interaction = parseInt(data_from_django.noUserInteractionHidden) == 
 
 var end_chatroom = false;
 
+var last_user_msg_timestamp = -1000;
 var last_curse_timestamp = -1000;
 
 submit_button.addEventListener("click", sendUserMessage);
@@ -583,6 +584,13 @@ function sendUserMessage() {
 
         return;
     }
+
+    if (Math.ceil(seconds) - last_user_msg_timestamp < 4) {
+        console.log("TOO SOON!");
+        return;
+    }
+
+    last_user_msg_timestamp = Math.ceil(seconds);
 
     $.generateRespond(user_message, Math.ceil(seconds), function(respond, respond_type, responding_bot) {
         if (respond && respond != "") {
