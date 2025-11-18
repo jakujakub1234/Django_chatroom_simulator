@@ -594,7 +594,7 @@ function sendUserMessage() {
 
     $.generateRespond(user_message, Math.ceil(seconds), function(respond, respond_type, responding_bot) {
         if (respond && respond != "") {
-            var times = [0, 4, 4, 5, 5, 7, 7, 9, 10, 10, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12];
+            var times = [0, 7, 7, 8, 8, 10, 10, 12, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
 
             if (!respond.includes("{{NEW_MESSAGE}}")) {
                 var respond_len = 1;
