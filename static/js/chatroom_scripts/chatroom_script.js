@@ -713,19 +713,19 @@ function printTimeToLeftChat(time_to_left_chat)
 
 function sendReactionsAndInteractionsData(is_chatroom_finished_1_0)
 {
-    sendDataThroughBeacon(true, {
+    sendDataThroughBeacon( {
         csrfmiddlewaretoken: data_from_django.token,
         action: "like_reactions",
         reactions: Array.from(like_reactions_memory).join(' ')
     });
 
-    sendDataThroughBeacon(true, {
+    sendDataThroughBeacon( {
         csrfmiddlewaretoken: data_from_django.token,
         action: "heart_reactions",
         reactions: Array.from(heart_reactions_memory).join(' ')
     });
 
-    sendDataThroughBeacon(true, {
+    sendDataThroughBeacon( {
         csrfmiddlewaretoken: data_from_django.token,
         action: "angry_reactions",
         reactions: Array.from(angry_reactions_memory).join(' ')
