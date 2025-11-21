@@ -402,10 +402,21 @@ function respondToMessage(message_dom) {
     } else {
         respond_message_div = message_div;
 
+        var to_responding_bot = user_name;
+
+        if (message_div.querySelector(".right") != null) {
+            to_responding_bot = message_div.querySelector(".right").innerText;
+        }
+
         respond_input_box.style.display = "block";
         respond_input_box.querySelector("#respond-input-box-nick").innerText = translations.chatroom_user_responding_to; 
-        respond_input_box.querySelector("#respond-input-box-nick").innerText += " " + message_div.querySelector(".right").innerText;
-        respond_input_box.querySelector("#respond-input-box-message").innerText = message_div.querySelector(".message-p").innerText;
+        respond_input_box.querySelector("#respond-input-box-nick").innerText += " " + to_responding_bot;
+        
+        if (respond_input_box.querySelector("#respond-input-box-message") != null) {
+            respond_input_box.querySelector("#respond-input-box-message").innerText = message_div.querySelector(".message-p").innerText;
+        } else {
+            respond_input_box.querySelector("#respond-input-box-message").innerText = user_name;
+        }
     }
 
     document.getElementById("msg_field").focus();
@@ -561,20 +572,27 @@ function sendUserMessage() {
     }
 
     var respond_message_id = 0;
+    var true_responding_bot = "";
 
     if (respond_message_div == "") {
         createAndSendMessageHTML(user_name, user_message, false);
     } else {
+        if (respond_message_div.querySelector(".right") != null) {
+            true_responding_bot = respond_message_div.querySelector(".right").innerText;
+        } else {
+            true_responding_bot = user_name;
+        }
+        
         createAndSendMessageHTML(
             user_name,
             user_message,
             false,
             respond_message_div.querySelector(".message-p").innerText,
-            respond_message_div.querySelector(".right").innerText
+            true_responding_bot
         );
 
         respond_message_id = respond_message_div.querySelector(".message-p").dataset.index;
-        
+
         respond_message_div = "";
         respond_input_box.style.display = "none";
     }
@@ -595,6 +613,10 @@ function sendUserMessage() {
     $.generateRespond(user_message, Math.ceil(seconds), function(respond, respond_type, responding_bot) {
         if (respond && respond != "") {
             var times = [0, 7, 7, 8, 8, 10, 10, 12, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
+
+            if (true_responding_bot != "" && true_responding_bot != user_name) {
+                responding_bot = true_responding_bot;
+            }
 
             if (!respond.includes("{{NEW_MESSAGE}}")) {
                 var respond_len = 1;
@@ -1230,11 +1252,11 @@ function incrementSeconds() {
 
     handleReports();
 
-    var time_to_left_chat = 420 - seconds_integer;
+    var time_to_left_chat = 580 - seconds_integer; // TODO chatroom_time
 
     printTimeToLeftChat(time_to_left_chat);
 
-    if (time_to_left_chat == 7*60 || time_to_left_chat == 2*60) {
+    if (time_to_left_chat == 2*60) {
         var minutes = Math.floor(time_to_left_chat / 60);
         var minutes_text = translations.minutes_many;
 

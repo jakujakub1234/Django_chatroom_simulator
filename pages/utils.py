@@ -6,7 +6,7 @@ lobby_time = 14
 # TODO remove chatroom interactions 
 #lobby_time = 0
 
-chatroom_time = 490
+chatroom_time = 580
 
 def load_translations():
     language_code = settings.LANGUAGE_CODE
