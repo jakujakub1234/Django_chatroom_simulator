@@ -1190,7 +1190,7 @@ function incrementSeconds() {
         }
     }
 
-    if (bots_message_id >= 1 + Object.keys(bots_messages).length) {
+    if (draft_bots_message_id >= 1 + Object.keys(bots_messages).length) {
         handleExitPoll();
         return;
     }
