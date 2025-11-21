@@ -1252,7 +1252,7 @@ function incrementSeconds() {
 
     handleReports();
 
-    var time_to_left_chat = 580 - seconds_integer; // TODO chatroom_time
+    var time_to_left_chat = 480 - seconds_integer; // TODO chatroom_time
 
     printTimeToLeftChat(time_to_left_chat);
 
@@ -1271,7 +1271,7 @@ function incrementSeconds() {
         openDialog();
     }
 
-    if (time_to_left_chat == 0) {
+    if (time_to_left_chat < -100) {
         end_chatroom = true;
         sendReactionsAndInteractionsData(1);
         closeChatroomPollDialog();
