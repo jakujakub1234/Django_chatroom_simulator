@@ -512,6 +512,8 @@ function addReport(report_button_dom, report_id) {
 
     reports_remove_messages_queue.push([random_time, message_id, bot_nick, report_id]);
     reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
+
+    closeReportDialog();
 }
 
 function addBotReaction(message_dom, emotion_id) {
