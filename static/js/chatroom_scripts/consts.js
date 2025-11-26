@@ -16,6 +16,6 @@ const layouts = ["#FFFFFF", "#222222"];
 const msg_field_colors = ["#f3f3f5", "aliceblue"]
 const colors_array = ["black", "white"];
 
-const SECONDS_FROM_LAST_MESSAGE_TO_POLL_DIALOG = 2;
+const SECONDS_FROM_LAST_MESSAGE_TO_POLL_DIALOG = 9;
 const SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT = 2;
 const SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE = 60;
