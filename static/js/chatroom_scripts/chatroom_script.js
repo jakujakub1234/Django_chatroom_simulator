@@ -670,6 +670,8 @@ function sendUserMessage() {
             sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id, respond_to_save_to_db);
 
             typing_time = 0;
+        } else {
+            sendDataToDatabase("message", user_message, Math.ceil(seconds), user_name, respond_message_id, "NONE");
         }
     });
 }
@@ -862,6 +864,10 @@ function updateUserInteractionData() {
     scroll_sleep = false;
 
     if (document.getElementById("msg_field").value != "") {
+        if (!is_user_typing) {
+            typing_time = 0;   
+        }
+
         input_seconds++;
         is_user_typing = true;
         typing_time++;
@@ -870,8 +876,6 @@ function updateUserInteractionData() {
             hesitation++;
             is_user_typing = false;
         }
-
-        typing_time = 0;
     }
 }
 
