@@ -139,16 +139,21 @@ jQuery.extend({
     }
 });
 
-function sendDataThroughAjax(async, data)
+function sendDataThroughAjax(async, data, is_exit_poll = false)
 {
     $.ajax({
         type: "POST",
         url: "../ajax/",
         async: async,
         data: data,
-        success: function (response) {
+        complete: function (response) {
+            if (is_exit_poll) {
+                exit_poll_user_voted = true;
+            }
+
             return response;
-        }
+        },
+        timeout: 30000
     });
 }
 
@@ -1103,7 +1108,8 @@ function removePollButtonsAndShowThanks() {
 }
 
 async function chatroomPollDialogClick(is_yes) {
-    exit_poll_user_voted = true;
+    //exit_poll_user_voted = true;
+    exit_poll_buttons_visible = false;
 
     removePollButtonsAndShowThanks();
     pollChangeUserAmount(6);
@@ -1114,7 +1120,7 @@ async function chatroomPollDialogClick(is_yes) {
             action: "exit_poll",
             is_yes: "True",
             vote_seconds: exit_poll_votings_possible_seconds
-        });
+        }, true);
 
         if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
             await chatroomPollBarMove(83);
@@ -1127,7 +1133,7 @@ async function chatroomPollDialogClick(is_yes) {
             action: "exit_poll",
             is_yes: "False",
             vote_seconds: exit_poll_votings_possible_seconds
-        });
+        }, true);
 
         if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
             await chatroomPollBarMove(67);
