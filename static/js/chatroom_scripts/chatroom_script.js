@@ -80,6 +80,9 @@ var exit_poll_buttons_visible = false;
 var exit_poll_user_voted = false;
 var chatroom_poll_percantage = 50;
 
+var reaction_and_interaction_data_saved = [false, false, false, false];
+var ending = 0;
+
 var chatroom_speed = parseInt(data_from_django.chatSpeedHidden);
 var not_exit_chatroom_at_the_end = parseInt(data_from_django.notExitChatHidden) == 1;
 var dont_scroll_chat_after_message = parseInt(data_from_django.dontScrollChatHidden) == 1;
@@ -139,7 +142,7 @@ jQuery.extend({
     }
 });
 
-function sendDataThroughAjax(async, data, is_exit_poll = false)
+function sendDataThroughAjax(async, data, is_exit_poll = false, reactions_and_interactions_index = -1)
 {
     $.ajax({
         type: "POST",
@@ -151,22 +154,26 @@ function sendDataThroughAjax(async, data, is_exit_poll = false)
                 exit_poll_user_voted = true;
             }
 
+            if (reactions_and_interactions_index > -1) {
+                reaction_and_interaction_data_saved[reactions_and_interactions_index] = true;
+            }
+
             return response;
         },
-        timeout: 30000
+        timeout: 15000
     });
 }
 
-function sendDataThroughBeacon(data) {
-    // Use FormData since sendBeacon prefers it for POST
-    const formData = new FormData();
-    for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-            formData.append(key, data[key]);
-        }
-    }
-    navigator.sendBeacon("../ajax/", formData);
-}
+// function sendDataThroughBeacon(data) {
+//     // Use FormData since sendBeacon prefers it for POST
+//     const formData = new FormData();
+//     for (const key in data) {
+//         if (data.hasOwnProperty(key)) {
+//             formData.append(key, data[key]);
+//         }
+//     }
+//     navigator.sendBeacon("../ajax/", formData);
+// }
 
 function createAndSendMessageHTML(
     sending_user_name,
@@ -720,27 +727,33 @@ function printTimeToLeftChat(time_to_left_chat)
     seconds_counter.innerText = new_time;
 }
 
-function sendReactionsAndInteractionsData(is_chatroom_finished_1_0)
+function sendReactionsAndInteractionsData(is_chatroom_finished_1_0, is_this_true_end)
 {
-    sendDataThroughBeacon( {
+    var indexes = [-1, -1, -1, -1];
+
+    if (is_this_true_end) {
+        indexes = [0, 1, 2, 3];
+    }
+
+    sendDataThroughAjax(true, {
         csrfmiddlewaretoken: data_from_django.token,
         action: "like_reactions",
         reactions: Array.from(like_reactions_memory).join(' ')
-    });
+    }, false, indexes[0]);
 
-    sendDataThroughBeacon( {
+    sendDataThroughAjax(true, {
         csrfmiddlewaretoken: data_from_django.token,
         action: "heart_reactions",
         reactions: Array.from(heart_reactions_memory).join(' ')
-    });
+    }, false, indexes[1]);
 
-    sendDataThroughBeacon( {
+    sendDataThroughAjax(true, {
         csrfmiddlewaretoken: data_from_django.token,
         action: "angry_reactions",
         reactions: Array.from(angry_reactions_memory).join(' ')
-    });
+    }, false, indexes[2]);
 
-    sendDataThroughBeacon( {
+    sendDataThroughAjax(true, {
         csrfmiddlewaretoken: data_from_django.token,
         action: "interactions",
         hesitation: hesitation,
@@ -749,7 +762,7 @@ function sendReactionsAndInteractionsData(is_chatroom_finished_1_0)
         input_seconds: input_seconds,
         is_chatroom_finished: is_chatroom_finished_1_0,
         chatroom_exit_time: seconds
-    });
+    }, false, indexes[3]);
 
     // sendDataThroughAjax(true, {
     //     csrfmiddlewaretoken: data_from_django.token,
@@ -1179,27 +1192,41 @@ function incrementSeconds() {
     */
 
     if (end_chatroom) {
+        console.log(reaction_and_interaction_data_saved);
+        if (ending == 1) {
+            if (reaction_and_interaction_data_saved.every(Boolean)) {
+                if (!not_exit_chatroom_at_the_end) {
+                    window.location.href = data_from_django.endUrl;
+                    ending = 0;
+                }
+            }
+        }
+        if (ending == 2) {
+            if (reaction_and_interaction_data_saved.every(Boolean)) {
+                if (!not_exit_chatroom_at_the_end) {
+                    window.location.href = data_from_django.badEndNoExitpollUrl;
+                    ending = 0;
+                }
+            }
+        }
+
         return;
     }
 
     if (exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
         end_chatroom = true;
-        sendReactionsAndInteractionsData(1);
+        sendReactionsAndInteractionsData(1, true);
         closeChatroomPollDialog();
         
-        if (!not_exit_chatroom_at_the_end) {
-            window.location.href = data_from_django.endUrl;
-        }
+        ending = 1;
     }
 
     if (exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
         end_chatroom = true;
-        sendReactionsAndInteractionsData(0);
+        sendReactionsAndInteractionsData(0, true);
         closeChatroomPollDialog();
         
-        if (!not_exit_chatroom_at_the_end) {
-            window.location.href = data_from_django.badEndNoExitpollUrl;
-        }
+        ending = 2;
     }
 
     if (draft_bots_message_id >= 1 + Object.keys(bots_messages).length) {
@@ -1285,12 +1312,10 @@ function incrementSeconds() {
 
     if (time_to_left_chat < -100) {
         end_chatroom = true;
-        sendReactionsAndInteractionsData(1);
+        sendReactionsAndInteractionsData(1, true);
         closeChatroomPollDialog();
 
-        if (!not_exit_chatroom_at_the_end) {
-            window.location.href = data_from_django.endUrl;
-        }
+        ending = 1;
     }
 }
 
@@ -1326,7 +1351,7 @@ window.addEventListener('beforeunload', function(e) {
         return;
     }
 
-    sendReactionsAndInteractionsData(0);
+    sendReactionsAndInteractionsData(0, false);
 
     hesitation = 0;
     mouse_movement_seconds = 0;
