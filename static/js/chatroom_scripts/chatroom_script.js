@@ -573,7 +573,7 @@ function sendUserMessage() {
         }
     }
 
-    if (user_message.match(/\w+/g).length > 1) {
+    if (user_message.match(/\w+/g) != null && user_message.match(/\w+/g).length > 1) {
         users_long_messages_counter++;
         
         curiosity_question_sended = true;
