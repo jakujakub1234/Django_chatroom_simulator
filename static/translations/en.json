@@ -76,6 +76,8 @@
 
     "return_qualtrics_code_title": "Thank you for your participation in the chat.",
     "return_qualtrics_code_text": "Your code to continue the study is:",
+    "copy_code_to_clipboard": "Copy code",
+    "code_copied": "Copied text: ",
 
     "fake_end_page_title": "Thank you for your participation in the chat.",
     "fake_end_page_text": "Due to leaving the chat before it ended, you cannot return to the study in Qualtrics.",

@@ -1,0 +1,20 @@
+.btn-submit {
+  width: 10%;
+  height: 50px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 3px 6px #999;
+  outline-color: transparent;
+  font-size: larger;
+  margin-top: 2%;
+}
+
+.btn-submit:hover {
+  background-color: rgb(193, 200, 207);
+}
+
+.btn-submit:active {
+  background-color: rgb(193, 200, 207);
+  box-shadow: 1px 3px #666;
+  transform: translateY(4px);
+}

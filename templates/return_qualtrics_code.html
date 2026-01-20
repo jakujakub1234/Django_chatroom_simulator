@@ -1,15 +1,37 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
 
 <h1 style="text-align: center; margin-top: 100px;">{{ translations.return_qualtrics_code_title }}</h1>
 <h2 style="text-align: center; margin-top: 100px;">{{ translations.return_qualtrics_code_text }}</h2>
 <h1 id="return-code" style="text-align: center; font-size: xxx-large;"></h1>
 
+<div style="text-align:center;">
+    <button class="btn-submit" onclick="copyCodeToClipboard()">{{ translations.copy_code_to_clipboard }}</button>
+</div>
+
+<link rel="stylesheet" href="{% static 'styles/return_qualtrics_code_style.css' %}">
+
 <script>
 
 var return_codes = ["672304", "327482", "273047", "049821", "182027"];
 document.getElementById('return-code').innerText = " " + return_codes[Math.floor(Math.random()*return_codes.length)];
+
+function copyCodeToClipboard() {
+    var copyText = document.getElementById("return-code");
+
+    var temp = document.createElement("textarea");
+    document.body.appendChild(temp);
+    temp.value= copyText.innerText
+    temp.select();
+    document.execCommand("copy");
+    //document.getElementById('copyer').innerText="Copied "+temp.value;
+    document.body.removeChild(temp);  
+
+    alert("{{ translations.code_copied }}" + copyText.innerText);
+}
 
 </script>
 

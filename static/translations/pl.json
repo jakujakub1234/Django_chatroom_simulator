@@ -80,6 +80,8 @@
 
     "return_qualtrics_code_title": "Koniec odtwarzania czatu. Twoje zgłoszenia zostały zapisane. Teraz możesz wrócić do poprzedniej zakładki i kontynuować badanie.",
     "return_qualtrics_code_text": "Twój kod do kontynuowania badania to:",
+    "copy_code_to_clipboard": "Skopiuj kod",
+    "code_copied": "Skopiowano tekst: ",
 
     "fake_end_page_title": "Dziękujemy za udział w czacie",
     "fake_end_page_text": "Z powodu wyjścia z czatu przed jego zakończeniem nie możesz wrócić do badania w programie Qualtrics",
