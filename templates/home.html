@@ -51,6 +51,10 @@
     <label for="no-user-interaction">
         <input type="checkbox" id="no-user-interaction" checked> Remove all user interaction functions (e.g. input field)
     </label>
+
+    <label for="instant-exit-poll">
+        <input type="checkbox" id="instant-exit-poll"> Go straight to end of chatroom and exit poll
+    </label>
 </div>
 
 {% endif %}
@@ -62,6 +66,7 @@
     <input type="hidden" name="not_exit_chat_hidden" id="not-exit-chat-hidden" value="0">
     <input type="hidden" name="dont_scroll_chat_hidden" id="dont-scroll-chat-hidden" value="0">
     <input type="hidden" name="no_user_interaction_hidden" id="no-user-interaction-hidden" value="0">
+    <input type="hidden" name="instant_exit_poll_hidden" id="instant-exit-poll-hidden" value="0">
 
     <input type="submit" value="{{ translations.button_submit }}" class="btn-submit" id="btn-submit">
 </form>
@@ -99,11 +104,16 @@ document.getElementById("no-user-interaction").addEventListener("change", functi
     document.getElementById("no-user-interaction-hidden").value = this.checked ? "1" : "0";
 });
 
+document.getElementById("instant-exit-poll").addEventListener("change", function() {
+    document.getElementById("instant-exit-poll-hidden").value = this.checked ? "1" : "0";
+});
+
 document.getElementById("btn-submit").addEventListener("click", function() {
     document.getElementById("chat-speed-hidden").value = document.getElementById("chat-speed").value;
     document.getElementById("not-exit-chat-hidden").value = document.getElementById("not-exit-chat").checked ? "1" : "0";
     document.getElementById("dont-scroll-chat-hidden").value = document.getElementById("dont-scroll-chat").checked ? "1" : "0";
     document.getElementById("no-user-interaction-hidden").value = document.getElementById("no-user-interaction").checked ? "1" : "0";
+    document.getElementById("instant-exit-poll-hidden").value = document.getElementById("instant-exit-poll").checked ? "1" : "0";
 });
 </script>
 

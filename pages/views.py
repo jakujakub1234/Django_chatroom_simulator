@@ -59,6 +59,7 @@ class HomePageView(TemplateView):
                 request.session['not_exit_chat_hidden'] = request.POST.get("not_exit_chat_hidden")
                 request.session['dont_scroll_chat_hidden'] = request.POST.get("dont_scroll_chat_hidden")
                 request.session['no_user_interaction_hidden'] = request.POST.get("no_user_interaction_hidden")
+                request.session['instant_exit_poll_hidden'] = request.POST.get("instant_exit_poll_hidden")
     
             return HttpResponseRedirect("/lobby")
 
@@ -131,11 +132,13 @@ class ChatroomPageView(TemplateView):
             context['not_exit_chat_hidden'] = self.request.session['not_exit_chat_hidden']
             context['dont_scroll_chat_hidden'] = self.request.session['dont_scroll_chat_hidden']
             context['no_user_interaction_hidden'] = self.request.session['no_user_interaction_hidden']
+            context['instant_exit_poll_hidden'] = self.request.session['instant_exit_poll_hidden']
         else:
             context['chat_speed_hidden'] = 1000
             context['not_exit_chat_hidden'] = 0
             context['dont_scroll_chat_hidden'] = 0
             context['no_user_interaction_hidden'] = 0
+            context['instant_exit_poll_hidden'] = 0
 
         return context
 
