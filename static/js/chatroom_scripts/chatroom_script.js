@@ -78,6 +78,7 @@ var exit_poll_votings_possible_seconds = 0;
 var exit_poll_opened = false;
 var exit_poll_buttons_visible = false;
 var exit_poll_user_voted = false;
+var exit_poll_user_vote_animation_finish = false;
 var chatroom_poll_percantage = 50;
 var poll_votes_yes = 0;
 
@@ -154,6 +155,7 @@ function sendDataThroughAjax(async, data, is_exit_poll = false, reactions_and_in
         complete: function (response) {
             if (is_exit_poll) {
                 exit_poll_user_voted = true;
+                //console.log("exit_poll_user_voted == true");
             }
 
             if (reactions_and_interactions_index > -1) {
@@ -1063,8 +1065,7 @@ async function pollChangeUserAmount(user_amount) {
 
 async function chatroomPollDialog() {
     exit_poll_user_voted = false;
-    console.log("BOTS VOTING!");
-    console.log(Math.round(2));
+    //console.log("BOTS VOTING!");
 
     if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
         // FINAL 83
@@ -1073,7 +1074,6 @@ async function chatroomPollDialog() {
         // await new Promise(resolve => setTimeout(resolve, 0));
         pollChangeUserAmount(2);
         poll_votes_yes++;
-        console.log(Math.round((poll_votes_yes/2)*100));
         await chatroomPollBarMove(Math.round((poll_votes_yes/2)*100));
 
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -1081,19 +1081,16 @@ async function chatroomPollDialog() {
         if (poll_votes_yes == 1) {
             poll_votes_yes++;
         }
-        console.log(Math.round((poll_votes_yes/3)*100));
         await chatroomPollBarMove(Math.round((poll_votes_yes/3)*100));
         
         await new Promise(resolve => setTimeout(resolve, 800));
         pollChangeUserAmount(4);
         poll_votes_yes++;
-        console.log(Math.round((poll_votes_yes/4)*100));
         await chatroomPollBarMove(Math.round((poll_votes_yes/4)*100));
         
         await new Promise(resolve => setTimeout(resolve, 800));
         pollChangeUserAmount(5);
         poll_votes_yes++;
-        console.log(Math.round((poll_votes_yes/5)*100));
         await chatroomPollBarMove(Math.round((poll_votes_yes/5)*100));
         
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -1131,7 +1128,7 @@ async function chatroomPollDialog() {
         await chatroomPollBarMove(Math.round((poll_votes_yes/6)*100));
     }
 
-    console.log("END OF BOTS VOTING!");
+    //console.log("END OF BOTS VOTING!");
     exit_poll_after_vote_seconds+=100;
 }
 
@@ -1162,24 +1159,28 @@ async function chatroomPollDialogClick(is_yes) {
     if (is_yes) {
         poll_votes_yes++;
 
-        await chatroomPollBarMove(100);
-
         sendDataThroughAjax(true, {
             csrfmiddlewaretoken: data_from_django.token,
             action: "exit_poll",
             is_yes: "True",
             vote_seconds: exit_poll_votings_possible_seconds
         }, true);
-    } else {
-        await chatroomPollBarMove(0);
 
+        await chatroomPollBarMove(100);
+    } else {
         sendDataThroughAjax(true, {
             csrfmiddlewaretoken: data_from_django.token,
             action: "exit_poll",
             is_yes: "False",
             vote_seconds: exit_poll_votings_possible_seconds
         }, true);
+
+        await chatroomPollBarMove(0);
     }
+
+    //console.log("XD");
+
+    exit_poll_user_vote_animation_finish = true;
 }
 
 function handleExitPoll() {
@@ -1207,7 +1208,7 @@ function handleExitPoll() {
         exit_poll_votings_possible_seconds++;
     }
 
-    if (exit_poll_user_voted) {
+    if (exit_poll_user_voted && exit_poll_user_vote_animation_finish) {
         chatroomPollDialog();
     }
 }
@@ -1220,7 +1221,7 @@ function incrementSeconds() {
     */
 
     if (end_chatroom) {
-        console.log(reaction_and_interaction_data_saved);
+        //console.log(reaction_and_interaction_data_saved);
         if (ending == 1) {
             if (reaction_and_interaction_data_saved.every(Boolean)) {
                 if (!not_exit_chatroom_at_the_end) {
