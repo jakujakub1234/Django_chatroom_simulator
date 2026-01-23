@@ -88,6 +88,7 @@
     "fake_end_page_no_exit_poll_text": "Dziękujemy serdecznie za udział w badaniu. Niestety, w związku z brakiem aktywności oraz niezrealizowaniem etapu głosowania, Państwa odpowiedź nie przeszła testu jakościowego.",
 
     "chatroom_poll_dialog_text": "Czy uchodźcy z Ukrainy powinni mieć takie same prawa jak obywatele Polski?",
+    "chatroom_poll_dialog_text_enter": "Czas na głosowanie wynosi 60 sekund.",
     "chatroom_poll_users_amount": "użytkowników zagłosowało",
     "chatroom_poll_thanks": "Dziękujemy za oddanie głosu"
 }

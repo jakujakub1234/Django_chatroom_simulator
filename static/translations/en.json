@@ -81,9 +81,10 @@
 
     "fake_end_page_title": "Thank you for your participation in the chat.",
     "fake_end_page_text": "Due to leaving the chat before it ended, you cannot return to the study in Qualtrics.",
-    "fake_end_page_no_exit_poll_text": "hank you for participating in the survey. Unfortunately, due to a lack of activity and not completing the voting stage, your response didn’t meet the quality standards.",
+    "fake_end_page_no_exit_poll_text": "Thank you for participating in the survey. Unfortunately, due to a lack of activity and not completing the voting stage, your response didn’t meet the quality standards.",
     
     "chatroom_poll_dialog_text": "Do you agree that refugees from Ukraine should be treated equally to polish citizens?",
+    "chatroom_poll_dialog_text_enter": "You have 60 seconds to vote.",
     "chatroom_poll_users_amount": "users have voted",
     "chatroom_poll_thanks": "PLACEHOLDER PLACEHOLDER"
 }

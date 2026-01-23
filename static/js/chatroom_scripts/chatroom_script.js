@@ -1066,66 +1066,72 @@ async function pollChangeUserAmount(user_amount) {
 async function chatroomPollDialog() {
     exit_poll_user_voted = false;
     //console.log("BOTS VOTING!");
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    pollChangeUserAmount(6);
 
     if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
+        await chatroomPollBarMove(83);
+
         // FINAL 83
 
         // pollChangeUserAmount(1);
         // await new Promise(resolve => setTimeout(resolve, 0));
-        pollChangeUserAmount(2);
-        poll_votes_yes++;
-        await chatroomPollBarMove(Math.round((poll_votes_yes/2)*100));
+        // pollChangeUserAmount(2);
+        // poll_votes_yes++;
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/2)*100));
 
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(3);
-        if (poll_votes_yes == 1) {
-            poll_votes_yes++;
-        }
-        await chatroomPollBarMove(Math.round((poll_votes_yes/3)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(3);
+        // if (poll_votes_yes == 1) {
+        //     poll_votes_yes++;
+        // }
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/3)*100));
         
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(4);
-        poll_votes_yes++;
-        await chatroomPollBarMove(Math.round((poll_votes_yes/4)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(4);
+        // poll_votes_yes++;
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/4)*100));
         
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(5);
-        poll_votes_yes++;
-        await chatroomPollBarMove(Math.round((poll_votes_yes/5)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(5);
+        // poll_votes_yes++;
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/5)*100));
         
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(6);
-        poll_votes_yes++;
-        await chatroomPollBarMove(Math.round((poll_votes_yes/6)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(6);
+        // poll_votes_yes++;
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/6)*100));
         //await new Promise(resolve => setTimeout(resolve, 800));
         //pollChangeUserAmount(6);
         //await chatroomPollBarMove(67);
     } else {
+        await chatroomPollBarMove(17);
+
         // FINAL 17
 
         // pollChangeUserAmount(1);
         // await new Promise(resolve => setTimeout(resolve, 0));
-        pollChangeUserAmount(2);
-        if (poll_votes_yes == 0) {
-            poll_votes_yes++;
-        }
-        await chatroomPollBarMove(Math.round((poll_votes_yes/2)*100));
+        // pollChangeUserAmount(2);
+        // if (poll_votes_yes == 0) {
+        //     poll_votes_yes++;
+        // }
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/2)*100));
         
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(3);
-        await chatroomPollBarMove(Math.round((poll_votes_yes/3)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(3);
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/3)*100));
         
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(4);
-        await chatroomPollBarMove(Math.round((poll_votes_yes/4)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(4);
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/4)*100));
         
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(5);
-        await chatroomPollBarMove(Math.round((poll_votes_yes/5)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(5);
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/5)*100));
         
-        await new Promise(resolve => setTimeout(resolve, 800));
-        pollChangeUserAmount(6);
-        await chatroomPollBarMove(Math.round((poll_votes_yes/6)*100));
+        // await new Promise(resolve => setTimeout(resolve, 800));
+        // pollChangeUserAmount(6);
+        // await chatroomPollBarMove(Math.round((poll_votes_yes/6)*100));
     }
 
     //console.log("END OF BOTS VOTING!");
@@ -1166,7 +1172,7 @@ async function chatroomPollDialogClick(is_yes) {
             vote_seconds: exit_poll_votings_possible_seconds
         }, true);
 
-        await chatroomPollBarMove(100);
+       // await chatroomPollBarMove(100);
     } else {
         sendDataThroughAjax(true, {
             csrfmiddlewaretoken: data_from_django.token,
@@ -1175,7 +1181,7 @@ async function chatroomPollDialogClick(is_yes) {
             vote_seconds: exit_poll_votings_possible_seconds
         }, true);
 
-        await chatroomPollBarMove(0);
+       // await chatroomPollBarMove(0);
     }
 
     //console.log("XD");

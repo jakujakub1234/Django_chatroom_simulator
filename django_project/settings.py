@@ -178,5 +178,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 LANGUAGE_CODE = 'pl'
