@@ -79,6 +79,7 @@ var exit_poll_opened = false;
 var exit_poll_buttons_visible = false;
 var exit_poll_user_voted = false;
 var exit_poll_user_vote_animation_finish = false;
+var exit_poll_all_animations_finished = false;
 var chatroom_poll_percantage = 50;
 var poll_votes_yes = 0;
 
@@ -1065,7 +1066,7 @@ async function pollChangeUserAmount(user_amount) {
 
 async function chatroomPollDialog() {
     exit_poll_user_voted = false;
-    //console.log("BOTS VOTING!");
+    console.log("BOTS VOTING!");
     await new Promise(resolve => setTimeout(resolve, 5000));
     pollChangeUserAmount(6);
 
@@ -1134,8 +1135,8 @@ async function chatroomPollDialog() {
         // await chatroomPollBarMove(Math.round((poll_votes_yes/6)*100));
     }
 
-    //console.log("END OF BOTS VOTING!");
-    exit_poll_after_vote_seconds+=100;
+    console.log("END OF BOTS VOTING!");
+    exit_poll_all_animations_finished = true;
 }
 
 function showPollButtons() {
@@ -1155,6 +1156,8 @@ function removePollButtonsAndShowThanks() {
 }
 
 async function chatroomPollDialogClick(is_yes) {
+    sendReactionsAndInteractionsData(1, true);
+
     //exit_poll_user_voted = true;
 
     exit_poll_buttons_visible = false;
@@ -1220,6 +1223,12 @@ function handleExitPoll() {
 }
 
 function incrementSeconds() {
+    if (exit_poll_all_animations_finished) {
+    exit_poll_after_vote_seconds+=1;
+    console.log("exit_poll_after_vote_seconds: " + exit_poll_after_vote_seconds.toString());
+    }
+    
+
     /*
     if (seconds > 490) {
         return;
@@ -1248,10 +1257,9 @@ function incrementSeconds() {
         return;
     }
 
-    // KURWA
+    // changes 
     if (exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
         end_chatroom = true;
-        sendReactionsAndInteractionsData(1, true);
         closeChatroomPollDialog();
         
         ending = 1;
