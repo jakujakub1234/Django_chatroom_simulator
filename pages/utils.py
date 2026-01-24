@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 
 lobby_time = 14
+
 # TODO remove chatroom interactions 
 #lobby_time = 0
 

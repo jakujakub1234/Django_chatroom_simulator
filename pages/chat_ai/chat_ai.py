@@ -88,7 +88,7 @@ class ChatAI:
         message = message.replace("ń","n")
         message = message.replace("ł","l")
 
-        message = message.translate(str.maketrans('', '', string.punctuation)) # TODO maybe not best idea, user can forgot about space after comma
+        #message = message.translate(str.maketrans('', '', string.punctuation)) # TODO maybe not best idea, user can forgot about space after comma
 
         return message
 

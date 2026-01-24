@@ -23,25 +23,18 @@ const seconds_counter = document.getElementById('seconds-counter');
 const submit_button = document.querySelector("#btn-submit");
 const msg_field = document.querySelector("#msg_field");
 
-var respect_reports_dict = {};
-var hostile_reports_dict = {};
-
-var reports_messages_size = 4;
-
-for (let i = 0; i < bots_nicks.length; i++) {
-    respect_reports_dict[bots_nicks[i]] = 0;
-    hostile_reports_dict[bots_nicks[i]] = 0;
-}
-
-respect_reports_dict[user_name] = -99999;
-
+// We need different ids to store id from real messages (from excel) and gemini ones
 var bots_message_id = 1;
 var draft_bots_message_id = 1;
+
+// We iterate users_messages_ids backwards (--1) because we need to differ this ids from bots messages ids
 var users_message_id = -1;
+
 var like_reactions_memory = new Set();
 var heart_reactions_memory = new Set();
 var angry_reactions_memory = new Set();
 
+// We need to store seconds of sended messages to not send it twice (exactly when refreshing site)
 var seconds_messages_sent = new Set();
 
 var hesitation = 0;
@@ -54,18 +47,25 @@ var scroll_sleep = false;
 var is_user_typing = false;
 var typing_time = 0;
 
-var users_long_messages_counter = 0;
-var curiosity_question_sended = false;
+var users_messages_counter = 0;
 
 var font_size_change = 0;
-var act_layout = 1;
+var act_layout = BLACK_LAYOUT;
 
+// queue with bots messages that has to be send (sorted by seconds to wait before sending it)
 var responds_queue = [];
+
 var reactions_queue = [];
 var reports_remove_messages_queue = [];
+
+// which draft message id is assigned to which id of real message in website. We need this map to send emojis properly.
+// Eg. if gemini responds was sended before draft messages, "shifting" it's real id upwards 
 var dict_draft_message_id_to_message_id = {};
 
+// holding reply box texts
 var respond_message_div = "";
+
+// holding text of opened modal (alerts, warning mesasages, 5 minutes left etc.) 
 var opened_modal = "";
 
 var prev_prev_message = "NONE";
@@ -84,17 +84,22 @@ var chatroom_poll_percantage = 50;
 var poll_votes_yes = 0;
 
 var reaction_and_interaction_data_saved = [false, false, false, false];
-var ending = 0;
 
+var ending = UNDIFINED_ENDING;
+
+// DEBUG MODE ONLY VARIABLES
 var chatroom_speed = parseInt(data_from_django.chatSpeedHidden);
 var not_exit_chatroom_at_the_end = parseInt(data_from_django.notExitChatHidden) == 1;
 var dont_scroll_chat_after_message = parseInt(data_from_django.dontScrollChatHidden) == 1;
 var no_user_interaction = parseInt(data_from_django.noUserInteractionHidden) == 1;
 var instant_exit_poll = parseInt(data_from_django.instantExitPollHidden) == 1;
 
+// guard variable to always redirect user to good ending page if chatroom is ended and user was not redirected (for some reason)
 var end_chatroom = false;
 
+// variable used to not respond spamming user
 var last_user_msg_timestamp = -1000;
+
 var last_curse_timestamp = -1000;
 
 submit_button.addEventListener("click", sendUserMessage);
@@ -579,7 +584,7 @@ function sendUserMessage() {
     }
 
     if (user_message.match(/\w+/g) != null && user_message.match(/\w+/g).length > 1) {
-        users_long_messages_counter++;
+        users_messages_counter++;
         
         curiosity_question_sended = true;
     }
@@ -674,7 +679,7 @@ function sendUserMessage() {
 
             responds_queue.sort((a, b) => a[0] - b[0]);
 
-            if (users_long_messages_counter > 0 && users_long_messages_counter % 2 == 0 && user_message.match(/\w+/g).length > 1) {
+            if (users_messages_counter > 0 && users_messages_counter % 2 == 0 && user_message.match(/\w+/g).length > 1) {
                 reactions_queue.push([3, users_message_id+1, 0]);
             }
 
@@ -936,99 +941,6 @@ function showTypingBotsNicks(seconds_integer) {
     }
 }
 
-function sendCuriosityQuestion() {
-    return;
-    if (no_user_interaction) {
-        return;
-    }
-
-    if (!curiosity_question_sended && draft_bots_message_id == 29) {
-        curiosity_question_sended = true;
-
-        curiosity_question = [
-            translations.ai_curiosity_question_1.replace("{nick}", user_name),
-            translations.ai_curiosity_question_2.replace("{nick}", user_name)
-        ][0];
-
-        createAndSendMessageHTML(
-            bots_nicks[1],
-            curiosity_question,
-            true,
-            "",
-            "",
-            false,
-            true
-        );
-    }
-}
-
-function handleReports() {
-    if (no_user_interaction || true) {
-        return;
-    }
-    
-    while (reports_remove_messages_queue.length > 0 && reports_remove_messages_queue[0][0] <= 0) {
-        var report_data = reports_remove_messages_queue.shift();
-        var reported_message_id = report_data[1];
-        var reported_bot_nick = report_data[2];
-        var report_type_id = report_data[3];
-
-        if (report_type_id == RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID) {
-            respect_reports_dict[reported_bot_nick] += 1
-
-            var respect_translation_index = [
-                "chatroom_moderator_respect_first_time_",
-                "chatroom_moderator_respect_first_time_",
-                "chatroom_moderator_respect_second_time_"
-            ][respect_reports_dict[reported_bot_nick]];
-
-            if (respect_reports_dict[reported_bot_nick] < 3) {
-                createAndSendMessageHTML(
-                    translations.chatroom_moderator_nick,
-                    translations[respect_translation_index + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", reported_bot_nick),
-                    true,
-                    "",
-                    "",
-                    false,
-                    false,
-                    true
-                )
-            }
-
-            else {
-                document.querySelector("[data-index='" + reported_message_id + "']").parentNode.parentNode.parentNode.style.display = 'none';
-            }
-        }
-        
-        if (report_type_id == HOSTILE_REPORT_ID_OR_RESPECT_NORM_DENY_ID) {
-            hostile_reports_dict[reported_bot_nick] += 1
-            
-            var hostile_translation_index = ["", "chatroom_moderator_hostile_first_time_", "chatroom_moderator_hostile_second_time_"][hostile_reports_dict[reported_bot_nick]];
-
-            if (hostile_reports_dict[reported_bot_nick] < 3) {
-                createAndSendMessageHTML(
-                    translations.chatroom_moderator_nick,
-                    translations[hostile_translation_index + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", reported_bot_nick),
-                    true,
-                    "",
-                    "",
-                    false,
-                    false,
-                    true
-                )
-            }
-
-            else {
-                document.querySelector("[data-index='" + reported_message_id + "']").parentNode.parentNode.parentNode.style.display = 'none';
-            }
-        }
-
-        if (report_type_id == MISINFORMATION_REPORT_ID) {
-            document.querySelector("[data-index='" + reported_message_id + "']").parentNode.parentNode.parentNode.style.display = 'none';
-        }
-    }
-}
-
 function chatroomPollBarMove(target) {
     return new Promise((resolve) => {
         var elem = document.getElementById("progress-bar");
@@ -1223,33 +1135,32 @@ function handleExitPoll() {
 }
 
 function incrementSeconds() {
-    if (exit_poll_all_animations_finished) {
-    exit_poll_after_vote_seconds+=1;
-    console.log("exit_poll_after_vote_seconds: " + exit_poll_after_vote_seconds.toString());
-    }
-    
-
     /*
     if (seconds > 490) {
         return;
     }
     */
 
+    if (exit_poll_all_animations_finished) {
+        exit_poll_after_vote_seconds += 1;
+        console.log("exit_poll_after_vote_seconds: " + exit_poll_after_vote_seconds.toString());
+    }
+
     if (end_chatroom) {
         //console.log(reaction_and_interaction_data_saved);
-        if (ending == 1) {
+        if (ending == GOOD_ENDING) {
             if (reaction_and_interaction_data_saved.every(Boolean)) {
                 if (!not_exit_chatroom_at_the_end) {
                     window.location.href = data_from_django.endUrl;
-                    ending = 0;
+                    ending = UNDIFINED_ENDING;
                 }
             }
         }
-        if (ending == 2) {
+        if (ending == BAD_ENDING) {
             if (reaction_and_interaction_data_saved.every(Boolean)) {
                 if (!not_exit_chatroom_at_the_end) {
                     window.location.href = data_from_django.badEndNoExitpollUrl;
-                    ending = 0;
+                    ending = UNDIFINED_ENDING;
                 }
             }
         }
@@ -1262,7 +1173,7 @@ function incrementSeconds() {
         end_chatroom = true;
         closeChatroomPollDialog();
         
-        ending = 1;
+        ending = GOOD_ENDING;
     }
 
     if (exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
@@ -1270,7 +1181,7 @@ function incrementSeconds() {
         sendReactionsAndInteractionsData(0, true);
         closeChatroomPollDialog();
         
-        ending = 2;
+        ending = BAD_ENDING;
     }
 
     if (instant_exit_poll) {
@@ -1369,7 +1280,7 @@ function incrementSeconds() {
         sendReactionsAndInteractionsData(1, true);
         closeChatroomPollDialog();
 
-        ending = 1;
+        ending = GOOD_ENDING;
     }
 }
 
