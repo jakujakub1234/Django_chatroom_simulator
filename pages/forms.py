@@ -14,13 +14,33 @@ class HomeForm(forms.Form):
         # TODO remove chatroom interactions
         #widget=forms.HiddenInput()
     )
-    
-    key_from_qualtrics = forms.CharField(
-        label=translations.get('home_form_qualtrics_key'),
-        max_length=100,
-        error_messages={'required': 'your custom error message'},
-        widget=forms.TextInput(attrs={"class": "form-input"})
-    )
+
+    if settings.DEBUG_MODE:
+        key_from_qualtrics = forms.CharField(
+            label=translations.get('home_form_qualtrics_key'),
+            max_length=100,
+            required=False,
+            error_messages={'required': 'your custom error message'},
+            widget=forms.HiddenInput()
+        )
+    else:    
+        key_from_qualtrics = forms.CharField(
+            label=translations.get('home_form_qualtrics_key'),
+            max_length=100,
+            error_messages={'required': 'your custom error message'},
+            widget=forms.TextInput(attrs={"class": "form-input"})
+        )
+
+    MANIOULATION_TYPE_CHOICES = [
+        ('2', 'Respect Manipulation'),
+        ('1', 'Non Respect Manipulation'),
+    ]
+
+    if settings.DEBUG_MODE:
+        manipulation_type = forms.ChoiceField(
+            widget=forms.RadioSelect,
+            choices=MANIOULATION_TYPE_CHOICES,
+        )
 
     is_positive_manipulation = forms.CharField(
         widget=forms.HiddenInput(),
@@ -33,7 +53,7 @@ class HomeForm(forms.Form):
         key_from_qualtrics = self.cleaned_data['key_from_qualtrics']
 
         if settings.DEBUG_MODE:
-            key_from_qualtrics = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxss76392ss"
+            key_from_qualtrics = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxss7639" + str(self.data["manipulation_type"]) + "ss"
 
         key_from_qualtrics = key_from_qualtrics[:-2]
 

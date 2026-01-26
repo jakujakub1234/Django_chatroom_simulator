@@ -6,6 +6,8 @@ Messages that went againts code of conduct
 Depending on amount and type of report messages moderated on diffrent reposne.
 
 */
+var data_from_django_reports = document.getElementById('data-from-django').dataset;
+var user_name_reports = data_from_django_reports.nick;
 
 var respect_reports_dict = {};
 var hostile_reports_dict = {};
@@ -17,7 +19,7 @@ for (let i = 0; i < bots_nicks.length; i++) {
     hostile_reports_dict[bots_nicks[i]] = 0;
 }
 
-respect_reports_dict[user_name] = -99999;
+respect_reports_dict[user_name_reports] = -99999;
 
 function handleReports() {
     if (no_user_interaction || true) {
