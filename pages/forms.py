@@ -40,6 +40,7 @@ class HomeForm(forms.Form):
         manipulation_type = forms.ChoiceField(
             widget=forms.RadioSelect,
             choices=MANIOULATION_TYPE_CHOICES,
+            initial=2
         )
 
     is_positive_manipulation = forms.CharField(

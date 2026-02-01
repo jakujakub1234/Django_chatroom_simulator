@@ -338,15 +338,15 @@ function sendUserMessage() {
     }
 
     var respond_message_id = 0;
-    var true_responding_bot = "";
+    var reply_to_who_nick = "";
 
     if (respond_message_div == "") {
         createAndSendMessageHTML(user_name, user_message, false);
     } else {
-        if (respond_message_div.querySelector(".right") != null) {
-            true_responding_bot = respond_message_div.querySelector(".right").innerText;
-        } else {
-            true_responding_bot = user_name;
+        if (respond_message_div.querySelector(".right") != null) { // is users message was respond to bots message
+            reply_to_who_nick = respond_message_div.querySelector(".right").innerText;
+        } else { // or to another users message
+            reply_to_who_nick = user_name;
         }
         
         createAndSendMessageHTML(
@@ -354,7 +354,7 @@ function sendUserMessage() {
             user_message,
             false,
             respond_message_div.querySelector(".message-p").innerText,
-            true_responding_bot
+            reply_to_who_nick
         );
 
         respond_message_id = respond_message_div.querySelector(".message-p").dataset.index;
@@ -378,10 +378,10 @@ function sendUserMessage() {
 
     $.generateRespond(user_message, Math.ceil(seconds), function(respond, respond_type, responding_bot) {
         if (respond && respond != "") {
-            var times = [0, 7, 7, 8, 8, 10, 10, 12, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
+            var times_to_send_respond_due_to_number_of_words = [0, 7, 7, 8, 8, 10, 10, 12, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
 
-            if (true_responding_bot != "" && true_responding_bot != user_name) {
-                responding_bot = true_responding_bot;
+            if (reply_to_who_nick != "" && reply_to_who_nick != user_name) {
+                responding_bot = reply_to_who_nick;
             }
 
             if (!respond.includes("{{NEW_MESSAGE}}")) {
@@ -393,9 +393,9 @@ function sendUserMessage() {
 
                 respond_len = Math.min(respond_len, 12);
 
-                responds_queue.push([times[respond_len], responding_bot, respond, user_message]);
+                responds_queue.push([times_to_send_respond_due_to_number_of_words[respond_len], responding_bot, respond, user_message]);
 
-            } else {
+            } else { // legacy code, possible only when respond is generating by algorithm (not by LLM) and responding message is designed to be sens as 2 messages
                 var respond = respond.split("{{NEW_MESSAGE}}");
 
                 var respond_len = 1;
@@ -406,7 +406,7 @@ function sendUserMessage() {
 
                 respond_len = Math.min(respond_len, 12);
 
-                responds_queue.push([times[respond_len], responding_bot, respond[0], user_message]);
+                responds_queue.push([times_to_send_respond_due_to_number_of_words[respond_len], responding_bot, respond[0], user_message]);
 
                 respond_len = 1;
 
@@ -416,7 +416,7 @@ function sendUserMessage() {
 
                 respond_len = Math.min(respond_len, 12);
 
-                responds_queue.push([times[respond_len] + 4, responding_bot, respond[1], user_message]);
+                responds_queue.push([times_to_send_respond_due_to_number_of_words[respond_len] + 4, responding_bot, respond[1], user_message]);
             }
 
             responds_queue.sort((a, b) => a[0] - b[0]);
@@ -426,10 +426,6 @@ function sendUserMessage() {
             }
 
             var respond_to_save_to_db = respond_type + ": " + respond;
-
-            if (respond_to_save_to_db == "") {
-                respond_to_save_to_db = "NONE";
-            }
 
             sendUserMessageDataToDatabase(user_message, Math.ceil(seconds), user_name, respond_message_id, respond_to_save_to_db);
 
@@ -526,6 +522,29 @@ function showTypingBotsNicks(seconds_integer) {
     }
 }
 
+function handleEndOfChatroom()
+{
+    logDebugMessage("State of saving data to database: " + reaction_and_interaction_data_saved.toString());
+    
+    if (ending == GOOD_ENDING) {
+        if (reaction_and_interaction_data_saved.every(Boolean)) {
+            if (!not_exit_chatroom_at_the_end) {
+                window.location.href = data_from_django.endUrl;
+                ending = UNDIFINED_ENDING;
+            }
+        }
+    }
+    
+    if (ending == BAD_ENDING) {
+        if (reaction_and_interaction_data_saved.every(Boolean)) {
+            if (!not_exit_chatroom_at_the_end) {
+                window.location.href = data_from_django.badEndNoExitpollUrl;
+                ending = UNDIFINED_ENDING;
+            }
+        }
+    }
+}
+
 function incrementSeconds() {
     if (exit_poll_all_animations_finished) {
         exit_poll_after_vote_seconds += 1;
@@ -533,23 +552,7 @@ function incrementSeconds() {
     }
 
     if (end_chatroom) {
-        logDebugMessage("State of saving data to database: " + reaction_and_interaction_data_saved.toString());
-        if (ending == GOOD_ENDING) {
-            if (reaction_and_interaction_data_saved.every(Boolean)) {
-                if (!not_exit_chatroom_at_the_end) {
-                    window.location.href = data_from_django.endUrl;
-                    ending = UNDIFINED_ENDING;
-                }
-            }
-        }
-        if (ending == BAD_ENDING) {
-            if (reaction_and_interaction_data_saved.every(Boolean)) {
-                if (!not_exit_chatroom_at_the_end) {
-                    window.location.href = data_from_django.badEndNoExitpollUrl;
-                    ending = UNDIFINED_ENDING;
-                }
-            }
-        }
+        handleEndOfChatroom();
 
         return;
     }
@@ -583,7 +586,6 @@ function incrementSeconds() {
         }
     }
     
-
     seconds++;
 
     updateUserInteractionData(document.getElementById("msg_field").value);
