@@ -1,0 +1,48 @@
+.header-text {
+    text-align: center;
+    margin-top: 100px;
+}
+
+body {
+        /*TODO change font*/
+        /*font-family: "Cormorant Garamond", serif;*/
+        font-family: sans-serif;
+
+        color: white;
+
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        min-height: 100vh;
+        /*background-image: linear-gradient(to top, #1e2323 0%, #274455 100%);*/
+        background-color: #222222;
+        padding-bottom: 60px;
+}
+
+p {
+    /*TODO change font*/
+    /* font-family: monospace; */
+    font-family: sans-serif;
+    color: white;
+}
+
+.btn-submit {
+  width: 10%;
+  height: 50px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 3px 6px #999;
+  outline-color: transparent;
+  font-size: larger;
+  margin-top: 2%;
+}
+
+.btn-submit:hover {
+  background-color: rgb(193, 200, 207);
+}
+
+.btn-submit:active {
+  background-color: rgb(193, 200, 207);
+  box-shadow: 1px 3px #666;
+  transform: translateY(4px);
+}
+

@@ -16,10 +16,11 @@
 	data-dont-scroll-chat-hidden="{{ dont_scroll_chat_hidden }}"
   data-no-user-interaction-hidden="{{ no_user_interaction_hidden }}"
   data-instant-exit-poll-hidden="{{ instant_exit_poll_hidden }}"
+  data-is-debug-mode-hidden="{{ is_debug_mode_hidden }}"
   tabindex="-1">  
 </article>
 
-<h1 id="header-text" style="text-align: center; margin-top: 100px;">Chatroom</h1>
+<h1 id="header-text" class="header-text" >Chatroom</h1>
 
 <div id="chatroom">
 </div>
@@ -64,7 +65,6 @@
   </form>
 </div>
 
-<!-- TODO ukryć to -->
 <div class="bottom-bar">
 
 <label for="change-font-size" style="margin-top: auto; margin-bottom: auto;">{{ translations.chatroom_change_font_button }}</label>
@@ -102,9 +102,22 @@
 <script src="{% static 'js/' %}{{ language_code }}/control_bots_messages.js"></script>
 <script src="{% static 'js/' %}{{ language_code }}/curse_words.js"></script>
 <script src="{% static 'js/svgs.js' %}"></script>
+
 <script src="{% static 'js/chatroom_scripts/consts.js' %}"></script>
-<script src="{% static 'js/chatroom_scripts/legacy_reports_abuse.js' %}"></script>
-<script src="{% static 'js/chatroom_scripts/legacy_curiosity_questions.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/logger.js' %}"></script>
+
+<script src="{% static 'js/chatroom_scripts/legacy_features/legacy_reports_abuse.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/legacy_features/legacy_curiosity_questions.js' %}"></script>
+
+<script src="{% static 'js/chatroom_scripts/interactions_data_gathering_manager.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/reactions_manager.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/database_manager.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/exit_poll_manager.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/reports_manager.js' %}"></script>
+<script src="{% static 'js/chatroom_scripts/gui_customization_manager.js' %}"></script>
+
+<script src="{% static 'js/chatroom_scripts/bots_scripted_messages_manager.js' %}"></script>
+
 <script src="{% static 'js/chatroom_scripts/chatroom_script.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'styles/chatroom_style.css' %}">

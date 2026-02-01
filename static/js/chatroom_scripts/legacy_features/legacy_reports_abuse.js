@@ -14,6 +14,8 @@ var hostile_reports_dict = {};
 
 var reports_messages_size = 4;
 
+var reports_remove_messages_queue = [];
+
 for (let i = 0; i < bots_nicks.length; i++) {
     respect_reports_dict[bots_nicks[i]] = 0;
     hostile_reports_dict[bots_nicks[i]] = 0;

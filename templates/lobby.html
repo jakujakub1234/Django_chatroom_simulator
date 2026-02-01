@@ -4,7 +4,7 @@
 {% block content %}
 <article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-chatroom-url = "{% url 'chatroom' %}" data-start-timestamp = "{{ start_timestamp }}" data-translations="{{ translations }}"></article>
 
-<h1 style="text-align: center; margin-top: 100px;">{{ lobby_title }}</h1>
+<h1 class="header-text" >{{ lobby_title }}</h1>
 <h2 style="text-align: center;">{{ translations.lobby_warning }}</h2>
 
 <h2 id="users-counter" style="text-align: center;">{{ translations.lobby_users_counter }}</h1>

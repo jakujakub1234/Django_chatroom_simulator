@@ -53,6 +53,7 @@ class HomePageView(TemplateView):
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
             request.session['is_positive_manipulation'] = form.data['is_positive_manipulation']
             request.session['start_timestamp'] = datetime.now().timestamp()
+            request.session['is_debug_mode_hidden'] =  1 if settings.DEBUG_MODE else 0
 
             if settings.DEBUG_MODE:
                 request.session['chat_speed_hidden'] = request.POST.get("chat_speed_hidden")
@@ -126,6 +127,7 @@ class ChatroomPageView(TemplateView):
         context['is_positive_manipulation'] = self.request.session['is_positive_manipulation']
         context['translations'] = translations
         context['language_code'] = language_code
+        context['is_debug_mode_hidden'] = 1 if settings.DEBUG_MODE else 0
 
         if settings.DEBUG_MODE:
             context['chat_speed_hidden'] = self.request.session['chat_speed_hidden']

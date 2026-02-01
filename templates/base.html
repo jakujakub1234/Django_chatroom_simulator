@@ -14,35 +14,12 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'styles/base_style.css' %}">
 </head>
 
 <body id="body">
     {% block content %}{% endblock %}
 </body>
-
-<style>
-    body {
-        /*TODO change font*/
-        /*font-family: "Cormorant Garamond", serif;*/
-        font-family: sans-serif;
-
-        color: white;
-
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        min-height: 100vh;
-        /*background-image: linear-gradient(to top, #1e2323 0%, #274455 100%);*/
-        background-color: #222222;
-        padding-bottom: 60px;
-    }
-
-    p {
-        /*TODO change font*/
-        /* font-family: monospace; */
-        font-family: sans-serif;
-        color: white;
-
-    }
-</style>
 
 </html>

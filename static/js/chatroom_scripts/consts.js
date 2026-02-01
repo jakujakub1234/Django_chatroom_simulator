@@ -1,4 +1,16 @@
-var translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
+const translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
+
+const data_from_django = document.getElementById('data-from-django').dataset;
+const user_name = data_from_django.nick;
+const token = data_from_django.token;
+const is_debug_mode = data_from_django.isDebugModeHidden == 1;
+
+// DEBUG MODE ONLY VARIABLES
+const chatroom_speed = parseInt(data_from_django.chatSpeedHidden);
+const not_exit_chatroom_at_the_end = parseInt(data_from_django.notExitChatHidden) == 1;
+const dont_scroll_chat_after_message = parseInt(data_from_django.dontScrollChatHidden) == 1;
+const no_user_interaction = parseInt(data_from_django.noUserInteractionHidden) == 1;
+const instant_exit_poll = parseInt(data_from_django.instantExitPollHidden) == 1;
 
 const LIKE_REACTION_ID = 0;
 const HEART_REACTION_ID = 1;
