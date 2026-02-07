@@ -4,6 +4,22 @@ export class ModalsManager
     {
         // holding opened modal (alerts, warning mesasages, 5 minutes left etc.) 
         this.opened_modal = "";
+
+        this.dialog_box = document.getElementById("dialog-box");
+
+        document
+            .getElementById("dialog-button")
+            .addEventListener("click", () => this.closeDialogWithTimeWarning());
+    }
+
+    openDialogWithTimeWarning(text) {
+        this.dialog_box.querySelector("p").innerText = text;
+
+        this.dialog_box.open = true;
+    }
+
+    closeDialogWithTimeWarning() {
+        this.dialog_box.open = false;
     }
 
     closeAllModals() {

@@ -8,6 +8,7 @@ import { InteractionsDataGatheringManager } from "./interactions_data_gathering_
 import { ExitPollManager } from "./exit_poll_manager.js";
 import { ReactionsManager } from "./reactions_manager.js";
 import { ReportsManager } from "./reports_manager.js";
+import { MessagesManager } from "./messages_manager.js";
 
 const timer = new Timer();
 
@@ -15,70 +16,24 @@ const modals_manager = new ModalsManager();
 
 const gui_customization_manager = new GuiCustomizationManager({});
 const interactions_manager = new InteractionsDataGatheringManager({});
-const db_manager = new DatabaseManager({ token: data_from_django.token, timer, interactions_manager });
-const reactions_manager = new ReactionsManager({ modals_manager });
+const reactions_manager = new ReactionsManager({ modals_manager, gui_customization_manager });
+const db_manager = new DatabaseManager({ token: data_from_django.token, timer, interactions_manager, reactions_manager });
 const reports_manager = new ReportsManager({ db_manager, modals_manager });
-const exit_poll_manager = new ExitPollManager({ db_manager, reactions_manager });
-
-var bots_messages = [];
-
-if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
-    logDebugMessage("Chosen bots message: RESPECT");
-    bots_messages = positive_bots_messages;
-} else if (document.getElementById('data-from-django').dataset.isPositive == "NONRESPECT") {
-    logDebugMessage("Chosen bots message: NON RESPECT");
-    bots_messages = negative_bots_messages;
-} else {
-    logDebugMessage("Chosen bots message: CONTROL");
-    bots_messages = control_bots_messages;
-}
+const exit_poll_manager = new ExitPollManager({ db_manager });
+const messages_manager = new MessagesManager({ db_manager, reactions_manager, gui_customization_manager, interactions_manager, reports_manager, timer, token: data_from_django.token });
 
 const seconds_counter = document.getElementById('seconds-counter');
 const submit_button = document.querySelector("#btn-submit");
 const msg_field = document.querySelector("#msg_field");
 
-// We need different ids to store id from real messages (from excel) and gemini ones
-var bots_message_id = 1;
-var draft_bots_message_id = 1;
-
-// We iterate users_messages_ids backwards (--1) because we need to differ this ids from bots messages ids
-var users_message_id = -1;
-
-// We need to store seconds of sended messages to not send it twice (exactly when refreshing site)
-var seconds_messages_sent = new Set();
-
-var users_messages_counter = 0;
-
-// queue with bots messages that has to be send (sorted by seconds to wait before sending it)
-var responds_queue = [];
-
-// which draft message id is assigned to which id of real message in website. We need this map to send emojis properly.
-// Eg. if gemini responds was sended before draft messages, "shifting" it's real id upwards 
-var dict_draft_message_id_to_message_id = {};
-
-// holding reply box texts
-var respond_message_div = "";
-
-var current_message = "NONE";
-
 var ending = UNDIFINED_ENDING;
-
-// TODO maybe move to reactions manager, or to some another manager, queues manager?
-var reactions_queue = [];
 
 // guard variable to always redirect user to good ending page if chatroom is ended and user was not redirected (for some reason)
 var end_chatroom = false;
 
-// variable used to not respond spamming user
-var last_user_msg_timestamp = -1000;
-
-var last_curse_timestamp = -1000;
-
-submit_button.addEventListener("click", sendUserMessage);
-
-const chatroom = document.getElementById("chatroom");
-const respond_input_box = document.getElementById("respond-input-box");
-const dialog_box = document.getElementById("dialog-box");
+submit_button.addEventListener("click", () => {
+    messages_manager.sendUserMessage();
+});
 
 msg_field.addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
@@ -88,341 +43,6 @@ msg_field.addEventListener("keypress", function(event) {
 });
 
 document.getElementById("msg_field").focus();
-
-jQuery.extend({
-    generateRespond: function(user_message, message_timestamp, callback) {
-        $.ajax({
-            type: "GET",
-            url: "../ajax/",
-            async: true,
-            data: {
-                csrfmiddlewaretoken: token,
-                message: user_message,
-                prev_message_id: draft_bots_message_id,
-                message_timestamp: message_timestamp
-            },
-            success: function (data) {
-                callback(data.respond, data.respond_type, data.responding_bot);
-            }
-        });
-    }
-});
-
-function createAndSendMessageHTML(
-    sending_user_name,
-    message,
-    is_bot,
-    respond_message = "",
-    respond_nick = "",
-    is_respond_to_user = false,
-    is_curiosity_question = false,
-    is_moderator = false 
-){
-    db_manager.prev_prev_message = db_manager.prev_message;
-    db_manager.prev_message = current_message;
-
-    current_message = "";
-    
-    if (is_curiosity_question) {
-        current_message = "EXTRA: ";
-    } else if (!is_bot) {
-        current_message = "PARTICIPANT: ";
-    } else if (is_respond_to_user) {
-        current_message = "BOT_REPLY: ";
-    } else if (is_moderator) {
-        current_message = "MODERATOR: ";
-    } else {
-        current_message = "STABLE: ";
-    }
-
-    current_message += message;
-
-    const date = new Date();
-
-    let hour = date.getHours().toString();
-    let min = date.getMinutes().toString();
-    
-    if (hour.length < 2) {
-        hour = "0" + hour;
-    }
-
-    if (min.length < 2) {
-        min = "0" + min;
-    }
-
-    var message_id;
-    
-    if (is_bot) {
-        message_id = bots_message_id;
-        bots_message_id++;
-
-        if (!is_respond_to_user) {
-            draft_bots_message_id++;
-            dict_draft_message_id_to_message_id[draft_bots_message_id-1] = bots_message_id-1;
-        }
-
-    } else {             
-        message_id = users_message_id;
-        users_message_id--;
-    }
-
-    var outside_message_wrapper = document.createElement("div");
-    outside_message_wrapper.classList.add(is_bot ? "wrapper-outside" : "wrapper-user-outside");
-
-    if (respond_message != "") {
-        var respond_container = document.createElement("div");
-        respond_container.classList.add("container", "container-respond");
-        if (!is_bot) {
-            respond_container.classList.add("container-respond-user");
-        }
-
-        var respond_header = document.createElement("p");
-        respond_header.textContent = translations.chatroom_respond_to_user + " " + respond_nick;
-
-        var respond_text = document.createElement("p");
-        respond_text.textContent = respond_message;
-
-        respond_container.appendChild(respond_header);
-        respond_container.appendChild(respond_text);
-
-        outside_message_wrapper.appendChild(respond_container);
-    }
-
-    var message_wrapper = document.createElement("div");
-    message_wrapper.classList.add(is_bot ? "wrapper" : "wrapper-user");
-
-    var message_container = document.createElement("div");
-    message_container.classList.add("container");
-    if (!is_bot) {
-        message_container.classList.add("user-container");
-    }
-
-    var nick_span = document.createElement("span");
-    nick_span.classList.add("right", "span-bot");
-    if (is_moderator) {
-        nick_span.classList.add("moderator-nick");
-    }
-    nick_span.textContent = sending_user_name;
-
-    var message_text = document.createElement("p");
-    message_text.classList.add("message-p");
-    message_text.setAttribute("data-index", message_id);
-    message_text.textContent = message;
-
-    var time_span = document.createElement("span");
-    time_span.classList.add(is_bot ? "time-left" : "time-left-user");
-    time_span.textContent = hour + ":" + min;
-
-    if (is_bot) {
-        message_container.appendChild(nick_span);
-    }
-
-    message_container.appendChild(message_text);
-    message_container.appendChild(time_span);
-    message_container.appendChild(reactions_manager.createDomWithReactionsContainer(is_bot));
-
-    message_wrapper.appendChild(message_container);
-
-    var buttons_container = document.createElement("div");
-    buttons_container.classList.add("container-buttons");
-    
-    var respond_button =  document.createElement("button");
-    respond_button.classList.add("respond-button", "message-button");
-    respond_button.addEventListener("click", (event) => respondToMessage(event.currentTarget));
-    respond_button.innerHTML = respond_svg;
-
-    if (no_user_interaction) {
-        respond_button.classList.add("hidden");
-    }
-
-    buttons_container.appendChild(respond_button);
-    buttons_container.appendChild(reactions_manager.createDomWithReactionsButton());
-    
-    if (is_bot) {
-        buttons_container.appendChild(reports_manager.createDomWithReportButton());
-    }
-
-    buttons_container.appendChild(reactions_manager.createDomWithReactionsModal(is_bot));
-    buttons_container.appendChild(reports_manager.createDomWithReportModal());
-
-    message_wrapper.appendChild(buttons_container);
-    outside_message_wrapper.appendChild(message_wrapper);
-
-    chatroom.appendChild(outside_message_wrapper);
-
-    if (!dont_scroll_chat_after_message) {
-
-        if (message_id % 2 == 0 || true) {
-            window.scroll({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
-    }
-
-    gui_customization_manager.changeFontSize(gui_customization_manager.font_size_change);
-    gui_customization_manager.changeLayoutColor(0);
-}
-
-function respondToMessage(message_dom) {
-    var message_div = message_dom.parentNode.parentNode.querySelector('.container');
-
-    if (message_div == respond_message_div) {
-        respond_message_div = "";
-
-        respond_input_box.style.display = "none";
-    } else {
-        respond_message_div = message_div;
-
-        var to_responding_bot = user_name;
-
-        if (message_div.querySelector(".right") != null) {
-            to_responding_bot = message_div.querySelector(".right").innerText;
-        }
-
-        respond_input_box.style.display = "block";
-        respond_input_box.querySelector("#respond-input-box-nick").innerText = translations.chatroom_user_responding_to; 
-        respond_input_box.querySelector("#respond-input-box-nick").innerText += " " + to_responding_bot;
-        
-        if (respond_input_box.querySelector("#respond-input-box-message") != null) {
-            respond_input_box.querySelector("#respond-input-box-message").innerText = message_div.querySelector(".message-p").innerText;
-        } else {
-            respond_input_box.querySelector("#respond-input-box-message").innerText = user_name;
-        }
-    }
-
-    document.getElementById("msg_field").focus();
-}
-
-function sendUserMessage() {
-    var user_message = document.getElementById("msg_field").value;
-    document.getElementById("msg_field").value = "";
-
-    var is_curse = false;
-
-    for (var word of user_message.replace(/[^\w\s\']|_/g, "").replace(/\s+/g, " ").toLowerCase().split(" ")) {
-        if (curse_words.has(word) && timer.getSeconds() - last_curse_timestamp > 60) {
-            is_curse = true;
-
-            last_curse_timestamp = timer.getSeconds();
-
-            var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
-
-            reports_remove_messages_queue.push([random_time, -1, user_name, RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID]);
-            reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
-        }
-    }
-
-    if (user_message.match(/\w+/g) != null && user_message.match(/\w+/g).length > 1) {
-        users_messages_counter++;
-        
-        curiosity_question_sended = true;
-    }
-
-    is_user_typing = false;
-
-    if (user_message === null || user_message.match(/^ *$/) !== null) {
-        return;
-    }
-
-    var respond_message_id = 0;
-    var reply_to_who_nick = "";
-
-    if (respond_message_div == "") {
-        createAndSendMessageHTML(user_name, user_message, false);
-    } else {
-        if (respond_message_div.querySelector(".right") != null) { // is users message was respond to bots message
-            reply_to_who_nick = respond_message_div.querySelector(".right").innerText;
-        } else { // or to another users message
-            reply_to_who_nick = user_name;
-        }
-        
-        createAndSendMessageHTML(
-            user_name,
-            user_message,
-            false,
-            respond_message_div.querySelector(".message-p").innerText,
-            reply_to_who_nick
-        );
-
-        respond_message_id = respond_message_div.querySelector(".message-p").dataset.index;
-
-        respond_message_div = "";
-        respond_input_box.style.display = "none";
-    }
-
-    if (is_curse) {
-        db_manager.sendUserMessageDataToDatabase(user_message, timer.getSeconds(), user_name, respond_message_id, "NONE");
-
-        return;
-    }
-
-    if (timer.getSeconds() - last_user_msg_timestamp < 4) {
-        logDebugMessage("Bots will not reply because user is spamming messages");
-        return;
-    }
-
-    last_user_msg_timestamp = timer.getSeconds();
-
-    $.generateRespond(user_message, timer.getSeconds(), function(respond, respond_type, responding_bot) {
-        if (respond && respond != "") {
-            var times_to_send_respond_due_to_number_of_words = [0, 7, 7, 8, 8, 10, 10, 12, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
-
-            if (reply_to_who_nick != "" && reply_to_who_nick != user_name) {
-                responding_bot = reply_to_who_nick;
-            }
-
-            if (!respond.includes("{{NEW_MESSAGE}}")) {
-                var respond_len = 1;
-                
-                if (respond.match(/\w+/g) != null) {
-                    respond_len = respond.match(/\w+/g).length;
-                }
-
-                respond_len = Math.min(respond_len, 12);
-
-                responds_queue.push([times_to_send_respond_due_to_number_of_words[respond_len], responding_bot, respond, user_message]);
-
-            } else { // legacy code, possible only when respond is generating by algorithm (not by LLM) and responding message is designed to be sens as 2 messages
-                var respond = respond.split("{{NEW_MESSAGE}}");
-
-                var respond_len = 1;
-                
-                if (respond[0].match(/\w+/g) != null) {
-                    respond_len = respond[0].match(/\w+/g).length;
-                }
-
-                respond_len = Math.min(respond_len, 12);
-
-                responds_queue.push([times_to_send_respond_due_to_number_of_words[respond_len], responding_bot, respond[0], user_message]);
-
-                respond_len = 1;
-
-                if (respond[1].match(/\w+/g) != null) {
-                    respond_len = respond[1].match(/\w+/g).length;
-                }
-
-                respond_len = Math.min(respond_len, 12);
-
-                responds_queue.push([times_to_send_respond_due_to_number_of_words[respond_len] + 4, responding_bot, respond[1], user_message]);
-            }
-
-            responds_queue.sort((a, b) => a[0] - b[0]);
-
-            if (users_messages_counter > 0 && users_messages_counter % 2 == 0 && user_message.match(/\w+/g).length > 1) {
-                reactions_queue.push([3, users_message_id+1, 0]);
-            }
-
-            var respond_to_save_to_db = respond_type + ": " + respond;
-
-            db_manager.sendUserMessageDataToDatabase(user_message, timer.getSeconds(), user_name, respond_message_id, respond_to_save_to_db);
-
-            interactions_manager.typing_time = 0;
-        } else {
-            db_manager.sendUserMessageDataToDatabase(user_message, timer.getSeconds(), user_name, respond_message_id, "NONE");
-        }
-    });
-}
 
 function printTimeToLeftChat(time_to_left_chat)
 {
@@ -463,53 +83,6 @@ function printTimeToLeftChat(time_to_left_chat)
     seconds_counter.innerText = new_time;
 }
 
-function openDialog() {
-    dialog_box.open = true;
-}
-
-function closeDialog() {
-    dialog_box.open = false;
-}
-
-function closeRespond() {
-    respond_message_div = "";
-    respond_input_box.style.display = "none";
-}
-
-function showTypingBotsNicks(seconds_integer) {
-    var bots_typing = [];
-
-    for (var i = SECONDS_UNTIL_SEND_BOT_MESSAGE_TO_SHOW_BOT_NAME_TYPING; i > 0; i--) {
-        if (seconds_integer + i in bots_messages) {
-            if (!bots_typing.includes(bots_messages[seconds_integer + i][0])) {
-                bots_typing.push(bots_messages[seconds_integer + i][0]);
-            }
-        }
-    }
-
-    responds_queue.forEach((respond) => {
-        if (!bots_typing.includes(respond[1])) {
-            bots_typing.push(respond[1]);
-        }
-    });
-
-    var typing_text = " " + translations.chatroom_user_singular_typing_text;
-
-    if (bots_typing.length > 1) {
-        typing_text = " " + translations.chatroom_user_plural_typing_text;
-    }
-
-    typing_text = bots_typing.join(", ") + typing_text;
-    typing_text = typing_text.replace(/,([^,]*)$/, " i" + '$1');
-
-    if (bots_typing.length > 0) {
-        document.getElementById("stage").style.display = "block";
-        document.getElementById("user-writing").innerHTML = typing_text;
-    } else {
-        document.getElementById("stage").style.display = "none";
-    }
-}
-
 function handleEndOfChatroom()
 {
     logDebugMessage("State of saving interaction and reactions to DB: " + db_manager.reaction_and_interaction_data_saved.toString());
@@ -534,6 +107,21 @@ function handleEndOfChatroom()
     }
 }
 
+function showDialogWithTimeWarning(time_to_left_chat)
+{
+    var minutes = Math.floor(time_to_left_chat / 60);
+    var minutes_text = translations.minutes_many;
+
+    if (minutes < 5) {
+        minutes_text = translations.minutes_few;
+    }
+    if (minutes == 1) {
+        minutes_text = translations.minutes_singular;
+    }
+
+    modals_manager.openDialogWithTimeWarning(translations.chatroom_end_dialog_text + " " + minutes.toString() + " " + minutes_text);
+}
+
 function incrementSeconds() {
     if (exit_poll_manager.exit_poll_all_animations_finished) {
         exit_poll_manager.exit_poll_after_vote_seconds += 1;
@@ -556,13 +144,8 @@ function incrementSeconds() {
     if (exit_poll_manager.exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
         end_chatroom = true;
 
-        db_manager.sendReactionsAndInteractionsData(
-            0,
-            true,
-            reactions_manager.like_reactions_memory,
-            reactions_manager.heart_reactions_memory,
-            reactions_manager.angry_reactions_memory
-        );
+        db_manager.sendReactionsAndInteractionsData(false, true);
+        db_manager.exit_poll_vote_saved = true;
         
         exit_poll_manager.closeChatroomPollDialog();
         
@@ -570,14 +153,14 @@ function incrementSeconds() {
     }
 
     if (instant_exit_poll) {
-        if (draft_bots_message_id >= 1) {
+        if (messages_manager.draft_bots_message_id >= 1) {
             exit_poll_manager.handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
             return;
         }
     }
     else
     {
-        if (draft_bots_message_id >= 1 + Object.keys(bots_messages).length) {
+        if (messages_manager.draft_bots_message_id >= 1 + Object.keys(messages_manager.bots_messages).length) {
             exit_poll_manager.  handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
             return;
         }
@@ -589,85 +172,31 @@ function incrementSeconds() {
 
     var seconds_integer = timer.getSeconds();
 
-    responds_queue.every((respond) => respond[0]--);
-    reactions_queue.every((reaction) => reaction[0]--);
+    messages_manager.responds_queue.every((respond) => respond[0]--);
+    reactions_manager.reactions_queue.every((reaction) => reaction[0]--);
     reports_remove_messages_queue.every((reports) => reports[0]--);
 
-    showTypingBotsNicks(seconds_integer);
+    messages_manager.showTypingBotsNicks(seconds_integer);
+    messages_manager.sendScriptedMessage(seconds_integer);
+    messages_manager.sendMessagesFromQueue();
 
-    if (seconds_integer in bots_messages && !seconds_messages_sent.has(seconds_integer)) {
-        createAndSendMessageHTML(
-            bots_messages[seconds_integer][0],
-            bots_messages[seconds_integer][1],
-            true,
-            bots_messages[seconds_integer][3] ?? "",
-            bots_messages[seconds_integer][2] ?? "",
-        );
-
-        seconds_messages_sent.add(seconds_integer);
-
-        if (bots_messages[seconds_integer][4] != "") {
-            var emojis_ids = bots_messages[seconds_integer][4].split(',');
-            var emojis_times = bots_messages[seconds_integer][5].split(',');
-
-            for (var i = 0; i < emojis_ids.length; i++) {
-                reactions_queue.push([emojis_times[i], dict_draft_message_id_to_message_id[draft_bots_message_id-1], emojis_ids[i]]);
-            }
-        }
-    }
-
-    while (responds_queue.length > 0 && responds_queue[0][0] <= 0) {
-        var respond = responds_queue.shift();
-
-        createAndSendMessageHTML(
-            respond[1],
-            respond[2],
-            true,
-            respond[3],
-            user_name,
-            true
-        );
-    }
-
+    reactions_manager.addReactionsFromQueue();
+    
     sendCuriosityQuestion();
-
-    while (reactions_queue.length > 0 && reactions_queue[0][0] <= 0) {
-        var reaction = reactions_queue.shift();
-
-        reactions_manager.addBotReaction(reaction[1], reaction[2]);
-        gui_customization_manager.changeLayoutColor(0);
-    }
 
     handleReports();
 
-    var time_to_left_chat = 480 - seconds_integer; // TODO chatroom_time
+    var time_to_left_chat = chatroom_time - seconds_integer;
 
     printTimeToLeftChat(time_to_left_chat);
 
     if (time_to_left_chat == 2*60) {
-        var minutes = Math.floor(time_to_left_chat / 60);
-        var minutes_text = translations.minutes_many;
-
-        if (minutes < 5) {
-            minutes_text = translations.minutes_few;
-        }
-        if (minutes == 1) {
-            minutes_text = translations.minutes_singular;
-        }
-
-        dialog_box.querySelector("p").innerText = translations.chatroom_end_dialog_text + " " + minutes.toString() + " " + minutes_text;
-        openDialog();
+        showDialogWithTimeWarning(time_to_left_chat);
     }
 
     if (time_to_left_chat < -100) {
         end_chatroom = true;
-        db_manager.sendReactionsAndInteractionsData(
-            1,
-            true,
-            reactions_manager.like_reactions_memory,
-            reactions_manager.heart_reactions_memory,
-            reactions_manager.angry_reactions_memory
-        );
+        db_manager.sendReactionsAndInteractionsData(true, true);
 
         closeChatroomPollDialog();
 
@@ -693,13 +222,7 @@ window.addEventListener('beforeunload', function(e) {
         return;
     }
 
-    db_manager.sendReactionsAndInteractionsData(
-        0,
-        false,
-        like_reactions_memory,
-        heart_reactions_memory,
-        angry_reactions_memory
-    );
+    db_manager.sendReactionsAndInteractionsData(false, false);
 
     interactions_manager.resetInteractionsCounters();
 

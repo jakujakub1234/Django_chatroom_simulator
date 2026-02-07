@@ -2,7 +2,14 @@
 {% load static %}
 
 {% block content %}
-<article id="data-from-django" data-nick="{{ nick }}" data-token="{{ csrf_token }}" data-chatroom-url = "{% url 'chatroom' %}" data-start-timestamp = "{{ start_timestamp }}" data-translations="{{ translations }}"></article>
+<article id="data-from-django"
+ data-nick="{{ nick }}"
+ data-token="{{ csrf_token }}"
+ data-chatroom-url = "{% url 'chatroom' %}"
+ data-start-timestamp = "{{ start_timestamp }}"
+ data-translations="{{ translations }}"
+ data-lobby-time = "{{ lobby_time }}">
+</article>
 
 <h1 class="header-text" >{{ lobby_title }}</h1>
 <h2 style="text-align: center;">{{ translations.lobby_warning }}</h2>

@@ -1,4 +1,5 @@
 const translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
+const chatroom_time = parseInt(document.getElementById('data-from-django').dataset.chatroomTime);
 
 const data_from_django = document.getElementById('data-from-django').dataset;
 const user_name = data_from_django.nick;

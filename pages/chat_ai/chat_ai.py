@@ -88,8 +88,6 @@ class ChatAI:
         message = message.replace("ń","n")
         message = message.replace("ł","l")
 
-        #message = message.translate(str.maketrans('', '', string.punctuation)) # TODO maybe not best idea, user can forgot about space after comma
-
         return message
 
     def setNick(self, nick):
@@ -326,8 +324,9 @@ class ChatAI:
 
         responding_message = random.choice(responding_message)
 
-        #if self.user_messages_counter % 3 == 0: TODO remove comments
-        #    responding_message = ""
+        # Legacy requirement to not reply every time 
+        # if self.user_messages_counter % 3 == 0:
+        #     responding_message = ""
 
         print("RESPOND: " + responding_message)
 

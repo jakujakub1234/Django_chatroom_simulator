@@ -1,16 +1,23 @@
 export class DatabaseManager
 {
-    constructor({ token, timer, interactions_manager })
+    constructor({ token, timer, interactions_manager, reactions_manager })
     {
         this.timer = timer;
         this.token = token;
         this.interactions_manager = interactions_manager;
+        this.reactions_manager = reactions_manager;
 
         this.reaction_and_interaction_data_saved = [false, false, false, false];
         this.exit_poll_vote_saved = false
         
         this.prev_prev_message = "NONE";
         this.prev_message = "NONE";
+    }
+
+    updateMessagesHistory(last_message)
+    {
+        this.prev_prev_message = this.prev_message;
+        this.prev_message = last_message;
     }
 
     sendDataThroughAjax(data, is_exit_poll = false, reactions_and_interactions_index = -1)
@@ -53,38 +60,40 @@ export class DatabaseManager
             message_time: message_time,
             nick: nick,
             respond_message_id: respond_message_id,
-            typing_time: typing_time
+            typing_time: this.interactions_manager.typing_time
         });
     }
 
     sendReactionsAndInteractionsData
     (
-        is_chatroom_finished_1_0,
-        is_this_true_end,
-        like_reactions_memory,
-        heart_reactions_memory,
-        angry_reactions_memory
+        is_chatroom_finished,
+        is_this_save_after_exit_poll
     )
     {
+        logDebugMessage("hesitation: " + this.interactions_manager.hesitation);
+        logDebugMessage("mouse_movement_seconds: " + this.interactions_manager.mouse_movement_seconds);
+        logDebugMessage("scroll_seconds: " + this.interactions_manager.scroll_seconds);
+        logDebugMessage("input_seconds: " + this.interactions_manager.input_seconds);
+
         var indexes = [-1, -1, -1, -1];
 
-        if (is_this_true_end) {
+        if (is_this_save_after_exit_poll) {
             indexes = [0, 1, 2, 3];
         }
 
         this.sendDataThroughAjax({
             action: "like_reactions",
-            reactions: Array.from(like_reactions_memory).join(' ')
+            reactions: Array.from(this.reactions_manager.like_reactions_memory).join(' ')
         }, false, indexes[0]);
 
         this.sendDataThroughAjax({
             action: "heart_reactions",
-            reactions: Array.from(heart_reactions_memory).join(' ')
+            reactions: Array.from(this.reactions_manager.heart_reactions_memory).join(' ')
         }, false, indexes[1]);
 
         this.sendDataThroughAjax({
             action: "angry_reactions",
-            reactions: Array.from(angry_reactions_memory).join(' ')
+            reactions: Array.from(this.reactions_manager.angry_reactions_memory).join(' ')
         }, false, indexes[2]);
 
         this.sendDataThroughAjax({
@@ -93,7 +102,7 @@ export class DatabaseManager
             mouse_movement_seconds: this.interactions_manager.mouse_movement_seconds,
             scroll_seconds: this.interactions_manager.scroll_seconds,
             input_seconds: this.interactions_manager.input_seconds,
-            is_chatroom_finished: is_chatroom_finished_1_0,
+            is_chatroom_finished: is_chatroom_finished ? 1 : 0,
             chatroom_exit_time: this.timer.getSeconds()
         }, false, indexes[3]);
     }

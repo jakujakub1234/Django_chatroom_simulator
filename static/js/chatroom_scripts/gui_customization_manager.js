@@ -22,20 +22,7 @@ export class GuiCustomizationManager
     {
         this.font_size_change = change_index;
 
-        var ele = document.getElementsByClassName('time-left');
-        for (var i = 0; i < ele.length; i++) {
-            if (this.font_size_change == 0) {
-                ele[i].style.fontSize = "10pt";
-            }
-            if (this.font_size_change == 1) {
-                ele[i].style.fontSize = "13pt";
-            }
-            if (this.font_size_change == 2) {
-                ele[i].style.fontSize = "16pt";
-            }
-        }
-
-        ele = document.getElementsByClassName('time-left-user');
+        var ele = document.getElementsByClassName('message-sent-time');
         for (var i = 0; i < ele.length; i++) {
             if (this.font_size_change == 0) {
                 ele[i].style.fontSize = "10pt";

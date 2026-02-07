@@ -16,4 +16,12 @@ export class Timer
     {
         return Math.ceil(this.seconds);
     }
+
+    getCurrentTimeInReadableFormat()
+    {
+        return new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
 }

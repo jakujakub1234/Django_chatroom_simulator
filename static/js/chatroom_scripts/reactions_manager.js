@@ -1,12 +1,15 @@
 export class ReactionsManager
 {
-    constructor({ modals_manager })
+    constructor({ modals_manager, gui_customization_manager })
     {
         this.modals_manager = modals_manager;
+        this.gui_customization_manager = gui_customization_manager;
 
         this.like_reactions_memory = new Set();
         this.heart_reactions_memory = new Set();
-        this.angry_reactions_memory = new Set();   
+        this.angry_reactions_memory = new Set();
+
+        this.reactions_queue = [];
     }
 
     addReaction(reaction_button_dom, emotion_id)
@@ -119,5 +122,15 @@ export class ReactionsManager
         reactions_modal.appendChild(angry_button);
 
         return reactions_modal;
+    }
+
+    addReactionsFromQueue()
+    {
+        while (this.reactions_queue.length > 0 && this.reactions_queue[0][0] <= 0) {
+            var reaction = this.reactions_queue.shift();
+
+            this.addBotReaction(reaction[1], reaction[2]);
+            this.gui_customization_manager.changeLayoutColor(0);
+        }
     }
 }

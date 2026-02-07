@@ -17,6 +17,7 @@
   data-no-user-interaction-hidden="{{ no_user_interaction_hidden }}"
   data-instant-exit-poll-hidden="{{ instant_exit_poll_hidden }}"
   data-is-debug-mode-hidden="{{ is_debug_mode_hidden }}"
+  data-chatroom-time = "{{ chatroom_time }}"
   tabindex="-1">  
 </article>
 
@@ -29,7 +30,7 @@
   <b>{{ translations.chatroom_end_dialog_warning }}</b>
   <p>{{ translations.chatroom_end_dialog_text }} 30 {{ translations.second_many }}</p>
   <br>
-  <div class="dialog-buttons"><button id="dialog-button" onclick="closeDialog()">{{ translations.OK }}</button></div>
+  <div class="dialog-buttons"><button id="dialog-button">{{ translations.OK }}</button></div>
 </dialog>
 
 <dialog id="report-box">
@@ -48,7 +49,7 @@
 </div>
 
 <div id="respond-input-box" class="container container-respond" style="display: none">
-  <button class="close-respond" id="close-respond" onclick="closeRespond()"></button>
+  <button class="close-respond" id="close-respond"></button>
   <p id="respond-input-box-nick">{{ translations.chatroom_respond_to_user }}</p>
   <p id="respond-input-box-message">respond_message</p>
 </div> 
@@ -108,8 +109,6 @@
 
 <script src="{% static 'js/chatroom_scripts/legacy_features/legacy_reports_abuse.js' %}"></script>
 <script src="{% static 'js/chatroom_scripts/legacy_features/legacy_curiosity_questions.js' %}"></script>
-
-<script src="{% static 'js/chatroom_scripts/bots_scripted_messages_manager.js' %}"></script>
 
 <script type="module" src="{% static 'js/chatroom_scripts/chatroom_script.js' %}"></script>
 

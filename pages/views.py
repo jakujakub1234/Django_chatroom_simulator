@@ -27,7 +27,7 @@ class HomePageView(TemplateView):
     def get(self, request):
         form = HomeForm()
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -74,7 +74,7 @@ class LobbyPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -93,6 +93,7 @@ class LobbyPageView(TemplateView):
         context['nick'] = self.request.session['nick']
         context['start_timestamp'] = self.request.session['start_timestamp']
         context['translations'] = translations
+        context['lobby_time'] = lobby_time
 
         context['lobby_title'] = translations.get('lobby_title').format(nick=self.request.session['nick'])
 
@@ -106,7 +107,7 @@ class ChatroomPageView(TemplateView):
             form = HomeForm()
             return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "": #TODO
+        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
             if survey_time > lobby_time + chatroom_time:
@@ -128,6 +129,7 @@ class ChatroomPageView(TemplateView):
         context['translations'] = translations
         context['language_code'] = language_code
         context['is_debug_mode_hidden'] = 1 if settings.DEBUG_MODE else 0
+        context['chatroom_time'] = chatroom_time
 
         if settings.DEBUG_MODE:
             context['chat_speed_hidden'] = self.request.session['chat_speed_hidden']

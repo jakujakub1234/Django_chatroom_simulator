@@ -1,10 +1,8 @@
 var translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
-
 var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
+var lobby_time = parseInt(document.getElementById('data-from-django').dataset.lobbyTime);
 
 var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
-
-var wait_time = 14;
 
 var timer_text = document.getElementById('seconds-counter');
 var users_counter = document.getElementById('users-counter');
@@ -54,7 +52,7 @@ $.ajax({
 });
 
 function incrementSeconds() {   
-    if (seconds > wait_time) {
+    if (seconds > lobby_time) {
         return;
     }
 
@@ -77,7 +75,7 @@ function incrementSeconds() {
         document.getElementById('bot-' + (users_actual_amount-1).toString()).innerHTML = avatar_svg + "<br>" + bots_nicks[users_actual_amount-2];
     }
 
-    if (seconds > wait_time) {
+    if (seconds > lobby_time) {
         window.location.href = document.getElementById('data-from-django').dataset.chatroomUrl;
     }
 }
