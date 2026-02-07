@@ -12,10 +12,15 @@ export class ReactionsManager
         this.reactions_queue = [];
     }
 
-    addReaction(reaction_button_dom, emotion_id)
+    addReactionToQueue(seconds_to_wait_before_send, message_id, emoji_id)
     {
-        var span_id = ["like-user", "heart-user", "angry-user"][emotion_id];
-        var svg = [like_svg, heart_svg, angry_svg][emotion_id];
+        this.reactions_queue.push([seconds_to_wait_before_send, message_id, emoji_id]);
+    }
+
+    addReactionToMessage(reaction_button_dom, emoji_id)
+    {
+        var span_id = ["like-user", "heart-user", "angry-user"][emoji_id];
+        var svg = [like_svg, heart_svg, angry_svg][emoji_id];
 
         var reactions_container = reaction_button_dom.parentNode.parentNode.parentNode.querySelector(".reactions-container-selector");
         var message_id = reaction_button_dom.parentNode.parentNode.parentNode.querySelector(".message-p").dataset.index;
@@ -25,7 +30,7 @@ export class ReactionsManager
         if (reaction) {
             reaction.remove();
 
-            switch (emotion_id) {
+            switch (emoji_id) {
                 case LIKE_REACTION_ID:
                     this.like_reactions_memory.delete(message_id);
                     break;
@@ -40,7 +45,7 @@ export class ReactionsManager
         } else {
             reactions_container.innerHTML += "<span id=" + span_id + ">" + svg + "</span>";
 
-            switch (emotion_id) {
+            switch (emoji_id) {
                 case LIKE_REACTION_ID:
                     this.like_reactions_memory.add(message_id);
                     break;
@@ -61,10 +66,10 @@ export class ReactionsManager
         logDebugMessage(this.angry_reactions_memory);
     }
 
-    addBotReaction(message_dom, emotion_id)
+    addBotReaction(message_dom, emoji_id)
     {
-        var span_id = ["like-user-bot", "heart-user-bot", "angry-user-bot"][emotion_id];
-        var svg = [like_svg, heart_svg, angry_svg][emotion_id];
+        var span_id = ["like-user-bot", "heart-user-bot", "angry-user-bot"][emoji_id];
+        var svg = [like_svg, heart_svg, angry_svg][emoji_id];
 
         var message_elem = document.querySelector("[data-index='" + message_dom + "']");
 
@@ -104,17 +109,17 @@ export class ReactionsManager
 
         var like_button =  document.createElement("button");
         like_button.classList.add("like-button", "message-button");
-        like_button.addEventListener("click", (event) => this.addReaction(event.currentTarget, LIKE_REACTION_ID));
+        like_button.addEventListener("click", (event) => this.addReactionToMessage(event.currentTarget, LIKE_REACTION_ID));
         like_button.innerHTML = like_svg;
 
         var heart_button =  document.createElement("button");
         heart_button.classList.add("heart-button", "message-button");
-        heart_button.addEventListener("click", (event) => this.addReaction(event.currentTarget, HEART_REACTION_ID));
+        heart_button.addEventListener("click", (event) => this.addReactionToMessage(event.currentTarget, HEART_REACTION_ID));
         heart_button.innerHTML = heart_svg;
 
         var angry_button =  document.createElement("button");
         angry_button.classList.add("angry-button", "message-button");
-        angry_button.addEventListener("click", (event) => this.addReaction(event.currentTarget, ANGRY_REACTION_ID));
+        angry_button.addEventListener("click", (event) => this.addReactionToMessage(event.currentTarget, ANGRY_REACTION_ID));
         angry_button.innerHTML = angry_svg;
 
         reactions_modal.appendChild(like_button);

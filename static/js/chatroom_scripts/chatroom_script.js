@@ -20,7 +20,7 @@ const reactions_manager = new ReactionsManager({ modals_manager, gui_customizati
 const db_manager = new DatabaseManager({ token: data_from_django.token, timer, interactions_manager, reactions_manager });
 const reports_manager = new ReportsManager({ db_manager, modals_manager });
 const exit_poll_manager = new ExitPollManager({ db_manager });
-const messages_manager = new MessagesManager({ db_manager, reactions_manager, gui_customization_manager, interactions_manager, reports_manager, timer, token: data_from_django.token });
+const messages_manager = new MessagesManager({ db_manager, reactions_manager, gui_customization_manager, reports_manager, interactions_manager, timer, token: data_from_django.token });
 
 const seconds_counter = document.getElementById('seconds-counter');
 const submit_button = document.querySelector("#btn-submit");
@@ -32,7 +32,7 @@ var ending = UNDIFINED_ENDING;
 var end_chatroom = false;
 
 submit_button.addEventListener("click", () => {
-    messages_manager.sendUserMessage();
+    messages_manager.user_message_manager.sendUserMessage();
 });
 
 msg_field.addEventListener("keypress", function(event) {
@@ -174,17 +174,21 @@ function incrementSeconds() {
 
     messages_manager.responds_queue.every((respond) => respond[0]--);
     reactions_manager.reactions_queue.every((reaction) => reaction[0]--);
+
+    // Legacy code start
     reports_remove_messages_queue.every((reports) => reports[0]--);
+    // Legacy code end
 
     messages_manager.showTypingBotsNicks(seconds_integer);
     messages_manager.sendScriptedMessage(seconds_integer);
-    messages_manager.sendMessagesFromQueue();
+    messages_manager.sendBotRespondMessagesFromQueue();
 
     reactions_manager.addReactionsFromQueue();
     
+    // Legacy code start
     sendCuriosityQuestion();
-
     handleReports();
+    // Legacy code end
 
     var time_to_left_chat = chatroom_time - seconds_integer;
 

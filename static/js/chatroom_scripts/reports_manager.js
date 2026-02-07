@@ -23,11 +23,16 @@ export class ReportsManager
             report_id, report_id
         });
 
+        // Legacy code start
+
         // Legacy reports abuse feature 
+        
         // var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
         // var bot_nick = report_button_dom.parentNode.parentNode.parentNode.parentNode.querySelector(".span-bot").innerText;
         // reports_remove_messages_queue.push([random_time, message_id, bot_nick, report_id]);
         // reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
+        
+        // Legacy code end
 
         this.closeReportDialog();
     }
