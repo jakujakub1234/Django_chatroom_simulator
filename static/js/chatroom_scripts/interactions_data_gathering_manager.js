@@ -1,54 +1,81 @@
-var hesitation = 0;
-var mouse_movement_seconds = 0;
-var scroll_seconds = 0;
-var input_seconds = 0;
-
-var mouse_movement_sleep = false;
-var scroll_sleep = false;
-var is_user_typing = false;
-var typing_time = 0;
-
-function updateUserInteractionData(msg_field_value)
+export class InteractionsDataGatheringManager
 {
-    mouse_movement_sleep = false;
-    scroll_sleep = false;
-
-    if (msg_field_value != "") {
-        if (!is_user_typing) {
-            typing_time = 0;   
-        }
-
-        input_seconds++;
-        is_user_typing = true;
-        typing_time++;
-    } 
-    else
+    constructor({})
     {
-        if (is_user_typing) {
-            hesitation++;
-            is_user_typing = false;
+        this.hesitation = 0;
+        this.mouse_movement_seconds = 0;
+        this.scroll_seconds = 0;
+        this.input_seconds = 0;
+
+        this.mouse_movement_sleep = false;
+        this.scroll_sleep = false;
+        this.is_user_typing = false;
+        this.typing_time = 0;
+
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onScroll = this.onScroll.bind(this);
+
+        window.addEventListener("mousemove", this.onMouseMove);
+        window.addEventListener("scroll", this.onScroll);
+    }
+
+    updateUserInteractionData(msg_field_value)
+    {
+        // TODO probably not needded because smarter implementation of windows listeners
+        // this.mouse_movement_sleep = false;
+        // this.scroll_sleep = false;
+
+        if (msg_field_value != "") {
+            if (!this.is_user_typing) {
+                this.typing_time = 0;   
+            }
+
+            this.input_seconds++;
+            this.is_user_typing = true;
+            this.typing_time++;
+        } 
+        else
+        {
+            if (this.is_user_typing) {
+                this.hesitation++;
+                this.is_user_typing = false;
+            }
         }
     }
-}
 
-function resetInteractionsCounters()
-{
-    hesitation = 0;
-    mouse_movement_seconds = 0;
-    scroll_seconds = 0;
-    input_seconds = 0;
-}
-
-window.addEventListener("mousemove", (e) => {
-    if (!mouse_movement_sleep) {
-        mouse_movement_seconds++;
-        mouse_movement_sleep = true;
+    resetInteractionsCounters()
+    {
+        this.hesitation = 0;
+        this.mouse_movement_seconds = 0;
+        this.scroll_seconds = 0;
+        this.input_seconds = 0;
     }
-});
 
-window.addEventListener("scroll", (e) => {
-    if (!scroll_sleep) {
-        scroll_seconds++;
-        scroll_sleep = true;
+    onMouseMove() {
+        if (!this.mouse_movement_sleep) {
+            this.mouse_movement_seconds++;
+            this.mouse_movement_sleep = true;
+
+            // reset sleep after 1 second
+            setTimeout(() => {
+                this.mouse_movement_sleep = false;
+            }, 1000);
+        }
     }
-});
+
+    onScroll() {
+        if (!this.scroll_sleep) {
+            this.scroll_seconds++;
+            this.scroll_sleep = true;
+
+            setTimeout(() => {
+                this.scroll_sleep = false;
+            }, 1000);
+        }
+    }
+
+    destroy() {
+        window.removeEventListener("mousemove", this.onMouseMove);
+        window.removeEventListener("scroll", this.onScroll);
+    }
+}

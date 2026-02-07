@@ -2,7 +2,6 @@ const translations = JSON.parse(document.getElementById('data-from-django').data
 
 const data_from_django = document.getElementById('data-from-django').dataset;
 const user_name = data_from_django.nick;
-const token = data_from_django.token;
 const is_debug_mode = data_from_django.isDebugModeHidden == 1;
 
 // DEBUG MODE ONLY VARIABLES

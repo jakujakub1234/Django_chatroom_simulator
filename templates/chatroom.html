@@ -91,8 +91,8 @@
 
   <h3 id="chatroom-poll-thanks">{{ translations.chatroom_poll_thanks }}</h3>
 
-  <button class="poll-btn-submit" id="chatroom-poll-yes" onclick="chatroomPollDialogClick(true)">{{ translations.yes }}</button>
-  <button class="poll-btn-submit" id="chatroom-poll-no" onclick="chatroomPollDialogClick(false)">{{ translations.no }}</button>
+  <button class="poll-btn-submit" id="chatroom-poll-yes">{{ translations.yes }}</button>
+  <button class="poll-btn-submit" id="chatroom-poll-no">{{ translations.no }}</button>
 </div>
 
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
@@ -109,16 +109,9 @@
 <script src="{% static 'js/chatroom_scripts/legacy_features/legacy_reports_abuse.js' %}"></script>
 <script src="{% static 'js/chatroom_scripts/legacy_features/legacy_curiosity_questions.js' %}"></script>
 
-<script src="{% static 'js/chatroom_scripts/interactions_data_gathering_manager.js' %}"></script>
-<script src="{% static 'js/chatroom_scripts/reactions_manager.js' %}"></script>
-<script src="{% static 'js/chatroom_scripts/database_manager.js' %}"></script>
-<script src="{% static 'js/chatroom_scripts/exit_poll_manager.js' %}"></script>
-<script src="{% static 'js/chatroom_scripts/reports_manager.js' %}"></script>
-<script src="{% static 'js/chatroom_scripts/gui_customization_manager.js' %}"></script>
-
 <script src="{% static 'js/chatroom_scripts/bots_scripted_messages_manager.js' %}"></script>
 
-<script src="{% static 'js/chatroom_scripts/chatroom_script.js' %}"></script>
+<script type="module" src="{% static 'js/chatroom_scripts/chatroom_script.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'styles/chatroom_style.css' %}">
 

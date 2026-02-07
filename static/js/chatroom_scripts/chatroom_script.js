@@ -1,5 +1,24 @@
-var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
-var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
+import { Timer } from "./timer.js";
+
+import { ModalsManager } from "./modals_manager.js";
+
+import { GuiCustomizationManager } from "./gui_customization_manager.js";
+import { DatabaseManager } from "./database_manager.js";
+import { InteractionsDataGatheringManager } from "./interactions_data_gathering_manager.js";
+import { ExitPollManager } from "./exit_poll_manager.js";
+import { ReactionsManager } from "./reactions_manager.js";
+import { ReportsManager } from "./reports_manager.js";
+
+const timer = new Timer();
+
+const modals_manager = new ModalsManager(); 
+
+const gui_customization_manager = new GuiCustomizationManager({});
+const interactions_manager = new InteractionsDataGatheringManager({});
+const db_manager = new DatabaseManager({ token: data_from_django.token, timer, interactions_manager });
+const reactions_manager = new ReactionsManager({ modals_manager });
+const reports_manager = new ReportsManager({ db_manager, modals_manager });
+const exit_poll_manager = new ExitPollManager({ db_manager, reactions_manager });
 
 var bots_messages = [];
 
@@ -40,14 +59,12 @@ var dict_draft_message_id_to_message_id = {};
 // holding reply box texts
 var respond_message_div = "";
 
-// holding text of opened modal (alerts, warning mesasages, 5 minutes left etc.) 
-var opened_modal = "";
-
-var prev_prev_message = "NONE";
-var prev_message = "NONE";
 var current_message = "NONE";
 
 var ending = UNDIFINED_ENDING;
+
+// TODO maybe move to reactions manager, or to some another manager, queues manager?
+var reactions_queue = [];
 
 // guard variable to always redirect user to good ending page if chatroom is ended and user was not redirected (for some reason)
 var end_chatroom = false;
@@ -101,8 +118,8 @@ function createAndSendMessageHTML(
     is_curiosity_question = false,
     is_moderator = false 
 ){
-    prev_prev_message = prev_message;
-    prev_message = current_message;
+    db_manager.prev_prev_message = db_manager.prev_message;
+    db_manager.prev_message = current_message;
 
     current_message = "";
     
@@ -202,7 +219,7 @@ function createAndSendMessageHTML(
 
     message_container.appendChild(message_text);
     message_container.appendChild(time_span);
-    message_container.appendChild(createDomWithReactionsContainer(is_bot));
+    message_container.appendChild(reactions_manager.createDomWithReactionsContainer(is_bot));
 
     message_wrapper.appendChild(message_container);
 
@@ -219,14 +236,14 @@ function createAndSendMessageHTML(
     }
 
     buttons_container.appendChild(respond_button);
-    buttons_container.appendChild(createDomWithReactionsButton());
+    buttons_container.appendChild(reactions_manager.createDomWithReactionsButton());
     
     if (is_bot) {
-        buttons_container.appendChild(createDomWithReportButton());
+        buttons_container.appendChild(reports_manager.createDomWithReportButton());
     }
 
-    buttons_container.appendChild(createDomWithReactionsModal(is_bot));
-    buttons_container.appendChild(createDomWithReportModal());
+    buttons_container.appendChild(reactions_manager.createDomWithReactionsModal(is_bot));
+    buttons_container.appendChild(reports_manager.createDomWithReportModal());
 
     message_wrapper.appendChild(buttons_container);
     outside_message_wrapper.appendChild(message_wrapper);
@@ -243,8 +260,8 @@ function createAndSendMessageHTML(
         }
     }
 
-    changeFontSize(font_size_change);
-    changeLayoutColor(0);
+    gui_customization_manager.changeFontSize(gui_customization_manager.font_size_change);
+    gui_customization_manager.changeLayoutColor(0);
 }
 
 function respondToMessage(message_dom) {
@@ -277,35 +294,6 @@ function respondToMessage(message_dom) {
     document.getElementById("msg_field").focus();
 }
 
-function closeAllModals() {
-    var all_modals = document.getElementsByClassName('reactions-modal');
-    
-    for (var i = 0; i < all_modals.length; ++i) {
-        all_modals[i].style.display = "none";  
-    }
-
-    all_modals = document.getElementsByClassName('report-modal');
-    
-    for (var i = 0; i < all_modals.length; ++i) {
-        all_modals[i].style.display = "none";  
-    }
-}
-
-function openOrCloseModal(button_dom, modal_type) {
-    closeAllModals();
-
-    var modal = button_dom.parentNode.querySelector(`.${modal_type}-modal`);
-
-    if (modal == opened_modal) {
-        opened_modal = "";
-
-        return;
-    }
-
-    modal.style.display = "inherit";
-    opened_modal = modal;
-}
-
 function sendUserMessage() {
     var user_message = document.getElementById("msg_field").value;
     document.getElementById("msg_field").value = "";
@@ -313,10 +301,10 @@ function sendUserMessage() {
     var is_curse = false;
 
     for (var word of user_message.replace(/[^\w\s\']|_/g, "").replace(/\s+/g, " ").toLowerCase().split(" ")) {
-        if (curse_words.has(word) && Math.ceil(seconds) - last_curse_timestamp > 60) {
+        if (curse_words.has(word) && timer.getSeconds() - last_curse_timestamp > 60) {
             is_curse = true;
 
-            last_curse_timestamp = Math.ceil(seconds);
+            last_curse_timestamp = timer.getSeconds();
 
             var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
 
@@ -364,19 +352,19 @@ function sendUserMessage() {
     }
 
     if (is_curse) {
-        sendUserMessageDataToDatabase(user_message, Math.ceil(seconds), user_name, respond_message_id, "NONE");
+        db_manager.sendUserMessageDataToDatabase(user_message, timer.getSeconds(), user_name, respond_message_id, "NONE");
 
         return;
     }
 
-    if (Math.ceil(seconds) - last_user_msg_timestamp < 4) {
+    if (timer.getSeconds() - last_user_msg_timestamp < 4) {
         logDebugMessage("Bots will not reply because user is spamming messages");
         return;
     }
 
-    last_user_msg_timestamp = Math.ceil(seconds);
+    last_user_msg_timestamp = timer.getSeconds();
 
-    $.generateRespond(user_message, Math.ceil(seconds), function(respond, respond_type, responding_bot) {
+    $.generateRespond(user_message, timer.getSeconds(), function(respond, respond_type, responding_bot) {
         if (respond && respond != "") {
             var times_to_send_respond_due_to_number_of_words = [0, 7, 7, 8, 8, 10, 10, 12, 13, 13, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
 
@@ -427,11 +415,11 @@ function sendUserMessage() {
 
             var respond_to_save_to_db = respond_type + ": " + respond;
 
-            sendUserMessageDataToDatabase(user_message, Math.ceil(seconds), user_name, respond_message_id, respond_to_save_to_db);
+            db_manager.sendUserMessageDataToDatabase(user_message, timer.getSeconds(), user_name, respond_message_id, respond_to_save_to_db);
 
-            typing_time = 0;
+            interactions_manager.typing_time = 0;
         } else {
-            sendUserMessageDataToDatabase(user_message, Math.ceil(seconds), user_name, respond_message_id, "NONE");
+            db_manager.sendUserMessageDataToDatabase(user_message, timer.getSeconds(), user_name, respond_message_id, "NONE");
         }
     });
 }
@@ -524,10 +512,11 @@ function showTypingBotsNicks(seconds_integer) {
 
 function handleEndOfChatroom()
 {
-    logDebugMessage("State of saving data to database: " + reaction_and_interaction_data_saved.toString());
-    
+    logDebugMessage("State of saving interaction and reactions to DB: " + db_manager.reaction_and_interaction_data_saved.toString());
+    logDebugMessage("State of saving poll vote to DB: " + db_manager.exit_poll_vote_saved.toString());
+
     if (ending == GOOD_ENDING) {
-        if (reaction_and_interaction_data_saved.every(Boolean)) {
+        if (db_manager.isAllDataSaved()) {
             if (!not_exit_chatroom_at_the_end) {
                 window.location.href = data_from_django.endUrl;
                 ending = UNDIFINED_ENDING;
@@ -536,7 +525,7 @@ function handleEndOfChatroom()
     }
     
     if (ending == BAD_ENDING) {
-        if (reaction_and_interaction_data_saved.every(Boolean)) {
+        if (db_manager.isAllDataSaved()) {
             if (!not_exit_chatroom_at_the_end) {
                 window.location.href = data_from_django.badEndNoExitpollUrl;
                 ending = UNDIFINED_ENDING;
@@ -546,9 +535,9 @@ function handleEndOfChatroom()
 }
 
 function incrementSeconds() {
-    if (exit_poll_all_animations_finished) {
-        exit_poll_after_vote_seconds += 1;
-        logDebugMessage("Time passed after voting: " + exit_poll_after_vote_seconds.toString());
+    if (exit_poll_manager.exit_poll_all_animations_finished) {
+        exit_poll_manager.exit_poll_after_vote_seconds += 1;
+        logDebugMessage("Time passed after voting: " + exit_poll_manager.exit_poll_after_vote_seconds.toString());
     }
 
     if (end_chatroom) {
@@ -557,40 +546,48 @@ function incrementSeconds() {
         return;
     }
 
-    if (exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
+    if (exit_poll_manager.exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
         end_chatroom = true;
-        closeChatroomPollDialog();
+        exit_poll_manager.closeChatroomPollDialog();
         
         ending = GOOD_ENDING;
     }
 
-    if (exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
+    if (exit_poll_manager.exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
         end_chatroom = true;
-        sendReactionsAndInteractionsData(0, true);
-        closeChatroomPollDialog();
+
+        db_manager.sendReactionsAndInteractionsData(
+            0,
+            true,
+            reactions_manager.like_reactions_memory,
+            reactions_manager.heart_reactions_memory,
+            reactions_manager.angry_reactions_memory
+        );
+        
+        exit_poll_manager.closeChatroomPollDialog();
         
         ending = BAD_ENDING;
     }
 
     if (instant_exit_poll) {
         if (draft_bots_message_id >= 1) {
-            handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
+            exit_poll_manager.handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
             return;
         }
     }
     else
     {
         if (draft_bots_message_id >= 1 + Object.keys(bots_messages).length) {
-            handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
+            exit_poll_manager.  handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
             return;
         }
     }
     
-    seconds++;
+    timer.tick();
 
-    updateUserInteractionData(document.getElementById("msg_field").value);
+    interactions_manager.updateUserInteractionData(document.getElementById("msg_field").value);
 
-    var seconds_integer = Math.ceil(seconds);
+    var seconds_integer = timer.getSeconds();
 
     responds_queue.every((respond) => respond[0]--);
     reactions_queue.every((reaction) => reaction[0]--);
@@ -610,8 +607,8 @@ function incrementSeconds() {
         seconds_messages_sent.add(seconds_integer);
 
         if (bots_messages[seconds_integer][4] != "") {
-            emojis_ids = bots_messages[seconds_integer][4].split(',');
-            emojis_times = bots_messages[seconds_integer][5].split(',');
+            var emojis_ids = bots_messages[seconds_integer][4].split(',');
+            var emojis_times = bots_messages[seconds_integer][5].split(',');
 
             for (var i = 0; i < emojis_ids.length; i++) {
                 reactions_queue.push([emojis_times[i], dict_draft_message_id_to_message_id[draft_bots_message_id-1], emojis_ids[i]]);
@@ -637,8 +634,8 @@ function incrementSeconds() {
     while (reactions_queue.length > 0 && reactions_queue[0][0] <= 0) {
         var reaction = reactions_queue.shift();
 
-        addBotReaction(reaction[1], reaction[2]);
-        changeLayoutColor(0);changeLayoutColor
+        reactions_manager.addBotReaction(reaction[1], reaction[2]);
+        gui_customization_manager.changeLayoutColor(0);
     }
 
     handleReports();
@@ -664,7 +661,14 @@ function incrementSeconds() {
 
     if (time_to_left_chat < -100) {
         end_chatroom = true;
-        sendReactionsAndInteractionsData(1, true);
+        db_manager.sendReactionsAndInteractionsData(
+            1,
+            true,
+            reactions_manager.like_reactions_memory,
+            reactions_manager.heart_reactions_memory,
+            reactions_manager.angry_reactions_memory
+        );
+
         closeChatroomPollDialog();
 
         ending = GOOD_ENDING;
@@ -689,9 +693,15 @@ window.addEventListener('beforeunload', function(e) {
         return;
     }
 
-    sendReactionsAndInteractionsData(0, false);
+    db_manager.sendReactionsAndInteractionsData(
+        0,
+        false,
+        like_reactions_memory,
+        heart_reactions_memory,
+        angry_reactions_memory
+    );
 
-    resetInteractionsCounters();
+    interactions_manager.resetInteractionsCounters();
 
     e.preventDefault();
     e.returnValue = translations.chatroom_leaving_page_warning;
