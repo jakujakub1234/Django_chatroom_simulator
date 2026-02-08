@@ -20,7 +20,7 @@ function sendCuriosityQuestion() {
             translations.ai_curiosity_question_2.replace("{nick}", user_name)
         ][0];
 
-        createAndSendMessageHTML(
+        createMessageDom(
             bots_nicks[1],
             curiosity_question,
             true,

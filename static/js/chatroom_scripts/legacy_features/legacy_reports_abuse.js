@@ -44,7 +44,7 @@ function handleReports() {
             ][respect_reports_dict[reported_bot_nick]];
 
             if (respect_reports_dict[reported_bot_nick] < 3) {
-                createAndSendMessageHTML(
+                createMessageDom(
                     translations.chatroom_moderator_nick,
                     translations[respect_translation_index + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", reported_bot_nick),
                     true,
@@ -67,7 +67,7 @@ function handleReports() {
             var hostile_translation_index = ["", "chatroom_moderator_hostile_first_time_", "chatroom_moderator_hostile_second_time_"][hostile_reports_dict[reported_bot_nick]];
 
             if (hostile_reports_dict[reported_bot_nick] < 3) {
-                createAndSendMessageHTML(
+                createMessageDom(
                     translations.chatroom_moderator_nick,
                     translations[hostile_translation_index + (Math.floor(Math.random() * (reports_messages_size) + 1)).toString()].replace("{nick}", reported_bot_nick),
                     true,

@@ -205,4 +205,31 @@ export class ExitPollManager
             }, 80);
         });
     }
+
+    isReadyToEndChatroomIfUserVoted()
+    {
+        if (this.exit_poll_all_animations_finished) {
+            this.exit_poll_after_vote_seconds += 1;
+            logDebugMessage("Time passed after voting: " + this.exit_poll_after_vote_seconds.toString());
+        }
+
+        if (this.exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
+            this.closeChatroomPollDialog();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    isReadyToEndChatroomIfUserNotVoted()
+    {
+        if (this.exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
+            this.closeChatroomPollDialog();
+
+            return true;
+        }
+
+        return false;
+    }
 }

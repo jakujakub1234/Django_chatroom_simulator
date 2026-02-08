@@ -8,7 +8,7 @@ import { InteractionsDataGatheringManager } from "./interactions_data_gathering_
 import { ExitPollManager } from "./exit_poll_manager.js";
 import { ReactionsManager } from "./reactions_manager.js";
 import { ReportsManager } from "./reports_manager.js";
-import { MessagesManager } from "./messages_manager.js";
+import { MessagesManager } from "./messages_managers/messages_manager.js";
 
 const timer = new Timer();
 
@@ -29,7 +29,7 @@ const msg_field = document.querySelector("#msg_field");
 var ending = UNDIFINED_ENDING;
 
 // guard variable to always redirect user to good ending page if chatroom is ended and user was not redirected (for some reason)
-var end_chatroom = false;
+var is_chatroom_ended = false;
 
 submit_button.addEventListener("click", () => {
     messages_manager.user_message_manager.sendUserMessage();
@@ -44,46 +44,7 @@ msg_field.addEventListener("keypress", function(event) {
 
 document.getElementById("msg_field").focus();
 
-function printTimeToLeftChat(time_to_left_chat)
-{
-    var new_time = translations.chatroom_time_to_end + " ";
-    var minutes_to_end = Math.floor(time_to_left_chat / 60);
-    var seconds_to_end = time_to_left_chat % 60;
-
-    if (minutes_to_end > 0) {
-        var minutes_text = translations.minutes_many;
-
-        if (minutes_to_end == 1) {
-            minutes_text = translations.minutes_singular;
-        }
-        else if (minutes_to_end < 5) {
-            minutes_text = translations.minutes_few;
-        }
-
-        new_time += minutes_to_end + " " + minutes_text;
-    }
-
-    if (seconds_to_end > 0) {
-        var seconds_text = translations.seconds_many;
-
-        if (seconds_to_end == 1) {
-            seconds_text = translations.seconds_singular;
-        }
-        else if (seconds_to_end < 5) {
-            seconds_text =  translations.seconds_few;
-        }
-
-        if (minutes_to_end > 0) {
-            new_time += " " + translations.and + " ";
-        }
-
-        new_time += seconds_to_end + " " + seconds_text;
-    }
-
-    seconds_counter.innerText = new_time;
-}
-
-function handleEndOfChatroom()
+function endChatroomIfEverythingSaved()
 {
     logDebugMessage("State of saving interaction and reactions to DB: " + db_manager.reaction_and_interaction_data_saved.toString());
     logDebugMessage("State of saving poll vote to DB: " + db_manager.exit_poll_vote_saved.toString());
@@ -123,47 +84,29 @@ function showDialogWithTimeWarning(time_to_left_chat)
 }
 
 function incrementSeconds() {
-    if (exit_poll_manager.exit_poll_all_animations_finished) {
-        exit_poll_manager.exit_poll_after_vote_seconds += 1;
-        logDebugMessage("Time passed after voting: " + exit_poll_manager.exit_poll_after_vote_seconds.toString());
-    }
-
-    if (end_chatroom) {
-        handleEndOfChatroom();
+    if (is_chatroom_ended) {
+        endChatroomIfEverythingSaved();
 
         return;
     }
 
-    if (exit_poll_manager.exit_poll_after_vote_seconds > SECONDS_FROM_VOTE_TO_POLL_DIALOG_EXIT) {
-        end_chatroom = true;
-        exit_poll_manager.closeChatroomPollDialog();
-        
+    if (exit_poll_manager.isReadyToEndChatroomIfUserVoted()) {
+        is_chatroom_ended = true;
         ending = GOOD_ENDING;
     }
 
-    if (exit_poll_manager.exit_poll_votings_possible_seconds > SECONDS_FROM_START_POLL_VOTING_TO_FORCE_QUIT_DUE_TO_NOT_VOTE) {
-        end_chatroom = true;
+    if (exit_poll_manager.isReadyToEndChatroomIfUserNotVoted()) {
+        is_chatroom_ended = true;
 
         db_manager.sendReactionsAndInteractionsData(false, true);
         db_manager.exit_poll_vote_saved = true;
         
-        exit_poll_manager.closeChatroomPollDialog();
-        
         ending = BAD_ENDING;
     }
 
-    if (instant_exit_poll) {
-        if (messages_manager.draft_bots_message_id >= 1) {
-            exit_poll_manager.handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
-            return;
-        }
-    }
-    else
-    {
-        if (messages_manager.draft_bots_message_id >= 1 + Object.keys(messages_manager.bots_messages).length) {
-            exit_poll_manager.  handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
-            return;
-        }
+    if (messages_manager.scriptEndedAndReadyForExitPoll()) {
+        exit_poll_manager.handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
+        return;
     }
     
     timer.tick();
@@ -172,16 +115,16 @@ function incrementSeconds() {
 
     var seconds_integer = timer.getSeconds();
 
-    messages_manager.responds_queue.every((respond) => respond[0]--);
-    reactions_manager.reactions_queue.every((reaction) => reaction[0]--);
+    messages_manager.bots_messages_manager.progressRespondsQueue();
+    reactions_manager.progressReactionsQueue();
 
     // Legacy code start
     reports_remove_messages_queue.every((reports) => reports[0]--);
     // Legacy code end
 
-    messages_manager.showTypingBotsNicks(seconds_integer);
-    messages_manager.sendScriptedMessage(seconds_integer);
-    messages_manager.sendBotRespondMessagesFromQueue();
+    messages_manager.bots_messages_manager.showTypingBotsNicks(seconds_integer);
+    messages_manager.bots_messages_manager.sendScriptedMessage(seconds_integer);
+    messages_manager.bots_messages_manager.sendBotRespondMessagesFromQueue();
 
     reactions_manager.addReactionsFromQueue();
     
@@ -192,14 +135,14 @@ function incrementSeconds() {
 
     var time_to_left_chat = chatroom_time - seconds_integer;
 
-    printTimeToLeftChat(time_to_left_chat);
+    seconds_counter.innerText = timer.getTimeToLeftChatInReadableFormat(time_to_left_chat);
 
     if (time_to_left_chat == 2*60) {
         showDialogWithTimeWarning(time_to_left_chat);
     }
 
     if (time_to_left_chat < -100) {
-        end_chatroom = true;
+        is_chatroom_ended = true;
         db_manager.sendReactionsAndInteractionsData(true, true);
 
         closeChatroomPollDialog();
@@ -221,8 +164,9 @@ window.addEventListener( "pageshow", function ( event ) {
     }
 });
 
+// Show modal and save everything to database when user close browser
 window.addEventListener('beforeunload', function(e) {
-    if (end_chatroom) {
+    if (is_chatroom_ended) {
         return;
     }
 

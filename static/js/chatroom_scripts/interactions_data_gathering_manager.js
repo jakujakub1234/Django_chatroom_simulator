@@ -21,10 +21,6 @@ export class InteractionsDataGatheringManager
 
     updateUserInteractionData(msg_field_value)
     {
-        // TODO probably not needded because smarter implementation of windows listeners
-        // this.mouse_movement_sleep = false;
-        // this.scroll_sleep = false;
-
         if (msg_field_value != "") {
             if (!this.is_user_typing) {
                 this.typing_time = 0;   

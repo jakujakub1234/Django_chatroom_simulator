@@ -11,6 +11,7 @@ const not_exit_chatroom_at_the_end = parseInt(data_from_django.notExitChatHidden
 const dont_scroll_chat_after_message = parseInt(data_from_django.dontScrollChatHidden) == 1;
 const no_user_interaction = parseInt(data_from_django.noUserInteractionHidden) == 1;
 const instant_exit_poll = parseInt(data_from_django.instantExitPollHidden) == 1;
+// DEBUG MODE ONLY VARIABLES
 
 const LIKE_REACTION_ID = 0;
 const HEART_REACTION_ID = 1;

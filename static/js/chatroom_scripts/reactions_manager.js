@@ -17,6 +17,11 @@ export class ReactionsManager
         this.reactions_queue.push([seconds_to_wait_before_send, message_id, emoji_id]);
     }
 
+    progressReactionsQueue()
+    {
+        this.reactions_queue.every((reaction) => reaction[0]--);
+    }
+
     addReactionToMessage(reaction_button_dom, emoji_id)
     {
         var span_id = ["like-user", "heart-user", "angry-user"][emoji_id];
