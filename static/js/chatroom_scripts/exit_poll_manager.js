@@ -184,7 +184,7 @@ export class ExitPollManager
     {
         return new Promise((resolve) => {
             var elem = document.getElementById("progress-bar");
-            let remaining_text = document.getElementById("remaining-text");
+            let remaining_text = document.getElementById("progress-bar-remaining-text");
 
             const id = setInterval(() => {
                 if (this.exit_poll_percantage === target) {

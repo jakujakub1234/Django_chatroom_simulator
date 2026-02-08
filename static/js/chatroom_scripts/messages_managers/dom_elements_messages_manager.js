@@ -59,7 +59,6 @@ export class DomElementsMessagesManager
         }
 
         var outside_message_wrapper = document.createElement("div");
-        outside_message_wrapper.classList.add(is_bot ? "wrapper-outside" : "wrapper-user-outside");
 
         if (respond_message != "") {
             var respond_container = document.createElement("div");
@@ -82,7 +81,7 @@ export class DomElementsMessagesManager
         }
 
         var message_wrapper = document.createElement("div");
-        message_wrapper.classList.add(is_bot ? "wrapper" : "wrapper-user");
+        message_wrapper.classList.add(is_bot ? "msg-wrapper" : "msg-wrapper-user");
 
         var message_container = document.createElement("div");
         message_container.classList.add("container");

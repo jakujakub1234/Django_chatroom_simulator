@@ -93,9 +93,9 @@ export class ReactionsManager
 
     createDomWithReactionsButton()
     {
-        var reaction_button =  document.createElement("button");
+        var reaction_button = document.createElement("button");
         
-        reaction_button.classList.add("reaction-button", "message-button");
+        reaction_button.classList.add("message-button");
         reaction_button.addEventListener("click", (event) => this.modals_manager.openOrCloseModal(event.currentTarget, "reactions"));
         reaction_button.innerHTML = reaction_svg;
 

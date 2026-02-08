@@ -46,7 +46,6 @@ export class ReportsManager
     {
         var report_modal = document.createElement("div");
         report_modal.classList.add("report-modal");
-        report_modal.id = "report-modal-id";
 
         var report_modal_header = document.createElement("h3");
         report_modal_header.style.color = "black";
@@ -84,7 +83,7 @@ export class ReportsManager
     {
         var report_button = document.createElement("button");
 
-        report_button.classList.add("report-button", "message-button");
+        report_button.classList.add("message-button");
         report_button.addEventListener("click", (event) => this.modals_manager.openOrCloseModal(event.currentTarget, "report"));
         report_button.innerHTML = report_svg;
 
