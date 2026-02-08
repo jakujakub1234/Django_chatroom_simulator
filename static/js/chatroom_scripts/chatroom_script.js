@@ -137,7 +137,7 @@ function incrementSeconds() {
 
     seconds_counter.innerText = timer.getTimeToLeftChatInReadableFormat(time_to_left_chat);
 
-    if (time_to_left_chat == 2*60) {
+    if (SECONDS_TO_CHATROOM_END_TO_SHOW_WARNING_DIALOG.has(time_to_left_chat)) {
         showDialogWithTimeWarning(time_to_left_chat);
     }
 
