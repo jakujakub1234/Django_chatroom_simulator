@@ -104,16 +104,15 @@ function incrementSeconds() {
         ending = BAD_ENDING;
     }
 
-    if (messages_manager.scriptEndedAndReadyForExitPoll()) {
+    if (messages_manager.scriptEndedAndReadyForExitPoll(timer.getSeconds())) {
         exit_poll_manager.handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
         return;
     }
     
     timer.tick();
+    var seconds_integer = timer.getSeconds();
 
     interactions_manager.updateUserInteractionData(document.getElementById("msg_field").value);
-
-    var seconds_integer = timer.getSeconds();
 
     messages_manager.bots_messages_manager.progressRespondsQueue();
     reactions_manager.progressReactionsQueue();
@@ -141,11 +140,13 @@ function incrementSeconds() {
         showDialogWithTimeWarning(time_to_left_chat);
     }
 
-    if (time_to_left_chat < -100) {
+        if (time_to_left_chat < GUARD_SECONDS_TO_WAIT_TO_ESCAPE_CHATROOM_WITH_GOOD_END_IF_SOMETHING_BROKE) {
         is_chatroom_ended = true;
+        
         db_manager.sendReactionsAndInteractionsData(true, true);
+        db_manager.exit_poll_vote_saved = true;
 
-        closeChatroomPollDialog();
+        this.exit_poll_manager.closeChatroomPollDialog();
 
         ending = GOOD_ENDING;
     }

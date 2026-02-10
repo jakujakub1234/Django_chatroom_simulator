@@ -3,6 +3,7 @@ const chatroom_time = parseInt(document.getElementById('data-from-django').datas
 
 const data_from_django = document.getElementById('data-from-django').dataset;
 const user_name = data_from_django.nick;
+
 const is_debug_mode = data_from_django.isDebugModeHidden == 1;
 
 // DEBUG MODE ONLY VARIABLES
@@ -41,3 +42,5 @@ const GOOD_ENDING = 1;
 const BAD_ENDING = 2;
 
 const SECONDS_TO_CHATROOM_END_TO_SHOW_WARNING_DIALOG = new Set([2*60]);
+
+const GUARD_SECONDS_TO_WAIT_TO_ESCAPE_CHATROOM_WITH_GOOD_END_IF_SOMETHING_BROKE = -100;

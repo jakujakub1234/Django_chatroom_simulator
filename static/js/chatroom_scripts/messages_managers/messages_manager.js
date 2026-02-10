@@ -11,16 +11,21 @@ export class MessagesManager
         this.user_message_manager = new UserMessageManager({ messages_manager: this, db_manager, interactions_manager, reactions_manager, timer, token })
     }
 
-    scriptEndedAndReadyForExitPoll()
+    scriptEndedAndReadyForExitPoll(seconds_integer)
     {
         if (instant_exit_poll) {
             if (this.bots_messages_manager.draft_bots_message_id >= 1) {
                 return true;
             }
         }
+        else if (chatroom_speed != 1000) {
+            if (this.bots_messages_manager.draft_bots_message_id >= 1 + Object.keys(this.bots_messages_manager.bots_messages).length) {
+                return true;
+            }
+        }
         else
         {
-            if (this.bots_messages_manager.draft_bots_message_id >= 1 + Object.keys(this.bots_messages_manager.bots_messages).length) {
+            if (seconds_integer >= 1 + Number(Object.keys(this.bots_messages_manager.bots_messages)[Object.keys(this.bots_messages_manager.bots_messages).length-1])) {
                 return true;
             }
         }
