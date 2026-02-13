@@ -39,7 +39,7 @@ class HomePageView(TemplateView):
             if survey_time > 1:
                 return HttpResponseRedirect("lobby")
 
-        return render(request, "home.html", {"form": form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+        return render(request, "home.html", {"form": form, 'translations': translations, "debug_mode": settings.DEBUG})
 
     def post(self, request, **kwargs):
         form = HomeForm(request.POST)
@@ -53,9 +53,9 @@ class HomePageView(TemplateView):
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
             request.session['is_positive_manipulation'] = form.data['is_positive_manipulation']
             request.session['start_timestamp'] = datetime.now().timestamp()
-            request.session['is_debug_mode_hidden'] =  1 if settings.DEBUG_MODE else 0
+            request.session['is_debug_hidden'] =  1 if settings.DEBUG else 0
 
-            if settings.DEBUG_MODE:
+            if settings.DEBUG:
                 request.session['chat_speed_hidden'] = request.POST.get("chat_speed_hidden")
                 request.session['not_exit_chat_hidden'] = request.POST.get("not_exit_chat_hidden")
                 request.session['dont_scroll_chat_hidden'] = request.POST.get("dont_scroll_chat_hidden")
@@ -64,7 +64,7 @@ class HomePageView(TemplateView):
     
             return HttpResponseRedirect("/lobby")
 
-        return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+        return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
 
 class LobbyPageView(TemplateView):
     template_name = "lobby.html"
@@ -72,7 +72,7 @@ class LobbyPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
 
         if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -105,7 +105,7 @@ class ChatroomPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
 
         if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
             survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
@@ -128,10 +128,10 @@ class ChatroomPageView(TemplateView):
         context['is_positive_manipulation'] = self.request.session['is_positive_manipulation']
         context['translations'] = translations
         context['language_code'] = language_code
-        context['is_debug_mode_hidden'] = 1 if settings.DEBUG_MODE else 0
+        context['is_debug_hidden'] = 1 if settings.DEBUG else 0
         context['chatroom_time'] = chatroom_time
 
-        if settings.DEBUG_MODE:
+        if settings.DEBUG:
             context['chat_speed_hidden'] = self.request.session['chat_speed_hidden']
             context['not_exit_chat_hidden'] = self.request.session['not_exit_chat_hidden']
             context['dont_scroll_chat_hidden'] = self.request.session['dont_scroll_chat_hidden']
@@ -152,7 +152,7 @@ class EndChatNoExitPollPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
 
         return super(EndChatNoExitPollPageView, self).get(request)
 
@@ -168,7 +168,7 @@ class EndChatPageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
 
         return super(EndChatPageView, self).get(request)
 
@@ -184,7 +184,7 @@ class ReturnQualtricsCodePageView(TemplateView):
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
 
         return super(ReturnQualtricsCodePageView, self).get(request)
 
@@ -305,7 +305,7 @@ class AjaxPageView(TemplateView):
                 
                 exit_poll.save()
 
-        return render(request, 'home.html', {'form': form, 'translations': translations, "debug_mode": settings.DEBUG_MODE})
+        return render(request, 'home.html', {'form': form, 'translations': translations, "debug_mode": settings.DEBUG})
 
     def get(self, request):
         respond, respond_type, responding_bot = self.chat_ai.generateRespond(

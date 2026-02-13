@@ -14,7 +14,13 @@ import dj_database_url
 from pathlib import Path
 import os
 
+# CUSTIOMIZABLE PARAMETERS
+
+DEBUG = False
+LANGUAGE_CODE = 'pl'
 DATABASES_ACTIVE = True
+
+# CUSTIOMIZABLE PARAMETERS
 
 with open('secrets.yaml', 'r') as file:
     yaml_file = yaml.safe_load(file)
@@ -31,8 +37,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = secret_secret_key
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -171,12 +175,9 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
 # and renames the files with unique names for each version to support long-term caching
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-DEBUG_MODE = True
-LANGUAGE_CODE = 'pl'

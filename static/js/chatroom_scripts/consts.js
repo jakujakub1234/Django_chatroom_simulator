@@ -4,7 +4,7 @@ const chatroom_time = parseInt(document.getElementById('data-from-django').datas
 const data_from_django = document.getElementById('data-from-django').dataset;
 const user_name = data_from_django.nick;
 
-const is_debug_mode = data_from_django.isDebugModeHidden == 1;
+const is_debug = data_from_django.isDebugModeHidden == 1;
 
 // DEBUG MODE ONLY VARIABLES
 const chatroom_speed = parseInt(data_from_django.chatSpeedHidden);
