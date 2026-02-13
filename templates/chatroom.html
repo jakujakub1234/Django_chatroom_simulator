@@ -59,7 +59,7 @@
     {% csrf_token %}
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <textarea type="text" placeholder="{{ translations.chatroom_input_placeholder }}" name="message" id="msg_field" maxlength="250" tabindex="0"> </textarea>
+        <textarea type="text" placeholder="{{ translations.chatroom_input_placeholder }}" name="message" id="msg_field" maxlength="250" tabindex="0"></textarea>
         <button name="send" class="btn btn-success chatroom-btn" id="btn-submit" tabindex="1">{{ translations.button_send }}</button>
       </div>
     </div>

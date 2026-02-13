@@ -9,6 +9,20 @@ export class MessagesManager
         this.bots_messages_manager = new BotsMessagesManager({ messages_manager: this, db_manager, reactions_manager, token });
         this.dom_elements_messages_manager = new DomElementsMessagesManager({ messages_manager: this, db_manager, reports_manager, reactions_manager, gui_customization_manager, timer });
         this.user_message_manager = new UserMessageManager({ messages_manager: this, db_manager, interactions_manager, reactions_manager, timer, token })
+    
+        this.updateDraftBotsMessageIdAfterReload(timer.getSeconds());
+    }
+
+    updateDraftBotsMessageIdAfterReload(seconds_integer)
+    {
+        for (let seconds_to_wait_before_send_msg of Object.keys(this.bots_messages_manager.bots_messages)) {
+            if (Number(seconds_to_wait_before_send_msg) <= seconds_integer) {
+                this.bots_messages_manager.draft_bots_message_id++;
+            }
+            else {
+                break;
+            }
+        }
     }
 
     scriptEndedAndReadyForExitPoll(seconds_integer)

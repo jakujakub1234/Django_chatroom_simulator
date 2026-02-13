@@ -16,7 +16,7 @@ import os
 
 # CUSTIOMIZABLE PARAMETERS
 
-DEBUG = False
+DEBUG = True
 LANGUAGE_CODE = 'pl'
 DATABASES_ACTIVE = True
 

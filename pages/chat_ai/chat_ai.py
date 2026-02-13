@@ -142,8 +142,6 @@ class ChatAI:
             gemini_prompt = self.gemini_prompt_main_negative.replace("CHATROOM_HISTORY", "\n" + "\n".join(self.chatroom_history))
         else:
             print("ERROR!!! INCORRECT IS_MANIPULATION_POSITIVE VALUE IN CHAT AI")
-
-        print("Prompt: " + gemini_prompt + ": " + message)
         
         payload = {
             "contents": [

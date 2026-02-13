@@ -11,7 +11,11 @@ export class DomElementsMessagesManager
 
         this.last_processed_message = "";
 
-        this.dom_bots_message_id = 1;
+        this.ai_response_message_id = AI_RESPONSE_MSG_ID_START_INDEX;
+
+        if (AI_RESPONSE_MSG_ID_START_INDEX <= Object.keys(this.messages_manager.bots_messages_manager.bots_messages).length) {
+            this.ai_response_message_id = Object.keys(this.messages_manager.bots_messages_manager.bots_messages).length + 100;
+        }
 
         this.chatroom = document.getElementById("chatroom");
     }
@@ -22,7 +26,7 @@ export class DomElementsMessagesManager
         is_bot,
         respond_message = "",
         respond_nick = "",
-        is_respond_to_user = false,
+        is_ai_respond_to_user = false,
         is_curiosity_question = false,      // Legacy code start and end
         is_moderator = false                // Legacy code start and end
     ){
@@ -34,7 +38,7 @@ export class DomElementsMessagesManager
             this.last_processed_message = "EXTRA: ";        // Legacy code start and end
         } else if (!is_bot) {
             this.last_processed_message = "PARTICIPANT: ";
-        } else if (is_respond_to_user) {
+        } else if (is_ai_respond_to_user) {
             this.last_processed_message = "BOT_REPLY: ";
         } else if (is_moderator) {
             this.last_processed_message = "MODERATOR: ";    // Legacy code start and end
@@ -45,18 +49,21 @@ export class DomElementsMessagesManager
         this.last_processed_message += message;
 
         var message_id;
-        
-        if (is_bot) {
-            message_id = this.dom_bots_message_id;
-            this.dom_bots_message_id++;
 
-            if (!is_respond_to_user) {
-                this.messages_manager.bots_messages_manager.updateDraftBotsMessagesDict(this.dom_bots_message_id - 1);
-            }
-        } else {             
+        if (is_ai_respond_to_user) {
+            message_id = this.ai_response_message_id;
+            this.ai_response_message_id++;
+        }
+        else if (is_bot) {
+            message_id = this.messages_manager.bots_messages_manager.draft_bots_message_id;
+            this.messages_manager.bots_messages_manager.draft_bots_message_id++;
+        }
+        else {             
             message_id = this.messages_manager.bots_messages_manager.users_message_id;
             this.messages_manager.bots_messages_manager.users_message_id--;
         }
+
+        console.log("DOM MESSAGE ID: " + message_id);
 
         var outside_message_wrapper = document.createElement("div");
 
@@ -149,8 +156,7 @@ export class DomElementsMessagesManager
         this.chatroom.appendChild(outside_message_wrapper);
 
         if (!dont_scroll_chat_after_message) {
-
-            if (message_id % 2 == 0 || true) {
+            if (message_id % 2 == 0 || true) { // Legacy code start and end
                 window.scroll({
                     top: document.body.scrollHeight,
                     behavior: 'smooth'

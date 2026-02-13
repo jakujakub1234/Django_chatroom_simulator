@@ -167,7 +167,7 @@ export class UserMessageManager
                 var words_amount_in_respond = this.countWordsInMessage(respond);
                 words_amount_in_respond = Math.min(words_amount_in_respond, 12);
 
-                this.messages_manager.bots_messages_manager.addBotRespondMessageToQueue(times_to_send_respond_due_to_number_of_words[words_amount_in_respond], responding_bot, respond, user_message);
+                this.messages_manager.bots_messages_manager.addBotAiRespondMessageToQueue(times_to_send_respond_due_to_number_of_words[words_amount_in_respond], responding_bot, respond, user_message);
 
             } else { // Legacy code, reachable only when respond is generating by algorithm (not by LLM) and responding message is designed to be sens as 2 messages
                 var respond = respond.split("{{NEW_MESSAGE}}");
@@ -175,15 +175,13 @@ export class UserMessageManager
                 var words_amount_in_respond = this.countWordsInMessage(respond[0]);
                 words_amount_in_respond = Math.min(words_amount_in_respond, 12);
 
-                this.messages_manager.bots_messages_manager.addBotRespondMessageToQueue(times_to_send_respond_due_to_number_of_words[words_amount_in_respond], responding_bot, respond[0], user_message);
+                this.messages_manager.bots_messages_manager.addBotAiRespondMessageToQueue(times_to_send_respond_due_to_number_of_words[words_amount_in_respond], responding_bot, respond[0], user_message);
 
                 words_amount_in_respond = this.countWordsInMessage(respond[1]);
                 words_amount_in_respond = Math.min(words_amount_in_respond, 12);
                 
-                this.messages_manager.bots_messages_manager.addBotRespondMessageToQueue(times_to_send_respond_due_to_number_of_words[words_amount_in_respond] + 4, responding_bot, respond[1], user_message);
+                this.messages_manager.bots_messages_manager.addBotAiRespondMessageToQueue(times_to_send_respond_due_to_number_of_words[words_amount_in_respond] + 4, responding_bot, respond[1], user_message);
             }
-
-            this.messages_manager.bots_messages_manager.responds_queue.sort((a, b) => a[0] - b[0]);
 
             if (this.users_messages_counter > 0 && this.users_messages_counter % 2 == 0 && this.countWordsInMessage(user_message) > 1) {
                 this.reactions_manager.addReactionToQueue(3, this.messages_manager.bots_messages_manager.users_message_id + 1, LIKE_REACTION_ID);

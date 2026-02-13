@@ -33,10 +33,6 @@ export class BotsMessagesManager
         // We need different ids to store id from real messages (from excel) and gemini ones
         this.draft_bots_message_id = 1;
 
-        // which draft message id is assigned to which id of real message in website. We need this map to send emojis properly.
-        // Eg. if gemini responds was sended before draft messages, "shifting" it's real id upwards 
-        this.dict_draft_message_id_to_message_id = {};
-
         // We iterate users_messages_ids backwards (--1) because we need to differ this ids from bots messages ids
         this.users_message_id = -1;
 
@@ -60,12 +56,6 @@ export class BotsMessagesManager
         });
     }
 
-    updateDraftBotsMessagesDict(last_dom_bots_message_id)
-    {
-        this.draft_bots_message_id++;
-        this.dict_draft_message_id_to_message_id[this.draft_bots_message_id-1] = last_dom_bots_message_id;
-    }
-
     showTypingBotsNicks(seconds_integer)
     {
         var nicks_of_typing_bots = [];
@@ -79,8 +69,8 @@ export class BotsMessagesManager
         }
 
         this.responds_queue.forEach((respond) => {
-            if (!nicks_of_typing_bots.includes(respond[1])) {
-                nicks_of_typing_bots.push(respond[1]);
+            if (!nicks_of_typing_bots.includes(respond.bot_nick)) {
+                nicks_of_typing_bots.push(respond.bot_nick);
             }
         });
 
@@ -103,7 +93,7 @@ export class BotsMessagesManager
 
     progressRespondsQueue()
     {
-        this.responds_queue.every((respond) => respond[0]--);
+        this.responds_queue.every((respond) => respond.seconds_to_wait_before_send--);
     }
 
     sendScriptedMessage(seconds_integer)
@@ -124,27 +114,34 @@ export class BotsMessagesManager
                 var emojis_times = this.bots_messages[seconds_integer][5].split(',');
 
                 for (var i = 0; i < emojis_ids.length; i++) {
-                    this.reactions_manager.addReactionToQueue(emojis_times[i], this.dict_draft_message_id_to_message_id[this.draft_bots_message_id-1], emojis_ids[i]);
+                    this.reactions_manager.addReactionToQueue(emojis_times[i], this.draft_bots_message_id - 1, emojis_ids[i]);
                 }
             }
         }
     }
 
-    addBotRespondMessageToQueue(seconds_to_wait_before_send, bot_nick, message, text_of_responded_message)
+    addBotAiRespondMessageToQueue(seconds_to_wait_before_send, bot_nick, message, text_of_responded_message)
     {
-        this.responds_queue.push([seconds_to_wait_before_send, bot_nick, message, text_of_responded_message]);
+        this.responds_queue.push({
+            seconds_to_wait_before_send: seconds_to_wait_before_send,
+            bot_nick: bot_nick,
+            message: message,
+            text_of_responded_message: text_of_responded_message
+        });
+        
+        this.responds_queue.sort((a, b) => a.seconds_to_wait_before_send - b.seconds_to_wait_before_send);
     }
 
     sendBotRespondMessagesFromQueue()
     {
-        while (this.responds_queue.length > 0 && this.responds_queue[0][0] <= 0) {
+        while (this.responds_queue.length > 0 && this.responds_queue[0].seconds_to_wait_before_send <= 0) {
             var respond = this.responds_queue.shift();
 
             this.messages_manager.dom_elements_messages_manager.createMessageDom(
-                respond[1],
-                respond[2],
+                respond.bot_nick,
+                respond.message,
                 true,
-                respond[3],
+                respond.text_of_responded_message,
                 user_name,
                 true
             );

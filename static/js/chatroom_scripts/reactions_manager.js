@@ -14,12 +14,16 @@ export class ReactionsManager
 
     addReactionToQueue(seconds_to_wait_before_send, message_id, emoji_id)
     {
-        this.reactions_queue.push([seconds_to_wait_before_send, message_id, emoji_id]);
+        this.reactions_queue.push({
+            seconds_to_wait_before_send: seconds_to_wait_before_send,
+            message_id: message_id,
+            emoji_id: emoji_id
+        });
     }
 
     progressReactionsQueue()
     {
-        this.reactions_queue.every((reaction) => reaction[0]--);
+        this.reactions_queue.every((reaction) => reaction.seconds_to_wait_before_send--);
     }
 
     addReactionToMessage(reaction_button_dom, emoji_id)
@@ -136,10 +140,10 @@ export class ReactionsManager
 
     addReactionsFromQueue()
     {
-        while (this.reactions_queue.length > 0 && this.reactions_queue[0][0] <= 0) {
+        while (this.reactions_queue.length > 0 && this.reactions_queue[0].seconds_to_wait_before_send <= 0) {
             var reaction = this.reactions_queue.shift();
 
-            this.addBotReaction(reaction[1], reaction[2]);
+            this.addBotReaction(reaction.message_id, reaction.emoji_id);
             this.gui_customization_manager.changeLayoutColor(0);
         }
     }
