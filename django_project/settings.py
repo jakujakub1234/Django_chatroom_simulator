@@ -101,10 +101,11 @@ if DATABASES_ACTIVE:
     }
 else:
     DATABASES = {
-        'default': dj_database_url.config(
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
-        conn_max_age=600
-    )}
+        'default': {
+            'ENGINE': 'django.db.backends.dummy',
+        }
+    }
+    SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 # CONNECT TO DB VIA TERMINAL
 # psql -h database_ip -d ManipulationDB -U postgres 
