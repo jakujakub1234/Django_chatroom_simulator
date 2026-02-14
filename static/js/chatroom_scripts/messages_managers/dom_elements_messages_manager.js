@@ -63,7 +63,7 @@ export class DomElementsMessagesManager
             this.messages_manager.bots_messages_manager.users_message_id--;
         }
 
-        console.log("DOM MESSAGE ID: " + message_id);
+        logDebugMessage("DOM MESSAGE ID: " + message_id);
 
         var outside_message_wrapper = document.createElement("div");
 
