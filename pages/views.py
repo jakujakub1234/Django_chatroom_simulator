@@ -51,7 +51,7 @@ class HomePageView(TemplateView):
                 request.session['nick'] = translations.get('default_user_name')
 
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
-            request.session['manipulation_type'] = form.data['is_positive_manipulation']
+            request.session['manipulation_type'] = form.data['manipulation_type']
             request.session['start_timestamp'] = datetime.now().timestamp()
             request.session['is_debug_hidden'] =  1 if settings.DEBUG else 0
 
@@ -220,7 +220,6 @@ class AjaxPageView(TemplateView):
                     qualtrics_id=request.session['key'],
                     nick=request.session['nick'],
                     chatroom_start=datetime.now().timestamp(),
-                    is_manipulation_positive=(request.session['manipulation_type']=="True"),
                     language_version=language_code,
                     manipulation_type=request.session['manipulation_type']
                 )

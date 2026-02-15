@@ -37,7 +37,7 @@ class HomeForm(forms.Form):
     ]
 
     if settings.DEBUG:
-        manipulation_type = forms.ChoiceField(
+        manipulation_type_for_debug_mode = forms.ChoiceField(
             widget=forms.RadioSelect,
             choices=MANIOULATION_TYPE_CHOICES,
             initial=2
@@ -54,7 +54,7 @@ class HomeForm(forms.Form):
         key_from_qualtrics = self.cleaned_data['key_from_qualtrics']
 
         if settings.DEBUG:
-            key_from_qualtrics = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxss7639" + str(self.data["manipulation_type"]) + "ss"
+            key_from_qualtrics = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxss7639" + str(self.data["manipulation_type_for_debug_mode"]) + "ss"
 
         key_from_qualtrics = key_from_qualtrics[:-2]
 

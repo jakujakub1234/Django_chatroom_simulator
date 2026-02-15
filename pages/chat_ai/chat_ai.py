@@ -126,7 +126,7 @@ class ChatAI:
 
         return False
 
-    def generateRespondUsingGemini(self, message, is_manipulation_positive):
+    def generateRespondUsingGemini(self, message, manipulation_type):
         final_bot = None
         self.user_messages_counter += 1
 
@@ -136,12 +136,12 @@ class ChatAI:
             "Content-Type": "application/json"
         }
 
-        if is_manipulation_positive == "RESPECT":
+        if manipulation_type == "RESPECT":
             gemini_prompt = self.gemini_prompt_main_positive.replace("CHATROOM_HISTORY", "\n" + "\n".join(self.chatroom_history))
-        elif is_manipulation_positive == "NONRESPECT":
+        elif manipulation_type == "NONRESPECT":
             gemini_prompt = self.gemini_prompt_main_negative.replace("CHATROOM_HISTORY", "\n" + "\n".join(self.chatroom_history))
         else:
-            print("ERROR!!! INCORRECT IS_MANIPULATION_POSITIVE VALUE IN CHAT AI")
+            print("ERROR!!! INCORRECT manipulation_type VALUE IN CHAT AI")
         
         payload = {
             "contents": [
@@ -240,17 +240,17 @@ class ChatAI:
 
         return self.responds["GENERIC"]
     
-    def getBotsChatroomHistory(self, message_timestamp, is_manipulation_positive):
+    def getBotsChatroomHistory(self, message_timestamp, manipulation_type):
         self.chatroom_history = []
 
         filename = "ERROR"
 
-        if is_manipulation_positive == "RESPECT":
+        if manipulation_type == "RESPECT":
             filename = "positive_bots_messages.json"
-        elif is_manipulation_positive == "NONRESPECT":
+        elif manipulation_type == "NONRESPECT":
             filename = "negative_bots_messages.json"
         else:
-            print("ERROR!!! INCORRECT IS_MANIPULATION_POSITIVE VALUE IN CHAT AI")
+            print("ERROR!!! INCORRECT manipulation_type VALUE IN CHAT AI")
 
         actual_sended_messages_history_index = 0
 
@@ -270,10 +270,10 @@ class ChatAI:
         print("HISTORY: ")
         print(self.chatroom_history)
 
-    def generateRespond(self, message, prev_message_id, message_timestamp, is_manipulation_positive):
+    def generateRespond(self, message, prev_message_id, message_timestamp, manipulation_type):
         message_timestamp = int(message_timestamp)
 
-        self.getBotsChatroomHistory(message_timestamp, is_manipulation_positive)
+        self.getBotsChatroomHistory(message_timestamp, manipulation_type)
         self.chatroom_history.append("user - " + message)
 
         # if message_timestamp - self.previous_message_timestamp < 4:
@@ -303,7 +303,7 @@ class ChatAI:
             print("BOTS")
             return ["", "", ""]
         
-        gemini_respond = self.generateRespondUsingGemini(message, is_manipulation_positive)
+        gemini_respond = self.generateRespondUsingGemini(message, manipulation_type)
 
         if gemini_respond:
             responding_message_pair, responding_message_type = [gemini_respond, "GEMINI"]

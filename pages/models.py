@@ -4,7 +4,6 @@ from datetime import datetime
 class Nicks(models.Model):
     qualtrics_id = models.CharField(max_length=255)
     nick = models.CharField(max_length=255, default="UNKNOWN_PROBABLY_CHAT_WITHOUT_INTERACTIONS")
-    is_manipulation_positive = models.BooleanField(default=True)
     chatroom_start = models.DateTimeField(auto_now_add=True)
     language_version = models.CharField(max_length=32, default="pl")
     manipulation_type = models.CharField(max_length=255, default="UNKNOWN")
