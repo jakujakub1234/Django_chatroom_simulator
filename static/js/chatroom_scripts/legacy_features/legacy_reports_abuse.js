@@ -6,6 +6,9 @@ Messages that went againts code of conduct
 Depending on amount and type of report messages moderated on diffrent reposne.
 
 */
+
+/*
+
 var data_from_django_reports = document.getElementById('data-from-django').dataset;
 var user_name_reports = data_from_django_reports.nick;
 
@@ -89,3 +92,4 @@ function handleReports() {
         }
     }
 }
+*/

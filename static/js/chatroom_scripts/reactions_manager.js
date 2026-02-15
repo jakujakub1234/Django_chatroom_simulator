@@ -14,11 +14,24 @@ export class ReactionsManager
 
     addReactionToQueue(seconds_to_wait_before_send, message_id, emoji_id)
     {
-        this.reactions_queue.push({
-            seconds_to_wait_before_send: seconds_to_wait_before_send,
-            message_id: message_id,
-            emoji_id: emoji_id
-        });
+        var index_of_new_reaction = this.reactions_queue.findIndex(
+            x => x.seconds_to_wait_before_send > seconds_to_wait_before_send
+        );
+
+        if (index_of_new_reaction === -1) {
+            this.reactions_queue.push({
+                seconds_to_wait_before_send: seconds_to_wait_before_send,
+                message_id: message_id,
+                emoji_id: emoji_id
+            });
+        }
+        else {
+            this.reactions_queue.splice(index_of_new_reaction, 0, {
+                seconds_to_wait_before_send: seconds_to_wait_before_send,
+                message_id: message_id,
+                emoji_id: emoji_id
+            });
+        }
     }
 
     progressReactionsQueue()

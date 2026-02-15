@@ -4,6 +4,8 @@ Mechanism to activate participation in inactive participate
 
 */
 
+/*
+
 var curiosity_question_sended = false;
 
 function sendCuriosityQuestion() {
@@ -31,3 +33,5 @@ function sendCuriosityQuestion() {
         );
     }
 }
+
+*/

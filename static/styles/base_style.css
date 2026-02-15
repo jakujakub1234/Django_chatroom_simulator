@@ -4,8 +4,6 @@
 }
 
 body {
-  /*TODO change font*/
-  /*font-family: "Cormorant Garamond", serif;*/
   font-family: sans-serif;
 
   color: white;
@@ -19,8 +17,6 @@ body {
 }
 
 p {
-  /*TODO change font*/
-  /* font-family: monospace; */
   font-family: sans-serif;
   color: white;
 }

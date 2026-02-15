@@ -43,7 +43,7 @@ class HomeForm(forms.Form):
             initial=2
         )
 
-    is_positive_manipulation = forms.CharField(
+    manipulation_type = forms.CharField(
         widget=forms.HiddenInput(),
         required=False
     )
@@ -65,13 +65,13 @@ class HomeForm(forms.Form):
 
         if control_number == "76392":
             self.data = self.data.copy()
-            self.data['is_positive_manipulation'] = "RESPECT"
+            self.data['manipulation_type'] = "RESPECT"
         elif control_number == "76393":
             self.data = self.data.copy()
-            self.data['is_positive_manipulation'] = "CONTROL"
+            self.data['manipulation_type'] = "CONTROL"
         elif control_number == "76391":
             self.data = self.data.copy()
-            self.data['is_positive_manipulation'] = "NONRESPECT"
+            self.data['manipulation_type'] = "NONRESPECT"
         else:
             self._errors["key_from_qualtrics"] = [translations.get('home_error_qualtrics_key')]
 

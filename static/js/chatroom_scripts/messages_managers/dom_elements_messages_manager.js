@@ -29,22 +29,22 @@ export class DomElementsMessagesManager
         is_bot,
         respond_message = "",
         respond_nick = "",
-        is_ai_respond_to_user = false,
-        is_curiosity_question = false,      // Legacy code start and end
-        is_moderator = false                // Legacy code start and end
+        is_ai_respond_to_user = false
+        // is_curiosity_question = false,      // Legacy code start and end
+        // is_moderator = false                // Legacy code start and end
     ){
         this.db_manager.updateMessagesHistory(this.last_processed_message);
 
         this.last_processed_message = "";
         
-        if (is_curiosity_question) {
-            this.last_processed_message = "EXTRA: ";        // Legacy code start and end
-        } else if (!is_bot) {
+        // if (is_curiosity_question) {
+        //     this.last_processed_message = "EXTRA: ";        // Legacy code start and end
+        if (!is_bot) {
             this.last_processed_message = "PARTICIPANT: ";
         } else if (is_ai_respond_to_user) {
             this.last_processed_message = "BOT_REPLY: ";
-        } else if (is_moderator) {
-            this.last_processed_message = "MODERATOR: ";    // Legacy code start and end
+        // } else if (is_moderator) {
+        //     this.last_processed_message = "MODERATOR: ";    // Legacy code start and end
         } else {
             this.last_processed_message = "STABLE: ";
         }
@@ -104,9 +104,9 @@ export class DomElementsMessagesManager
         nick_span.classList.add("right", "span-bot");
 
         // Legacy code start
-        if (is_moderator) {
-            nick_span.classList.add("moderator-nick");
-        }
+        // if (is_moderator) {
+        //     nick_span.classList.add("moderator-nick");
+        // }
         // Legacy code end
 
         nick_span.textContent = sending_user_name;

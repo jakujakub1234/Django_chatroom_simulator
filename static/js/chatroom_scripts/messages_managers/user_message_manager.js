@@ -85,10 +85,10 @@ export class UserMessageManager
                 this.last_curse_timestamp = message_sent_time;
 
                 // Legacy code start
-                var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
+                // var random_time = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
 
-                reports_remove_messages_queue.push([random_time, -1, user_name, RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID]);
-                reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
+                // reports_remove_messages_queue.push([random_time, -1, user_name, RESPECT_REPORT_ID_OR_RESPECT_NORM_CONFIRMED_ID]);
+                // reports_remove_messages_queue.sort((a, b) => a[0] - b[0]);
                 // Legacy code end
             }
         }
@@ -97,7 +97,7 @@ export class UserMessageManager
             this.users_messages_counter++;
             
             // Legacy code start
-            curiosity_question_sended = true;
+            // curiosity_question_sended = true;
             // Legacy code end
         }
 

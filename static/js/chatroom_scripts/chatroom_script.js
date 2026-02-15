@@ -118,7 +118,7 @@ function incrementSeconds() {
     reactions_manager.progressReactionsQueue();
 
     // Legacy code start
-    reports_remove_messages_queue.every((reports) => reports[0]--);
+    // reports_remove_messages_queue.every((reports) => reports[0]--);
     // Legacy code end
 
     messages_manager.bots_messages_manager.showTypingBotsNicks();
@@ -127,8 +127,8 @@ function incrementSeconds() {
     reactions_manager.addReactionsFromQueue();
     
     // Legacy code start
-    sendCuriosityQuestion();
-    handleReports();
+    // sendCuriosityQuestion();
+    // handleReports();
     // Legacy code end
 
     var time_to_left_chat = chatroom_time - seconds_integer;

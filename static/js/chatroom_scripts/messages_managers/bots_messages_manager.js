@@ -96,18 +96,33 @@ export class BotsMessagesManager
 
     addBotAiRespondMessageToQueue(seconds_to_wait_before_send, bot_nick, message, text_of_responded_message)
     {
-        this.bots_messages_queue.push({
-            seconds_to_wait_before_send: seconds_to_wait_before_send,
-            bot_nick: bot_nick,
-            message: message,
-            name_respond_to: user_name,
-            text_of_responded_message: text_of_responded_message,
-            emoji_ids: [],
-            emoji_times: [],
-            is_ai_respond_to_user: true
-        });
-        
-        // TODO replace all sorts like this with efficient inserting
-        this.bots_messages_queue.sort((a, b) => a.seconds_to_wait_before_send - b.seconds_to_wait_before_send);
+        var index_of_new_message = this.bots_messages_queue.findIndex(
+            x => x.seconds_to_wait_before_send > seconds_to_wait_before_send
+        );
+
+        if (index_of_new_message === -1) {
+            this.bots_messages_queue.push({
+                seconds_to_wait_before_send: seconds_to_wait_before_send,
+                bot_nick: bot_nick,
+                message: message,
+                name_respond_to: user_name,
+                text_of_responded_message: text_of_responded_message,
+                emoji_ids: [],
+                emoji_times: [],
+                is_ai_respond_to_user: true
+            });
+        }
+        else {
+            this.bots_messages_queue.splice(index_of_new_message, 0, {
+                seconds_to_wait_before_send: seconds_to_wait_before_send,
+                bot_nick: bot_nick,
+                message: message,
+                name_respond_to: user_name,
+                text_of_responded_message: text_of_responded_message,
+                emoji_ids: [],
+                emoji_times: [],
+                is_ai_respond_to_user: true
+            });
+        }        
     }
 }

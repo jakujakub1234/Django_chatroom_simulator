@@ -107,36 +107,6 @@ else:
     }
     SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
-# CONNECT TO DB VIA TERMINAL
-# psql -h database_ip -d ManipulationDB -U postgres 
-# database_password
-# \c ManipulationDB
-# SELECT * FROM pages_nicks;
-
-# COPY (SELECT xmin, * FROM pages_nicks ) TO stdout WITH (FORMAT CSV, HEADER);
-# COPY (SELECT * FROM pages_nicks ) TO stdout WITH (FORMAT CSV, HEADER);
-# select xmin, * from pages_nicks limit(1);
-
-# WHERE LENGTH(qualtrics_id) < 7
-
-'''
-delete from pages_angryreactions ;
-delete from pages_exitpoll       ;
-delete from pages_heartreactions ;
-delete from pages_interactions   ;
-delete from pages_likereactions  ;
-delete from pages_messages       ;
-delete from pages_nicks          ;
-delete from pages_reports ;
-
-'''
-
-#GS_BUCKET_NAME="reliable-byte-428411-d8_reliable-byte-428411-d8.appspot.com"
-
-#DATABASES = {
-#    'default': dj_database_url.config(default=DATABASE_URL)
-#}
-
 #DATABASES['default']['NAME'] = 'ManipulationDB'
 
 # Password validation
