@@ -246,33 +246,29 @@ class ChatAI:
         filename = "ERROR"
 
         if is_manipulation_positive == "RESPECT":
-            filename = "positive_bots_messages.js"
+            filename = "positive_bots_messages.json"
         elif is_manipulation_positive == "NONRESPECT":
-            filename = "negative_bots_messages.js"
+            filename = "negative_bots_messages.json"
         else:
             print("ERROR!!! INCORRECT IS_MANIPULATION_POSITIVE VALUE IN CHAT AI")
 
         actual_sended_messages_history_index = 0
 
         with open(os.path.join(self.module_dir, f'{self.chatroom_script_dir}/{filename}')) as file:
-            for line in file:
-                line = line.rstrip()
+            json_with_messages = json.load(file)
+            
+        for msg_obj in json_with_messages:   
+            while actual_sended_messages_history_index < len(self.sended_messages_history) and int(msg_obj['seconds_to_wait_before_send']) >= self.sended_messages_history[actual_sended_messages_history_index][0]:
+                self.chatroom_history.append(self.sended_messages_history[actual_sended_messages_history_index][1])
+                actual_sended_messages_history_index += 1
 
-                if ":" in line:
-                    timestamp, msg_array = line.split(':', 1)
-                    if msg_array[-1] == ",":
-                        msg_array = msg_array[:-1]
+            if int(msg_obj['seconds_to_wait_before_send']) <= message_timestamp:
+                self.chatroom_history.append("bot " + msg_obj["bot_nick"] + " - " + msg_obj["message"])
+            else:
+                break
 
-                    msg_array = eval(msg_array)
-
-                    while actual_sended_messages_history_index < len(self.sended_messages_history) and int(timestamp) >= self.sended_messages_history[actual_sended_messages_history_index][0]:
-                        self.chatroom_history.append(self.sended_messages_history[actual_sended_messages_history_index][1])
-                        actual_sended_messages_history_index += 1
-
-                    if int(timestamp) <= message_timestamp:
-                        self.chatroom_history.append("bot " + msg_array[0] + " - " + msg_array[1])
-                    else:
-                        break
+        print("HISTORY: ")
+        print(self.chatroom_history)
 
     def generateRespond(self, message, prev_message_id, message_timestamp, is_manipulation_positive):
         message_timestamp = int(message_timestamp)

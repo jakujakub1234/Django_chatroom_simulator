@@ -15,13 +15,12 @@ export class MessagesManager
 
     updateDraftBotsMessageIdAfterReload(seconds_integer)
     {
-        for (let seconds_to_wait_before_send_msg of Object.keys(this.bots_messages_manager.bots_messages)) {
-            if (Number(seconds_to_wait_before_send_msg) <= seconds_integer) {
-                this.bots_messages_manager.draft_bots_message_id++;
-            }
-            else {
-                break;
-            }
+        for (var i = 0; i <= seconds_integer; i++) {
+            this.bots_messages_manager.progressBotsMessagesQueue();
+        }
+
+        while (this.bots_messages_manager.bots_messages_queue.length > 0 && this.bots_messages_manager.bots_messages_queue[0].seconds_to_wait_before_send <= 0) {
+            this.bots_messages_manager.bots_messages_queue.shift();
         }
     }
 
@@ -32,14 +31,8 @@ export class MessagesManager
                 return true;
             }
         }
-        else if (chatroom_speed != 1000) {
-            if (this.bots_messages_manager.draft_bots_message_id >= 1 + Object.keys(this.bots_messages_manager.bots_messages).length) {
-                return true;
-            }
-        }
-        else
-        {
-            if (seconds_integer >= 1 + Number(Object.keys(this.bots_messages_manager.bots_messages)[Object.keys(this.bots_messages_manager.bots_messages).length-1])) {
+        else {
+            if ((this.bots_messages_manager.bots_messages_queue).length <= 0) {
                 return true;
             }
         }

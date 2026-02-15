@@ -111,7 +111,7 @@ export class ExitPollManager
         await new Promise(resolve => setTimeout(resolve, 5000));
         this.pollChangeUserAmount(6);
 
-        if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
+        if (document.getElementById('data-from-django').dataset.manipulationType == "RESPECT") {
             await this.chatroomPollBarMove(83);
 
             // TODO Dynamic changes

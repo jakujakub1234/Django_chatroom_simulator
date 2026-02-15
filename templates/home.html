@@ -88,6 +88,11 @@ window.addEventListener( "pageshow", function ( event ) {
     }
 });
 
+</script>
+
+{% if debug_mode %}
+
+<script>
 document.getElementById("chat-speed").addEventListener("change", function() {
     document.getElementById("chat-speed-hidden").value = this.value;
 });
@@ -116,5 +121,7 @@ document.getElementById("btn-submit").addEventListener("click", function() {
     document.getElementById("instant-exit-poll-hidden").value = document.getElementById("instant-exit-poll").checked ? "1" : "0";
 });
 </script>
+
+{% endif %}
 
 {% endblock content %}

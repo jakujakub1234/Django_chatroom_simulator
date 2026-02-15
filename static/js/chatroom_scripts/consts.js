@@ -1,10 +1,10 @@
-const translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
-const chatroom_time = parseInt(document.getElementById('data-from-django').dataset.chatroomTime);
-
 const data_from_django = document.getElementById('data-from-django').dataset;
-const user_name = data_from_django.nick;
 
+const translations = JSON.parse(data_from_django.translations.replaceAll("'",'"'));
+const chatroom_time = parseInt(data_from_django.chatroomTime);
+const user_name = data_from_django.nick;
 const is_debug = data_from_django.isDebugModeHidden == 1;
+const bots_messages_json = data_from_django.botsMessagesJson;
 
 // DEBUG MODE ONLY VARIABLES
 const chatroom_speed = parseInt(data_from_django.chatSpeedHidden);

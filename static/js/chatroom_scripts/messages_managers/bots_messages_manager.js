@@ -7,30 +7,12 @@ export class BotsMessagesManager
         this.reactions_manager = reactions_manager;
         this.token = token;
 
-        /*
-        bots_messages:
-        dict, where keys are seconds in which msg should be send (measuring from the beggining of chat)
-        and value is array with crucial data about this message: [bots_nick, message, nick_of_which_bot_this_message_is reply_to, message_to_reply, emojis_ids_to_be_add_to_msg, seonds_when_each_emoji_will_be_added]
-        */
-        this.bots_messages = {};
+        this.bots_messages_queue = JSON.parse(bots_messages_json);
 
-        if (document.getElementById('data-from-django').dataset.isPositive == "RESPECT") {
-            logDebugMessage("Chosen bots message: RESPECT");
-            this.bots_messages = positive_bots_messages;
-        } else if (document.getElementById('data-from-django').dataset.isPositive == "NONRESPECT") {
-            logDebugMessage("Chosen bots message: NON RESPECT");
-            this.bots_messages = negative_bots_messages;
-        } else {
-            logDebugMessage("Chosen bots message: CONTROL");
-            this.bots_messages = control_bots_messages;
-        }
+        logDebugMessage("DRAFT MESSAGES: ");
+        logDebugMessage(this.bots_messages_queue);
 
-        this.responds_queue = [];
-
-        // We need to store seconds of sended messages to not send it twice (exactly when refreshing site)
-        this.seconds_messages_sent = new Set();
-
-        // We need different ids to store id from real messages (from excel) and gemini ones
+        // We need different ids to store id from real messages (from excel) and gemini ones. Gemini starts from AI_RESPONSE_MSG_ID_START_INDEX
         this.draft_bots_message_id = 1;
 
         // We iterate users_messages_ids backwards (--1) because we need to differ this ids from bots messages ids
@@ -60,19 +42,13 @@ export class BotsMessagesManager
     {
         var nicks_of_typing_bots = [];
 
-        for (var i = SECONDS_UNTIL_SEND_BOT_MESSAGE_TO_SHOW_BOT_NAME_TYPING; i > 0; i--) {
-            if (seconds_integer + i in this.bots_messages) {
-                if (!nicks_of_typing_bots.includes(this.bots_messages[seconds_integer + i][0])) {
-                    nicks_of_typing_bots.push(this.bots_messages[seconds_integer + i][0]);
+        for (var bot_message of this.bots_messages_queue) {
+            if (bot_message.seconds_to_wait_before_send <= seconds_integer + SECONDS_UNTIL_SEND_BOT_MESSAGE_TO_SHOW_BOT_NAME_TYPING) {
+                if (!nicks_of_typing_bots.includes(bot_message.bot_nick)) {
+                    nicks_of_typing_bots.push(bot_message.bot_nick);
                 }
             }
         }
-
-        this.responds_queue.forEach((respond) => {
-            if (!nicks_of_typing_bots.includes(respond.bot_nick)) {
-                nicks_of_typing_bots.push(respond.bot_nick);
-            }
-        });
 
         var typing_nicks_text = " " + translations.chatroom_user_singular_typing_text;
 
@@ -91,30 +67,28 @@ export class BotsMessagesManager
         }
     }
 
-    progressRespondsQueue()
+    progressBotsMessagesQueue()
     {
-        this.responds_queue.every((respond) => respond.seconds_to_wait_before_send--);
+        this.bots_messages_queue.every((respond) => respond.seconds_to_wait_before_send--);
     }
 
-    sendScriptedMessage(seconds_integer)
+    sendBotMessageFromQueue()
     {
-        if (seconds_integer in this.bots_messages && !this.seconds_messages_sent.has(seconds_integer)) {
+        while (this.bots_messages_queue.length > 0 && this.bots_messages_queue[0].seconds_to_wait_before_send <= 0) {
+            var bot_message = this.bots_messages_queue.shift();
+
             this.messages_manager.dom_elements_messages_manager.createMessageDom(
-                this.bots_messages[seconds_integer][0],
-                this.bots_messages[seconds_integer][1],
+                bot_message.bot_nick,
+                bot_message.message,
                 true,
-                this.bots_messages[seconds_integer][3] ?? "",
-                this.bots_messages[seconds_integer][2] ?? "",
+                bot_message.text_of_responded_message,
+                bot_message.name_respond_to,
+                bot_message.is_ai_respond_to_user
             );
 
-            this.seconds_messages_sent.add(seconds_integer);
-
-            if (this.bots_messages[seconds_integer][4] != "") {
-                var emojis_ids = this.bots_messages[seconds_integer][4].split(',');
-                var emojis_times = this.bots_messages[seconds_integer][5].split(',');
-
-                for (var i = 0; i < emojis_ids.length; i++) {
-                    this.reactions_manager.addReactionToQueue(emojis_times[i], this.draft_bots_message_id - 1, emojis_ids[i]);
+            if (bot_message.emoji_ids.length > 0) {
+                for (var i = 0; i < bot_message.emoji_ids.length; i++) {
+                    this.reactions_manager.addReactionToQueue(bot_message.emoji_times[i], this.draft_bots_message_id - 1, bot_message.emoji_ids[i]);
                 }
             }
         }
@@ -122,29 +96,18 @@ export class BotsMessagesManager
 
     addBotAiRespondMessageToQueue(seconds_to_wait_before_send, bot_nick, message, text_of_responded_message)
     {
-        this.responds_queue.push({
+        this.bots_messages_queue.push({
             seconds_to_wait_before_send: seconds_to_wait_before_send,
             bot_nick: bot_nick,
             message: message,
-            text_of_responded_message: text_of_responded_message
+            name_respond_to: user_name,
+            text_of_responded_message: text_of_responded_message,
+            emoji_ids: [],
+            emoji_times: [],
+            is_ai_respond_to_user: true
         });
         
-        this.responds_queue.sort((a, b) => a.seconds_to_wait_before_send - b.seconds_to_wait_before_send);
-    }
-
-    sendBotRespondMessagesFromQueue()
-    {
-        while (this.responds_queue.length > 0 && this.responds_queue[0].seconds_to_wait_before_send <= 0) {
-            var respond = this.responds_queue.shift();
-
-            this.messages_manager.dom_elements_messages_manager.createMessageDom(
-                respond.bot_nick,
-                respond.message,
-                true,
-                respond.text_of_responded_message,
-                user_name,
-                true
-            );
-        }
+        // TODO replace all sorts like this with efficient inserting
+        this.bots_messages_queue.sort((a, b) => a.seconds_to_wait_before_send - b.seconds_to_wait_before_send);
     }
 }

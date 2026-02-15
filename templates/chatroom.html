@@ -7,7 +7,7 @@
 	data-token="{{ csrf_token }}"
 	data-end-url="{% url 'return_qualtrics_code' %}"
 	data-start-timestamp = "{{ start_timestamp}}"
-	data-is-positive = "{{ is_positive_manipulation }}"
+	data-manipulation-type = "{{ manipulation_type }}"
 	data-translations="{{ translations }}"
 	data-bad-end-url="{% url 'end_chat' %}"
   data-bad-end-no-exitpoll-url="{% url 'end_chat_no_exitpoll' %}"
@@ -18,6 +18,7 @@
   data-instant-exit-poll-hidden="{{ instant_exit_poll_hidden }}"
   data-is-debug-mode-hidden="{{ is_debug_hidden }}"
   data-chatroom-time = "{{ chatroom_time }}"
+  data-bots-messages-json = "{{ bots_messages_json }}"
   tabindex="-1">  
 </article>
 
@@ -96,11 +97,12 @@
   <button class="poll-btn-submit" id="chatroom-poll-no">{{ translations.no }}</button>
 </div>
 
+<script id="bots-data" type="application/json">
+{{ bots_messages_json|safe }}
+</script>
+
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 <script src="{% static 'js/button_animation.js' %}"></script>
-<script src="{% static 'js/' %}{{ language_code }}/positive_bots_messages.js"></script>
-<script src="{% static 'js/' %}{{ language_code }}/negative_bots_messages.js"></script>
-<script src="{% static 'js/' %}{{ language_code }}/control_bots_messages.js"></script>
 <script src="{% static 'js/' %}{{ language_code }}/curse_words.js"></script>
 <script src="{% static 'js/svgs.js' %}"></script>
 

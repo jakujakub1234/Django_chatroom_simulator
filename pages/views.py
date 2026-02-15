@@ -51,7 +51,7 @@ class HomePageView(TemplateView):
                 request.session['nick'] = translations.get('default_user_name')
 
             request.session['key'] = form.cleaned_data['key_from_qualtrics']
-            request.session['is_positive_manipulation'] = form.data['is_positive_manipulation']
+            request.session['manipulation_type'] = form.data['is_positive_manipulation']
             request.session['start_timestamp'] = datetime.now().timestamp()
             request.session['is_debug_hidden'] =  1 if settings.DEBUG else 0
 
@@ -102,6 +102,17 @@ class LobbyPageView(TemplateView):
 class ChatroomPageView(TemplateView):  
     template_name = "chatroom.html"
 
+    def loadJsonWithBotsMessages(self, manipulation_type):
+            if manipulation_type == "RESPECT":
+                path = f"static/js/{language_code}/positive_bots_messages.json"
+            elif manipulation_type == "NONRESPECT":
+                path = f"static/js/{language_code}/negative_bots_messages.json"
+            else:
+                path = f"static/js/{language_code}/control_bots_messages.json"
+
+            with open(path, encoding="utf-8") as f:
+                return f.read()
+
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":
             form = HomeForm()
@@ -125,11 +136,12 @@ class ChatroomPageView(TemplateView):
         context = super(ChatroomPageView, self).get_context_data(*args,**kwargs)
         context['nick'] = self.request.session['nick']
         context['start_timestamp'] = self.request.session['start_timestamp'] + lobby_time
-        context['is_positive_manipulation'] = self.request.session['is_positive_manipulation']
+        context['manipulation_type'] = self.request.session['manipulation_type']
         context['translations'] = translations
         context['language_code'] = language_code
         context['is_debug_hidden'] = 1 if settings.DEBUG else 0
         context['chatroom_time'] = chatroom_time
+        context['bots_messages_json'] = self.loadJsonWithBotsMessages(self.request.session['manipulation_type'])
 
         if settings.DEBUG:
             context['chat_speed_hidden'] = self.request.session['chat_speed_hidden']
@@ -208,9 +220,9 @@ class AjaxPageView(TemplateView):
                     qualtrics_id=request.session['key'],
                     nick=request.session['nick'],
                     chatroom_start=datetime.now().timestamp(),
-                    is_manipulation_positive=(request.session['is_positive_manipulation']=="True"),
+                    is_manipulation_positive=(request.session['manipulation_type']=="True"),
                     language_version=language_code,
-                    manipulation_type=request.session['is_positive_manipulation']
+                    manipulation_type=request.session['manipulation_type']
                 )
             
                 nick.save()        
@@ -312,7 +324,7 @@ class AjaxPageView(TemplateView):
             request.GET['message'],
             request.GET['prev_message_id'],
             request.GET['message_timestamp'],
-            request.session['is_positive_manipulation']
+            request.session['manipulation_type']
         )
 
         return JsonResponse({'respond': respond, "respond_type": respond_type, "responding_bot": responding_bot}, status=200, content_type="application/json")

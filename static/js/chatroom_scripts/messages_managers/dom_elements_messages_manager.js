@@ -13,11 +13,14 @@ export class DomElementsMessagesManager
 
         this.ai_response_message_id = AI_RESPONSE_MSG_ID_START_INDEX;
 
-        if (AI_RESPONSE_MSG_ID_START_INDEX <= Object.keys(this.messages_manager.bots_messages_manager.bots_messages).length) {
-            this.ai_response_message_id = Object.keys(this.messages_manager.bots_messages_manager.bots_messages).length + 100;
-        }
-
         this.chatroom = document.getElementById("chatroom");
+    }
+
+    increaseAiResponseMessageIdIfNecessary()
+    {
+        if (AI_RESPONSE_MSG_ID_START_INDEX <= (this.messages_manager.bots_messages_manager.bots_messages_queue).length) {
+            this.ai_response_message_id = (this.messages_manager.bots_messages_manager.bots_messages_queue).length + 100;
+        }
     }
 
     createMessageDom(

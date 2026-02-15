@@ -114,7 +114,7 @@ function incrementSeconds() {
 
     interactions_manager.updateUserInteractionData(document.getElementById("msg_field").value);
 
-    messages_manager.bots_messages_manager.progressRespondsQueue();
+    messages_manager.bots_messages_manager.progressBotsMessagesQueue();
     reactions_manager.progressReactionsQueue();
 
     // Legacy code start
@@ -122,8 +122,7 @@ function incrementSeconds() {
     // Legacy code end
 
     messages_manager.bots_messages_manager.showTypingBotsNicks(seconds_integer);
-    messages_manager.bots_messages_manager.sendScriptedMessage(seconds_integer);
-    messages_manager.bots_messages_manager.sendBotRespondMessagesFromQueue();
+    messages_manager.bots_messages_manager.sendBotMessageFromQueue();
 
     reactions_manager.addReactionsFromQueue();
     
