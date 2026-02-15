@@ -21,10 +21,11 @@ export class MessagesManager
 
         while (this.bots_messages_manager.bots_messages_queue.length > 0 && this.bots_messages_manager.bots_messages_queue[0].seconds_to_wait_before_send <= 0) {
             this.bots_messages_manager.bots_messages_queue.shift();
+            this.bots_messages_manager.draft_bots_message_id++;
         }
     }
 
-    scriptEndedAndReadyForExitPoll(seconds_integer)
+    scriptEndedAndReadyForExitPoll()
     {
         if (instant_exit_poll) {
             if (this.bots_messages_manager.draft_bots_message_id >= 1) {

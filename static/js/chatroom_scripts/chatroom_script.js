@@ -104,7 +104,7 @@ function incrementSeconds() {
         ending = BAD_ENDING;
     }
 
-    if (messages_manager.scriptEndedAndReadyForExitPoll(timer.getSeconds())) {
+    if (messages_manager.scriptEndedAndReadyForExitPoll()) {
         exit_poll_manager.handleExitPoll(document.getElementById("chatroom-poll-dialog-box"));
         return;
     }
@@ -121,7 +121,7 @@ function incrementSeconds() {
     reports_remove_messages_queue.every((reports) => reports[0]--);
     // Legacy code end
 
-    messages_manager.bots_messages_manager.showTypingBotsNicks(seconds_integer);
+    messages_manager.bots_messages_manager.showTypingBotsNicks();
     messages_manager.bots_messages_manager.sendBotMessageFromQueue();
 
     reactions_manager.addReactionsFromQueue();

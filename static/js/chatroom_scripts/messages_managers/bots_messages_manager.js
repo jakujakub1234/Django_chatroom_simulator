@@ -38,12 +38,12 @@ export class BotsMessagesManager
         });
     }
 
-    showTypingBotsNicks(seconds_integer)
+    showTypingBotsNicks()
     {
         var nicks_of_typing_bots = [];
 
         for (var bot_message of this.bots_messages_queue) {
-            if (bot_message.seconds_to_wait_before_send <= seconds_integer + SECONDS_UNTIL_SEND_BOT_MESSAGE_TO_SHOW_BOT_NAME_TYPING) {
+            if (bot_message.seconds_to_wait_before_send <= SECONDS_UNTIL_SEND_BOT_MESSAGE_TO_SHOW_BOT_NAME_TYPING) {
                 if (!nicks_of_typing_bots.includes(bot_message.bot_nick)) {
                     nicks_of_typing_bots.push(bot_message.bot_nick);
                 }
