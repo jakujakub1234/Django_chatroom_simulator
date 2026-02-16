@@ -3,3 +3,7 @@ __pycache__/
 secrets.yaml
 pages/DS_Store
 static/DS_Store
+additional_tools/db_data_csv_generator/plain_csvs_from_database/*
+additional_tools/db_data_csv_generator/results/*
+additional_tools/db_data_csv_generator/qualtrics_ids.txt
+.DS_Store

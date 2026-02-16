@@ -15,7 +15,7 @@ class ChatAI:
         
         directory_for_current_lang = f'files_for_ai/{language_code}'
 
-        self.chatroom_script_dir = f'../../static/js/{language_code}'
+        self.bots_messages_dir = f'../../static/js/bots_messages/{language_code}'
 
         self.user_nick = ""
         self.user_messages_counter = 0
@@ -254,7 +254,7 @@ class ChatAI:
 
         actual_sended_messages_history_index = 0
 
-        with open(os.path.join(self.module_dir, f'{self.chatroom_script_dir}/{filename}')) as file:
+        with open(os.path.join(self.module_dir, f'{self.bots_messages_dir}/{filename}')) as file:
             json_with_messages = json.load(file)
             
         for msg_obj in json_with_messages:   

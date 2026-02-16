@@ -26,7 +26,9 @@ with open('secrets.yaml', 'r') as file:
     yaml_file = yaml.safe_load(file)
     secret_secret_key = yaml_file['SECRET_KEY']
     database_ip = yaml_file['DATABASE_IP']
+    database_user = yaml_file['DATABASE_USER']
     database_password = yaml_file['DATABASE_PASSWORD']
+    database_name = yaml_file['DATABASE_NAME']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -94,9 +96,9 @@ if DATABASES_ACTIVE:
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'HOST': database_ip,
-            'USER': 'postgres',
+            'USER': database_user,
             'PASSWORD': database_password,
-            'NAME': 'ManipulationDB',
+            'NAME': database_name,
         }
     }
 else:
@@ -106,8 +108,6 @@ else:
         }
     }
     SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-
-#DATABASES['default']['NAME'] = 'ManipulationDB'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

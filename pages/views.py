@@ -104,11 +104,11 @@ class ChatroomPageView(TemplateView):
 
     def loadJsonWithBotsMessages(self, manipulation_type):
             if manipulation_type == "RESPECT":
-                path = f"static/js/{language_code}/positive_bots_messages.json"
+                path = f"static/js/bots_messages/{language_code}/positive_bots_messages.json"
             elif manipulation_type == "NONRESPECT":
-                path = f"static/js/{language_code}/negative_bots_messages.json"
+                path = f"static/js/bots_messages/{language_code}/negative_bots_messages.json"
             else:
-                path = f"static/js/{language_code}/control_bots_messages.json"
+                path = f"static/js/bots_messages/{language_code}/control_bots_messages.json"
 
             with open(path, encoding="utf-8") as f:
                 return f.read()
