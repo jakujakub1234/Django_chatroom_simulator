@@ -173,15 +173,17 @@ def createRawCsvFilesFromDb():
     if not os.path.exists(f"{current_directory}/plain_csvs_from_database"):
         os.makedirs(f"{current_directory}/plain_csvs_from_database")
 
-    # TODO refactor after moving a lot of code to some configuration JSON
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_nicks", "nicks")
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_messages", "messages")
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_angryreactions", "angry_reactions")
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_heartreactions", "heart_reactions")
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_likereactions", "like_reactions")
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_interactions", "interactions")
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_reports", "reports")
-    downloadCsvFromDb(database_user, database_password, database_ip, database_name, "pages_exitpoll", "exitpoll")
+    with open(f'{current_directory}/../../secrets.yaml', 'r') as file:
+        db_prefix = yaml.safe_load(file)['DATABASE_PREFIX']
+
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "nicks", "nicks")
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "messages", "messages")
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "angryreactions", "angry_reactions")
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "heartreactions", "heart_reactions")
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "likereactions", "like_reactions")
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "interactions", "interactions")
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "reports", "reports")
+    downloadCsvFromDb(database_user, database_password, database_ip, database_name, db_prefix + "exitpoll", "exitpoll")
 
 def downloadCsvFromDb(db_user, db_password, db_ip, db_name, table_name, csv_name):
     current_directory = os.path.dirname(os.path.realpath(__file__))
