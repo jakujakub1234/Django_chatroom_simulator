@@ -8,6 +8,8 @@ var timer_text = document.getElementById('seconds-counter');
 var users_counter = document.getElementById('users-counter');
 
 var users_actual_amount = 2;
+
+// TODO to chatroom configurations
 var time_to_another_users = [
     0,
     3,
