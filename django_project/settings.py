@@ -13,14 +13,18 @@ import yaml
 import dj_database_url
 from pathlib import Path
 import os
+import json
 
-# CUSTIOMIZABLE PARAMETERS
+if not os.path.isfile(os.path.dirname(__file__) + "/../chatroom_configuration.json"):
+    print("ERROR: chatroom_configuration.json not found")
+    exit()
 
-DEBUG = True
-LANGUAGE_CODE = 'pl'
-DATABASES_ACTIVE = True
+with open(os.path.dirname(__file__) + "/../chatroom_configuration.json") as file:
+    chatroom_configuration = json.load(file)
 
-# CUSTIOMIZABLE PARAMETERS
+DEBUG = chatroom_configuration["debug_mode"]
+LANGUAGE_CODE = chatroom_configuration["current_language"]
+DATABASES_ACTIVE = chatroom_configuration["active_database"]
 
 with open('secrets.yaml', 'r') as file:
     yaml_file = yaml.safe_load(file)

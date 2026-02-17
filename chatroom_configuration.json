@@ -1,0 +1,11 @@
+{
+    "supported_languages": [
+        "pl",
+        "en"
+    ],
+    "current_language": "pl",
+    "debug_mode": true,
+    "active_database": true,
+    "lobby_time": 14,
+    "chatroom_time": 480
+}

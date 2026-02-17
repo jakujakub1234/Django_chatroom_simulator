@@ -2,12 +2,15 @@ import json
 import os
 from django.conf import settings
 
-lobby_time = 14
+if not os.path.isfile(os.path.dirname(__file__) + "/../chatroom_configuration.json"):
+    print("ERROR: chatroom_configuration.json not found")
+    exit()
 
-# TODO remove chatroom interactions 
-#lobby_time = 0
+with open(os.path.dirname(__file__) + "/../chatroom_configuration.json") as file:
+    chatroom_configuration = json.load(file)
 
-chatroom_time = 480
+lobby_time = chatroom_configuration["lobby_time"]
+chatroom_time = chatroom_configuration["chatroom_time"]
 
 def load_translations():
     language_code = settings.LANGUAGE_CODE
