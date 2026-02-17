@@ -103,15 +103,15 @@ class ChatroomPageView(TemplateView):
     template_name = "chatroom.html"
 
     def loadJsonWithBotsMessages(self, manipulation_type):
-            if manipulation_type == "RESPECT":
-                path = f"static/js/bots_messages/{language_code}/positive_bots_messages.json"
-            elif manipulation_type == "NONRESPECT":
-                path = f"static/js/bots_messages/{language_code}/negative_bots_messages.json"
-            else:
-                path = f"static/js/bots_messages/{language_code}/control_bots_messages.json"
+        if manipulation_type == "RESPECT":
+            path = f"static/js/bots_messages/{language_code}/positive_bots_messages.json"
+        elif manipulation_type == "NONRESPECT":
+            path = f"static/js/bots_messages/{language_code}/negative_bots_messages.json"
+        else:
+            path = f"static/js/bots_messages/{language_code}/control_bots_messages.json"
 
-            with open(path, encoding="utf-8") as f:
-                return f.read()
+        with open(path, encoding="utf-8") as f:
+            return f.read()
 
     def get(self, request):
         if 'key' not in request.session or request.session['key'] == "":

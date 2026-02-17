@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import json
 import os
 
@@ -56,35 +57,101 @@ class TkinterWindow:
 
         self.entries = {}
 
+        row_index = 0
+
         for i, (key, value) in enumerate(self.data.items()):
-            if key == "bots_nicks" or key == "bots_lobby_times_to_appear":
-                continue
-
-            tk.Label(scrollable_frame, text=key, anchor="w", width=30).grid(row=i, column=0, padx=5, pady=2, sticky="w")
-
-            entry = tk.Entry(scrollable_frame, width=60)
-            entry.insert(0, value)
-            entry.grid(row=i, column=1, padx=5, pady=2, sticky="w")
-
-            entry.bind("<Control-a>", self.select_all)
-            entry.bind("<Control-A>", self.select_all)
-            entry.bind("<<Paste>>", self.custom_paste)
-
-            self.entries[key] = entry
+                if key in ("bots_nicks", "bots_lobby_times_to_appear"):
+                    self.build_bots_editor(scrollable_frame, row_index)
+                    row_index += 1
+                    continue
 
         save_btn = tk.Button(editor_win, text="Save", command=lambda: self.save_file(filepath))
         save_btn.pack(pady=5)
+
+    def build_bots_editor(self, parent, row):
+        tk.Label(parent, text="Bots", anchor="w", width=30)\
+            .grid(row=row, column=0, padx=5, pady=5, sticky="nw")
+
+        frame = tk.Frame(parent)
+        frame.grid(row=row, column=1, sticky="w")
+
+        self.bots_tree = ttk.Treeview(frame, columns=("nick","time"), show="headings", height=5)
+        self.bots_tree.heading("nick", text="Nick")
+        self.bots_tree.heading("time", text="Time")
+        self.bots_tree.pack()
+
+        nicks = self.data["bots_nicks"].split(";")
+        times = self.data["bots_lobby_times_to_appear"].split(";")
+
+        for n, t in zip(nicks, times):
+            self.bots_tree.insert("", "end", values=(n, t))
+
+        btn_frame = tk.Frame(frame)
+        btn_frame.pack()
+
+        tk.Button(btn_frame, text="+", width=3, command=self.add_bot).pack(side="left")
+        tk.Button(btn_frame, text="-", width=3, command=self.remove_bot).pack(side="left")
+
+        self.bots_tree.bind("<Double-1>", self.edit_bot_cell)
+
+    def add_bot(self):
+        self.bots_tree.insert("", "end", values=("nick", "0"))
+
+    def remove_bot(self):
+        for item in self.bots_tree.selection():
+            self.bots_tree.delete(item)
+
+    def edit_bot_cell(self, event):
+        item = self.bots_tree.identify_row(event.y)
+        column = self.bots_tree.identify_column(event.x)
+
+        if not item:
+            return
+
+        col = int(column[1:]) - 1
+        x,y,w,h = self.bots_tree.bbox(item, column)
+
+        entry = tk.Entry(self.bots_tree)
+        entry.place(x=x, y=y, width=w, height=h)
+
+        value = self.bots_tree.item(item)["values"][col]
+        entry.insert(0, value)
+        entry.focus()
+
+        def save(e):
+            vals = list(self.bots_tree.item(item)["values"])
+            vals[col] = entry.get()
+            self.bots_tree.item(item, values=vals)
+            entry.destroy()
+
+        entry.bind("<Return>", save)
+        entry.bind("<FocusOut>", lambda e: entry.destroy())
 
     def save_file(self, filepath):
         for key, entry in self.entries.items():
             self.data[key] = entry.get()
 
+        if hasattr(self, "bots_tree"):
+            nicks = []
+            times = []
+
+            for row in self.bots_tree.get_children():
+                nick, time = self.bots_tree.item(row)["values"]
+                nicks.append(nick)
+                times.append(time)
+
+            self.data["bots_nicks"] = ";".join(nicks)
+            self.data["bots_lobby_times_to_appear"] = ";".join(times)
+
         try:
             with open(filepath, "w", encoding="utf-8") as f:
                 json.dump(self.data, f, ensure_ascii=False, indent=4)
+
             messagebox.showinfo("Saved", f"{os.path.basename(filepath)} saved successfully!", parent=self.root)
+
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save file:\n{e}", parent=self.root)
+
 
     def select_all(self, event):
         event.widget.select_range(0, 'end')
@@ -99,7 +166,7 @@ class TkinterWindow:
         event.widget.insert("insert", event.widget.clipboard_get())
         return "break"
 
-def editTranslations(main_window):
+def configureBotsNames(main_window):
     languages_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../static/translations")
     editor = TkinterWindow(main_window, languages_folder)
     main_window.wait_window(editor.root)

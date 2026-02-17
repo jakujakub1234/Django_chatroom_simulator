@@ -1,6 +1,8 @@
-var translations = JSON.parse(document.getElementById('data-from-django').dataset.translations.replaceAll("'",'"'));
-var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
-var lobby_time = parseInt(document.getElementById('data-from-django').dataset.lobbyTime);
+const data_from_django = document.getElementById('data-from-django').dataset;
+
+var translations = JSON.parse(data_from_django.translations.replaceAll("'",'"'));
+var start_timestamp = parseInt(data_from_django.startTimestamp);
+var lobby_time = parseInt(data_from_django.lobbyTime);
 
 var seconds = Math.floor(Date.now() / 1000) - start_timestamp;
 
@@ -10,34 +12,21 @@ var users_counter = document.getElementById('users-counter');
 var users_actual_amount = 2;
 
 // TODO to chatroom configurations
-var time_to_another_users = [
-    0,
-    3,
-    4,
-    7,
-    13,
-];
+var time_to_another_users = translations.bots_lobby_times_to_appear.split(";").map(Number);
 
-for (let i = 0; i < 6; i++) {
+const bots_nicks = translations.bots_nicks.split(";");
+bots_nicks.splice(1, 0, data_from_django.nick);
+
+const loading_circle = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
+
+createTableWithBotsNames(bots_nicks, loading_circle);
+
+for (let i = 0; i < bots_nicks.length; i++) {
     if (time_to_another_users[i] > seconds) {
         users_counter.innerText = translations.lobby_users_counter + i;
         break;
     }
 }
-
-var data_from_django = document.getElementById('data-from-django').dataset;
-
-const bots_nicks = translations.bots_nicks.split(";");
-const loading_circle = `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
-
-document.getElementById('bot-0').innerHTML = avatar_svg + "<br>" + bots_nicks[0];
-document.getElementById('bot-1').innerHTML = avatar_svg + "<br>" + data_from_django.nick;
-
-document.getElementById('bot-2').innerHTML = loading_circle;
-document.getElementById('bot-3').innerHTML = loading_circle;
-document.getElementById('bot-4').innerHTML = loading_circle;
-document.getElementById('bot-5').innerHTML = loading_circle;
-//document.getElementById('bot-6').innerHTML = loading_circle;
 
 $.ajax({
     type: "POST",
@@ -53,7 +42,39 @@ $.ajax({
     }
 });
 
-function incrementSeconds() {   
+function createTableWithBotsNames(bots_nicks, loading_circle)
+{
+    const cols = 3;
+    const table = document.getElementById("bots-table").querySelector("tbody");
+
+    var current_index = 0;
+
+    table.innerHTML = "";
+
+    for (let i = 0; i < bots_nicks.length; i += cols) {
+        const row = document.createElement("tr");
+
+        bots_nicks.slice(i, i + cols).forEach(name => {
+            const td = document.createElement("td");
+            td.id = "bot-" + current_index.toString();
+
+            if (current_index < 2) {
+                td.innerHTML = avatar_svg + "<br>" + bots_nicks[current_index];
+            }
+            else {
+                td.innerHTML = loading_circle;
+            }
+
+            current_index++;
+            row.appendChild(td);
+        });
+
+        table.appendChild(row);
+    }
+}
+
+function incrementSeconds()
+{   
     if (seconds > lobby_time) {
         return;
     }
@@ -74,13 +95,15 @@ function incrementSeconds() {
         users_actual_amount++;
         users_counter.innerText = translations.lobby_users_counter + users_actual_amount;
 
-        document.getElementById('bot-' + (users_actual_amount-1).toString()).innerHTML = avatar_svg + "<br>" + bots_nicks[users_actual_amount-2];
+        document.getElementById('bot-' + (users_actual_amount-1).toString()).innerHTML = avatar_svg + "<br>" + bots_nicks[users_actual_amount-1];
     }
 
     if (seconds > lobby_time) {
-        window.location.href = document.getElementById('data-from-django').dataset.chatroomUrl;
+        window.location.href = data_from_django.chatroomUrl;
     }
 }
+
+document.getElementById("data-from-django").remove();
 
 incrementSeconds();
 setInterval(incrementSeconds, 1000);

@@ -5,7 +5,7 @@
     ],
     "current_language": "pl",
     "debug_mode": true,
-    "active_database": true,
+    "active_database": false,
     "lobby_time": 14,
     "chatroom_time": 480
 }

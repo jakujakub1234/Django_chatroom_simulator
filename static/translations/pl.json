@@ -1,23 +1,21 @@
 {
     "default_user_name": "Uczestnik badania",
-    
     "title": "Chatroom badania",
     "button_submit": "Zatwierdź",
     "button_send": "Wyślij",
     "OK": "OK",
     "and": "i",
     "bots_nicks": "tomek;Sara;pixelninja99;Protatoes;julia",
+    "bots_lobby_times_to_appear": "0;3;4;7;13",
     "yes": "Tak",
     "no": "Nie",
     "out_of": "z",
-
     "seconds_singular": "sekunda",
     "seconds_few": "sekundy",
     "seconds_many": "sekund",
     "minutes_singular": "minuta",
     "minutes_few": "minuty",
     "minutes_many": "minut",
-
     "home_warning_time": "Wkrótce zostaną Państwo połączeni z innymi uczestnikami czatu. Rozmowa potrwa do około 8 minut.",
     "home_info_qualtrics": "Po zakończeniu czatu otrzymają Państwo kod, który należy wpisać w karcie, w której wypełniali Państwo badanie w programie Qualtrics. Proszę pamiętać, aby nie zamknąć karty z badaniem w Qualtrics. Wpisanie kodu umożliwi kontynuowanie badania.",
     "home_info_exit": "Wyjście z chatroomu spowoduje jego automatyczne zakończenie.",
@@ -27,12 +25,10 @@
     "home_form_nick": "Podaj swój nick:",
     "home_form_qualtrics_key": "Podaj klucz wygenerowany w Qualtricsie:",
     "home_error_qualtrics_key": "Nieprawidłowy klucz z Qualtricsa",
-
     "lobby_title": "Witamy Państwa, prosimy o chwilę cierpliwości, wkrótce zostaną Państwo przydzieleni do chatroomu.",
     "lobby_warning": "Uwaga! Czat nie może zostać opuszczony, zakończy się automatycznie po około 8 minutach od dołączenia.",
     "lobby_users_counter": "Ilość osób w lobby: ",
     "lobby_timer": "Czas oczekiwania: ",
-
     "chatroom_input_placeholder": "Napisz wiadomość...",
     "chatroom_end_dialog_warning": "Uwaga",
     "chatroom_end_dialog_text": "Czat zakończy się automatycznie za",
@@ -56,7 +52,6 @@
     "LEGACY_chatroom_report_respect_text": "Wiadomość zawiera treść, która wyraża brak szacunku",
     "LEGACY_chatroom_report_hostile_text": "Wiadomość zawiera wulgarne i agresywne treści",
     "chatroom_report_misinformation_text": "Wiadomość rozpowszechnia błędne lub fałszywe informacje",
-
     "chatroom_moderator_nick": "Moderator",
     "chatroom_moderator_respect_first_time_1": "Trzymajmy nasze rozmowy na poziomie konstruktywnym @{nick}! Pamiętaj, aby komunikować się z szacunkiem, zgodnie z zasadami naszej grupy.",
     "chatroom_moderator_respect_first_time_2": "Cenimy sobie tutaj pełne szacunku dyskusje @{nick}",
@@ -74,19 +69,15 @@
     "chatroom_moderator_hostile_second_time_2": "Wrogie komentarze nie są tolerowane @{nick}. Dbajmy o to, aby nasz czat był bezpieczną przestrzenią dla wszystkich.",
     "chatroom_moderator_hostile_second_time_3": "Przypomnienie, że nasza grupa ma politykę zerowej tolerancji wobec takiego języka. Prosimy o dostosowanie stylu komunikacji @{nick}.",
     "chatroom_moderator_hostile_second_time_4": "Drugie ostrzeżenie @{nick}: pisanie takich wiadomości spowoduje usunięcie dalszych komentarzy. Dążymy do stworzenia bezpiecznej przestrzeni.",
-
     "ai_curiosity_question_1": "A Ty {nick} , co myślisz?",
     "ai_curiosity_question_2": "A Ty {nick} , masz może jakiś pomysł?",
-
     "return_qualtrics_code_title": "Koniec odtwarzania czatu. Twoje zgłoszenia zostały zapisane. Teraz możesz wrócić do poprzedniej zakładki i kontynuować badanie.",
     "return_qualtrics_code_text": "Twój kod do kontynuowania badania to:",
     "copy_code_to_clipboard": "Skopiuj kod",
     "code_copied": "Skopiowano tekst: ",
-
     "fake_end_page_title": "Dziękujemy za udział w czacie",
     "fake_end_page_text": "Z powodu wyjścia z czatu przed jego zakończeniem nie możesz wrócić do badania w programie Qualtrics",
     "fake_end_page_no_exit_poll_text": "Dziękujemy serdecznie za udział w badaniu. Niestety, w związku z brakiem aktywności oraz niezrealizowaniem etapu głosowania, Państwa odpowiedź nie przeszła testu jakościowego.",
-
     "chatroom_poll_dialog_text": "Czy uchodźcy z Ukrainy powinni mieć takie same prawa jak obywatele Polski?",
     "chatroom_poll_dialog_text_enter": "Czas na głosowanie wynosi 60 sekund.",
     "chatroom_poll_users_amount": "użytkowników zagłosowało",

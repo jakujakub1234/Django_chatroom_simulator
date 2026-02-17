@@ -7,6 +7,7 @@ from configure_variables.configure_variables import configureVariables
 from configure_secrets.configure_secrets import configureSecrets
 from edit_supported_languages.edit_supported_languages import editSupportedLanguages
 from edit_translations.edit_translations import editTranslations
+from configure_bots_names.configure_bots_names import configureBotsNames
 
 def run_with_message(parent, func):
     msg = tk.Label(parent, text="Please wait...", fg="blue")
@@ -30,5 +31,6 @@ tk.Button(root, text="Configure variables", command=lambda: run_with_message(roo
 tk.Button(root, text="Configure secrets", command=lambda: run_with_message(root, configureSecrets)).grid(row=2, column=1, padx=15, pady=25)
 tk.Button(root, text="Add / Remove supported languages", command=lambda: run_with_message(root, editSupportedLanguages)).grid(row=3, column=0, padx=15, pady=25)
 tk.Button(root, text="Edit all texts on website", command=lambda: run_with_message(root, editTranslations)).grid(row=3, column=1, padx=15, pady=25)
+tk.Button(root, text="Edit bots names and lobby timings", command=lambda: run_with_message(root, configureBotsNames)).grid(row=4, column=0, padx=15, pady=25)
 
 root.mainloop()

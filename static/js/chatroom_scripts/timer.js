@@ -2,7 +2,7 @@ export class Timer
 {
     constructor()
     {
-        var start_timestamp = parseInt(document.getElementById('data-from-django').dataset.startTimestamp);
+        var start_timestamp = parseInt(data_from_django.startTimestamp);
 
         this.seconds = Math.floor(Date.now() / 1000) - start_timestamp;
     }

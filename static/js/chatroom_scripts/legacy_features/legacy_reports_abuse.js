@@ -9,8 +9,7 @@ Depending on amount and type of report messages moderated on diffrent reposne.
 
 /*
 
-var data_from_django_reports = document.getElementById('data-from-django').dataset;
-var user_name_reports = data_from_django_reports.nick;
+var user_name_reports = data_from_django.nick;
 
 var respect_reports_dict = {};
 var hostile_reports_dict = {};

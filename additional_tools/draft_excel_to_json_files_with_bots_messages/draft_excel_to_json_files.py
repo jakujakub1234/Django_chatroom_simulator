@@ -11,6 +11,7 @@ class TkinterWindow:
     def __init__(self, parent):
         self.filename = ""
         self.language_code = ""
+        self.closed_properly = False
 
         self.root = tk.Toplevel(parent)
         self.root.title("Select language of messages and file")
@@ -65,6 +66,8 @@ class TkinterWindow:
 
         selected = self.lb.curselection()
 
+        self.closed_properly = True
+
         self.language_code = [self.lb.get(i) for i in selected][0]
         self.root.destroy()
 
@@ -75,6 +78,9 @@ def draftExcelToJsonFiles(main_window):
 
     language_code = tkinter_window.language_code
     filename = tkinter_window.filename
+
+    if not tkinter_window.closed_properly:
+        return
 
     for start_column in [1,2,3]:
         if start_column == 1:

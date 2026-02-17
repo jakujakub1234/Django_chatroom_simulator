@@ -151,6 +151,8 @@ function incrementSeconds() {
     }
 }
 
+document.getElementById("data-from-django").remove();
+
 incrementSeconds();
 setInterval(incrementSeconds, chatroom_speed);
 

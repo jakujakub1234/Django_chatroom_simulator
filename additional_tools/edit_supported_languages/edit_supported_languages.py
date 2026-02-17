@@ -84,7 +84,8 @@ static/js/bots_messages/{new_language}\n")
 
             confirm = tk.messagebox.askyesno(
                 "Confirm deletion",
-                "Are you sure?\nAll data for selected language(s) will be deleted!"
+                "Are you sure?\nAll data for selected language(s) will be deleted!",
+                parent=self.root
             )
 
             if not confirm:

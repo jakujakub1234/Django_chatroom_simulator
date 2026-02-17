@@ -199,6 +199,7 @@ class TkinterWindow:
         self.qulatrics_ids_filename = ""
         self.results_directory = os.path.dirname(os.path.realpath(__file__)) + "/results"
         self.download_new_csvs = False
+        self.closed_properly = False
 
         self.root = tk.Toplevel(main_window)
         self.root.title("Select qualtrics_ids file")
@@ -265,6 +266,7 @@ class TkinterWindow:
             return
         
         self.download_new_csvs = self.is_checkbox.get()
+        self.closed_properly = True
         self.root.destroy()
 
 def dbDataGenerator(main_window):
@@ -274,6 +276,10 @@ def dbDataGenerator(main_window):
     download_new_csvs = tkinter_window.download_new_csvs
     qulatrics_ids_filename = tkinter_window.qulatrics_ids_filename
     results_directory = tkinter_window.results_directory
+
+    if not tkinter_window.closed_properly:
+        return
+
 
     if download_new_csvs:
         createRawCsvFilesFromDb()

@@ -100,7 +100,7 @@ export class ExitPollManager
 
     async pollChangeUserAmount(user_amount)
     {
-        document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " 6 " + translations.chatroom_poll_users_amount;
+        document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " " + (bots_nicks.length + 1).toString() + " " + translations.chatroom_poll_users_amount;
     }
 
     async chatroomPollDialog()
@@ -109,9 +109,10 @@ export class ExitPollManager
 
         logDebugMessage("Bots are voting now");
         await new Promise(resolve => setTimeout(resolve, 5000));
-        this.pollChangeUserAmount(6);
+        
+        this.pollChangeUserAmount(bots_nicks.length + 1);
 
-        if (document.getElementById('data-from-django').dataset.manipulationType == "RESPECT") {
+        if (data_from_django.manipulationType == "RESPECT") {
             await this.chatroomPollBarMove(83);
 
             // TODO Dynamic changes
