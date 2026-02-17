@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 import os 
+import json
 
 class TkinterWindow:
     def __init__(self, parent):
@@ -21,8 +22,13 @@ class TkinterWindow:
         self.lb = tk.Listbox(self.root, height=4, name="language code")
         self.lb.pack(pady=5)
 
-        # TODO refactor after moving a lot of code to some configuration JSON
-        for language_codes in ["pl","en"]:
+        self.current_directory = os.path.dirname(os.path.realpath(__file__))
+        self.json_filepath = os.path.join(self.current_directory, "../../chatroom_configuration.json")
+
+        with open(self.json_filepath, "r") as f:
+            self.configuration_data = json.load(f)
+
+        for language_codes in self.configuration_data["supported_languages"]:
             self.lb.insert(tk.END, language_codes)
 
         self.lb.selection_set(0)

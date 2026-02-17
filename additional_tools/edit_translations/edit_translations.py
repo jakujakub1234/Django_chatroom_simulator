@@ -8,7 +8,6 @@ class TkinterWindow:
         self.languages_dir = languages_dir
         self.root = tk.Toplevel(parent)
         self.root.title("Translation Editor")
-        self.root.geometry("700x500")
 
         tk.Label(self.root, text="Select language to edit:").pack(padx=10, pady=(10, 5))
 
@@ -31,7 +30,7 @@ class TkinterWindow:
     def open_language_window(self, filepath, lang):
         editor_win = tk.Toplevel(self.root)
         editor_win.title(f"Editing {lang.upper()}")
-        editor_win.geometry("700x600")
+        #editor_win.geometry("700x600")
 
         try:
             with open(filepath, "r", encoding="utf-8") as f:

@@ -1,6 +1,7 @@
 import tkinter as tk
 import json
 import os
+import shutil
 
 class TkinterWindow:
     def __init__(self, parent):
@@ -11,7 +12,22 @@ class TkinterWindow:
 
         self.root = tk.Toplevel(parent)
         self.root.title("Supported Languages Editor")
-        self.root.geometry("300x300")
+        #self.root.geometry("300x300")
+
+        label = tk.Label(self.root, font=("Helvetica", 15), text="REMEMBER:\n\n\
+1. Deleting language will delete all content related to this language permapermanently\n\
+2. Language en cannot be deleted\n\
+3. New language is added by copying en version of all related files. You need to manualy provide your translations files in these directories:\n\n\
+pages/chat_ai/files_for_ai/{new_language}\n\
+static/translations/{new_language}.json\n\
+static/js/curse_words/{new_language}\n\
+static/js/bots_messages/{new_language}\n")
+        
+        label.pack()
+
+        self.error_english_delete_label_str = tk.StringVar()
+        error_english_delete_label = tk.Label(self.root, textvariable=self.error_english_delete_label_str, fg='#f00')
+        error_english_delete_label.pack()
 
         tk.Label(self.root, text="Supported Languages:").pack(anchor="w", padx=10, pady=(10,0))
 
@@ -50,7 +66,9 @@ class TkinterWindow:
         if new_lang and new_lang not in self.data["supported_languages"]:
             self.data["supported_languages"].append(new_lang)
             self.save_json()
+            self.addFilesAndDirectoriesForNewLanguage(new_lang)
             self.refresh_listbox()
+
         self.new_lang_entry.delete(0, "end")
 
     def remove_selected(self):
@@ -59,10 +77,50 @@ class TkinterWindow:
             return
         for index in reversed(selected):
             lang = self.listbox.get(index)
+
+            if lang == "en":
+                self.error_english_delete_label_str.set("Language en cannot be deleted!")
+                continue
+
+            confirm = tk.messagebox.askyesno(
+                "Confirm deletion",
+                "Are you sure?\nAll data for selected language(s) will be deleted!"
+            )
+
+            if not confirm:
+                return
+            
             self.data["supported_languages"].remove(lang)
+            self.removeFilesAndDirectoriesForDeletedLanguage(lang)
+
         self.save_json()
         self.refresh_listbox()
 
+    def addFilesAndDirectoriesForNewLanguage(self, lang_code):
+        chat_ai_directory = self.current_directory + "/../../pages/chat_ai/files_for_ai"
+        shutil.copytree(chat_ai_directory + "/en", chat_ai_directory + "/" + lang_code)
+
+        translations_directory = self.current_directory + "/../../static/translations"
+        shutil.copy2(translations_directory + "/en.json", translations_directory + "/" + lang_code + ".json")
+
+        curse_words_directory = self.current_directory + "/../../static/js/curse_words"
+        shutil.copytree(curse_words_directory + "/en", curse_words_directory + "/" + lang_code)
+
+        bots_messages_directory = self.current_directory + "/../../static/js/bots_messages"
+        shutil.copytree(bots_messages_directory + "/en", bots_messages_directory + "/" + lang_code)
+
+    def removeFilesAndDirectoriesForDeletedLanguage(self, lang_code):
+        chat_ai_en_directory = self.current_directory + "/../../pages/chat_ai/files_for_ai"
+        shutil.rmtree(chat_ai_en_directory + "/" + lang_code)
+
+        translations_directory = self.current_directory + "/../../static/translations"
+        os.remove(translations_directory + "/" + lang_code + ".json")
+
+        curse_words_directory = self.current_directory + "/../../static/js/curse_words"
+        shutil.rmtree(curse_words_directory + "/" + lang_code)
+
+        bots_messages_directory = self.current_directory + "/../../static/js/bots_messages"
+        shutil.rmtree(bots_messages_directory + "/" + lang_code)
 
 def editSupportedLanguages(main_window):
     editor = TkinterWindow(main_window)
