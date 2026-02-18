@@ -8,7 +8,7 @@ class TkinterWindow:
     def __init__(self, parent, languages_dir):
         self.languages_dir = languages_dir
         self.root = tk.Toplevel(parent)
-        self.root.title("Translation Editor")
+        self.root.title("Edit bots names and lobby times")
 
         tk.Label(self.root, text="Select language to edit:").pack(padx=10, pady=(10, 5))
 
@@ -29,19 +29,20 @@ class TkinterWindow:
             btn.pack(pady=2)
 
     def open_language_window(self, filepath, lang):
-        editor_win = tk.Toplevel(self.root)
-        editor_win.title(f"Editing {lang.upper()}")
+        self.editor_win = tk.Toplevel(self.root)
+        self.editor_win.geometry("1200x500")
+        self.editor_win.title(f"Editing {lang.upper()}")
 
         try:
             with open(filepath, "r", encoding="utf-8") as f:
                 self.data = json.load(f)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load {filepath}:\n{e}", parent=self.root)
-            editor_win.destroy()
+            self.editor_win.destroy()
             return
 
-        canvas = tk.Canvas(editor_win)
-        scrollbar = tk.Scrollbar(editor_win, orient="vertical", command=canvas.yview)
+        canvas = tk.Canvas(self.editor_win)
+        scrollbar = tk.Scrollbar(self.editor_win, orient="vertical", command=canvas.yview)
         scrollable_frame = tk.Frame(canvas)
 
         scrollable_frame.bind(
@@ -55,103 +56,111 @@ class TkinterWindow:
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.entries = {}
-
-        row_index = 0
+        self.bots_names = []
+        self.bots_lobby_times = []
 
         for i, (key, value) in enumerate(self.data.items()):
-                if key in ("bots_nicks", "bots_lobby_times_to_appear"):
-                    self.build_bots_editor(scrollable_frame, row_index)
-                    row_index += 1
-                    continue
+            if key == "bots_nicks":
+                self.bots_names = value.split(";")
+            
+            if key == "bots_lobby_times_to_appear":
+                self.bots_lobby_times = value.split(";")
 
-        save_btn = tk.Button(editor_win, text="Save", command=lambda: self.save_file(filepath))
-        save_btn.pack(pady=5)
+        tk.Label(scrollable_frame, text="Edit values by double clicking on it. First bot will always be loaded before user.").pack(padx=10, pady=(10, 5))
 
-    def build_bots_editor(self, parent, row):
-        tk.Label(parent, text="Bots", anchor="w", width=30)\
-            .grid(row=row, column=0, padx=5, pady=5, sticky="nw")
+        self.tree = ttk.Treeview(scrollable_frame, columns=("Nick", "Seconds to load to lobby"), show="headings")
+        self.tree.heading("Nick", text="Nick")
+        self.tree.heading("Seconds to load to lobby", text="Seconds to load to lobby")
+        self.tree.pack(fill="both", expand=True, padx=10, pady=10)
 
-        frame = tk.Frame(parent)
-        frame.grid(row=row, column=1, sticky="w")
+        self.tree.bind("<Double-1>", self.on_double_click)
 
-        self.bots_tree = ttk.Treeview(frame, columns=("nick","time"), show="headings", height=5)
-        self.bots_tree.heading("nick", text="Nick")
-        self.bots_tree.heading("time", text="Time")
-        self.bots_tree.pack()
+        btn_frame = tk.Frame(scrollable_frame)
+        btn_frame.pack(pady=5)
 
-        nicks = self.data["bots_nicks"].split(";")
-        times = self.data["bots_lobby_times_to_appear"].split(";")
+        tk.Button(btn_frame, text="Add", command=self.add_item).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="Remove", command=self.remove_item).pack(side="left", padx=5)
 
-        for n, t in zip(nicks, times):
-            self.bots_tree.insert("", "end", values=(n, t))
+        tk.Button(btn_frame, text="Save", command=lambda: self.save_file(filepath)).pack(side="left", padx=5)
 
-        btn_frame = tk.Frame(frame)
-        btn_frame.pack()
+        self.refresh()
 
-        tk.Button(btn_frame, text="+", width=3, command=self.add_bot).pack(side="left")
-        tk.Button(btn_frame, text="-", width=3, command=self.remove_bot).pack(side="left")
+    def refresh(self):
+        self.tree.delete(*self.tree.get_children())
+        for t, n in zip(self.bots_names, self.bots_lobby_times):
+            self.tree.insert("", "end", values=(t, n))
 
-        self.bots_tree.bind("<Double-1>", self.edit_bot_cell)
+    def add_item(self):
+        self.bots_names.append("New bot nick")
+        self.bots_lobby_times.append(0)
+        self.refresh()
 
-    def add_bot(self):
-        self.bots_tree.insert("", "end", values=("nick", "0"))
-
-    def remove_bot(self):
-        for item in self.bots_tree.selection():
-            self.bots_tree.delete(item)
-
-    def edit_bot_cell(self, event):
-        item = self.bots_tree.identify_row(event.y)
-        column = self.bots_tree.identify_column(event.x)
-
-        if not item:
+    def remove_item(self):
+        selected = self.tree.selection()
+        if not selected:
+            messagebox.showwarning("Warning", "Select item to remove")
             return
 
-        col = int(column[1:]) - 1
-        x,y,w,h = self.bots_tree.bbox(item, column)
+        idx = self.tree.index(selected[0])
+        del self.bots_names[idx]
+        del self.bots_lobby_times[idx]
+        self.refresh()
 
-        entry = tk.Entry(self.bots_tree)
-        entry.place(x=x, y=y, width=w, height=h)
+    def on_double_click(self, event):
+        region = self.tree.identify("region", event.x, event.y)
+        if region != "cell":
+            return
 
-        value = self.bots_tree.item(item)["values"][col]
+        row_id = self.tree.identify_row(event.y)
+        column = self.tree.identify_column(event.x)
+        col_index = int(column.replace("#", "")) - 1
+        item_index = self.tree.index(row_id)
+
+        x, y, width, height = self.tree.bbox(row_id, column)
+
+        value = self.tree.item(row_id)["values"][col_index]
+
+        entry = tk.Entry(self.tree)
+        entry.place(x=x, y=y, width=width, height=height)
         entry.insert(0, value)
         entry.focus()
 
-        def save(e):
-            vals = list(self.bots_tree.item(item)["values"])
-            vals[col] = entry.get()
-            self.bots_tree.item(item, values=vals)
-            entry.destroy()
+        def save_edit(event=None):
+            new_val = entry.get()
 
-        entry.bind("<Return>", save)
-        entry.bind("<FocusOut>", lambda e: entry.destroy())
+            if col_index == 1:
+                try:
+                    new_val = int(new_val)
+                except ValueError:
+                    messagebox.showerror("Error", "Number must be numeric")
+                    return
+                self.bots_lobby_times[item_index] = new_val
+            else:
+                self.bots_names[item_index] = new_val
+
+            entry.destroy()
+            self.refresh()
+
+        entry.bind("<Return>", save_edit)
+        entry.bind("<FocusOut>", save_edit)
+        entry.bind("<Control-a>", self.select_all)
+        entry.bind("<Control-A>", self.select_all)
+        entry.bind("<<Paste>>", self.custom_paste)
 
     def save_file(self, filepath):
-        for key, entry in self.entries.items():
-            self.data[key] = entry.get()
+        self.bots_lobby_times = list(map(int, self.bots_lobby_times))
+        self.bots_lobby_times, self.bots_names = zip(*sorted(zip(self.bots_lobby_times, self.bots_names)))
 
-        if hasattr(self, "bots_tree"):
-            nicks = []
-            times = []
-
-            for row in self.bots_tree.get_children():
-                nick, time = self.bots_tree.item(row)["values"]
-                nicks.append(nick)
-                times.append(time)
-
-            self.data["bots_nicks"] = ";".join(nicks)
-            self.data["bots_lobby_times_to_appear"] = ";".join(times)
+        self.data["bots_nicks"] = ";".join(self.bots_names)
+        self.data["bots_lobby_times_to_appear"] = ";".join(map(str, self.bots_lobby_times))
 
         try:
             with open(filepath, "w", encoding="utf-8") as f:
                 json.dump(self.data, f, ensure_ascii=False, indent=4)
-
-            messagebox.showinfo("Saved", f"{os.path.basename(filepath)} saved successfully!", parent=self.root)
-
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save file:\n{e}", parent=self.root)
 
+        self.root.destroy()
 
     def select_all(self, event):
         event.widget.select_range(0, 'end')

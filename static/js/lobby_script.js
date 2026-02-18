@@ -11,7 +11,6 @@ var users_counter = document.getElementById('users-counter');
 
 var users_actual_amount = 2;
 
-// TODO to chatroom configurations
 var time_to_another_users = translations.bots_lobby_times_to_appear.split(";").map(Number);
 
 const bots_nicks = translations.bots_nicks.split(";");

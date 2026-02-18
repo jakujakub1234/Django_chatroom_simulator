@@ -8,16 +8,20 @@ class TkinterWindow:
         self.json_filepath = os.path.join(self.current_directory, "../../chatroom_configuration.json")
 
         self.root = tk.Toplevel(parent)
+        self.root.grid_columnconfigure(0, weight=0)
+        self.root.grid_columnconfigure(1, weight=1)
         self.root.title("JSON Editor")
 
         self.widgets = {}
         self.data = self.load_json()
 
+        vcmd = (self.root.register(self.validate_int), "%P")
+
         for i, (key, value) in enumerate(self.data.items()):
             if key == "supported_languages":
                 continue
             
-            tk.Label(self.root, text=key, anchor="w", width=20).grid(row=i, column=0, padx=5, pady=5)
+            tk.Label(self.root, text=key, anchor="w").grid(row=i, column=0, padx=5, pady=5)
             
             if isinstance(value, bool):
                 var = tk.BooleanVar(value=value)
@@ -30,12 +34,13 @@ class TkinterWindow:
                 self.current_lang_var = var
                 self.current_lang_option = tk.OptionMenu(self.root, var, *self.data["supported_languages"])
                 self.current_lang_option.grid(row=i, column=1, padx=5, pady=5, sticky="w")
+                entry = tk.Entry(self.root, validate="key", validatecommand=vcmd)
                 self.widgets[key] = var
 
             else:
-                entry = tk.Entry(self.root, width=50)
+                entry = tk.Entry(self.root)
                 entry.insert(0, str(value))
-                entry.grid(row=i, column=1, padx=5, pady=5)
+                entry.grid(row=i, column=1, padx=5, pady=5, sticky="ew")
                 entry.bind("<Control-a>", self.select_all)
                 entry.bind("<Control-A>", self.select_all)
                 entry.bind("<<Paste>>", self.custom_paste)
@@ -48,6 +53,9 @@ class TkinterWindow:
         tk.Button(self.root, text="Cancel", command=self.exit).grid(
             row=len(self.data)+1, column=0, columnspan=2, pady=5
         )
+
+    def validate_int(self, value):
+        return value.isdigit() or value == ""
 
     def load_json(self):
         with open(self.json_filepath, "r") as f:

@@ -11,6 +11,10 @@ with open(os.path.dirname(__file__) + "/../chatroom_configuration.json") as file
 
 lobby_time = chatroom_configuration["lobby_time"]
 chatroom_time = chatroom_configuration["chatroom_time"]
+exit_poll_active = chatroom_configuration["exit_poll_active"]
+exit_poll_is_user_voting_first = chatroom_configuration["exit_poll_is_user_voting_first"]
+exit_poll_final_percentage_respect_condition = chatroom_configuration["exit_poll_final_percentage_respect_condition"]
+exit_poll_final_percentage_nonrespect_condition = chatroom_configuration["exit_poll_final_percentage_nonrespect_condition"]
 
 def load_translations():
     language_code = settings.LANGUAGE_CODE

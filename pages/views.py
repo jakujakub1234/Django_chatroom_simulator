@@ -9,7 +9,7 @@ from .models import LikeReactions, HeartReactions, AngryReactions
 from .models import Interactions
 from .models import Reports
 from .models import ExitPoll
-from .utils import lobby_time, chatroom_time
+from .utils import lobby_time, chatroom_time, exit_poll_active, exit_poll_is_user_voting_first, exit_poll_final_percentage_respect_condition, exit_poll_final_percentage_nonrespect_condition
 from .chat_ai.chat_ai import ChatAI
 from django.conf import settings
 import json
@@ -141,6 +141,10 @@ class ChatroomPageView(TemplateView):
         context['language_code'] = language_code
         context['is_debug_hidden'] = 1 if settings.DEBUG else 0
         context['chatroom_time'] = chatroom_time
+        context['exit_poll_active'] = 1 if exit_poll_active else 0
+        context['exit_poll_is_user_voting_first'] = 1 if exit_poll_is_user_voting_first else 0
+        context['exit_poll_final_percentage_respect_condition'] = exit_poll_final_percentage_respect_condition
+        context['exit_poll_final_percentage_nonrespect_condition'] = exit_poll_final_percentage_nonrespect_condition
         context['bots_messages_json'] = self.loadJsonWithBotsMessages(self.request.session['manipulation_type'])
 
         if settings.DEBUG:

@@ -27,12 +27,25 @@ export class ExitPollManager
 
     handleExitPoll(poll_dialog_box)
     {
+        if (data_from_django.exitPollActive == 0) {
+            this.exit_poll_after_vote_seconds = 99999;
+
+            this.db_manager.sendReactionsAndInteractionsData(true, true);
+            this.db_manager.exit_poll_vote_saved = true;
+        }
+
         this.seconds_from_last_message++;
 
         if (this.seconds_from_last_message >= SECONDS_FROM_LAST_MESSAGE_TO_POLL_DIALOG && !this.exit_poll_opened) {
             this.exit_poll_opened = true;
             poll_dialog_box.style.display = "block";
-            this.pollChangeUserAmount(0);
+
+            if (data_from_django.exitPollIsUserVotingFirst == 1) {
+                this.pollChangeUserAmount(0);
+            }
+            else {
+                this.pollChangeUserAmount(bots_nicks.length);
+            }
             this.showPollButtons();
         }
 
@@ -52,7 +65,13 @@ export class ExitPollManager
         this.exit_poll_buttons_visible = false;
 
         this.removePollButtonsAndShowThanks();
-        this.pollChangeUserAmount(1);
+       
+        if (data_from_django.exitPollIsUserVotingFirst == 1) {
+            this.pollChangeUserAmount(1);
+        }
+        else {
+            this.pollChangeUserAmount(bots_nicks.length + 1);
+        }
 
         if (is_yes) {
             this.exit_poll_votes_yes_counter++;
@@ -108,12 +127,15 @@ export class ExitPollManager
         this.exit_poll_animations_started = true;
 
         logDebugMessage("Bots are voting now");
-        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        if (data_from_django.exitPollIsUserVotingFirst == 1) {
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
         
         this.pollChangeUserAmount(bots_nicks.length + 1);
 
         if (data_from_django.manipulationType == "RESPECT") {
-            await this.chatroomPollBarMove(83);
+            await this.chatroomPollBarMove(Math.floor(data_from_django.exitPollFinalPercentageRespectCondition));
 
             // TODO Dynamic changes
             // FINAL 83
@@ -148,7 +170,7 @@ export class ExitPollManager
             // await new Promise(resolve => setTimeout(resolve, 800));
             // this.pollChangeUserAmount(6);
         } else {
-            await this.chatroomPollBarMove(17);
+            await this.chatroomPollBarMove(Math.floor(data_from_django.exitPollFinalPercentageNonrespectCondition));
 
             // FINAL 17
 
