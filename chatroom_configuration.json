@@ -8,7 +8,6 @@
     "active_database": false,
     "lobby_time": 14,
     "chatroom_time": 480,
-
     "exit_poll_active": true,
     "exit_poll_is_user_voting_first": true,
     "exit_poll_final_percentage_respect_condition": 83,

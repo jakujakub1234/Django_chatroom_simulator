@@ -3,6 +3,7 @@ from tkinter import messagebox
 from tkinter import ttk
 import json
 import os
+import tkinter.font as tkfont
 
 class TkinterWindow:
     def __init__(self, parent, languages_dir):
@@ -28,10 +29,32 @@ class TkinterWindow:
             )
             btn.pack(pady=2)
 
+    def auto_size_columns(self, tree):
+        style = ttk.Style()
+        font_name = style.lookup("Treeview", "font") or "TkDefaultFont"
+        font = tkfont.Font(font=font_name)
+
+        for col in tree["columns"]:
+            max_width = font.measure(tree.heading(col)["text"])
+
+            for row in tree.get_children():
+                value = str(tree.set(row, col))
+                max_width = max(max_width, font.measure(value))
+
+            tree.column(col, width=max_width + 20)
+
     def open_language_window(self, filepath, lang):
         self.editor_win = tk.Toplevel(self.root)
         self.editor_win.geometry("1200x500")
         self.editor_win.title(f"Editing {lang.upper()}")
+
+        label = tk.Label(self.editor_win, font=("Helvetica", 15), text="Options \"Respect exit poll votes\" and \"Non respect exit poll votes\" works only when \nexit_poll_real_time_voting\n is set to true")
+        
+        label.pack()
+
+        self.style = ttk.Style()
+        self.style.configure("Treeview.Heading", font=("Segoe UI", 11))
+        self.editor_win.option_add("*TCombobox*Listbox.font", ("Segoe UI", 14))
 
         try:
             with open(filepath, "r", encoding="utf-8") as f:
@@ -58,6 +81,17 @@ class TkinterWindow:
 
         self.bots_names = []
         self.bots_lobby_times = []
+        self.bots_respect_votings = []
+        self.bots_nonrespect_votings = []
+
+        self.votings_values_labels = {
+            "No": "0",
+            "Yes": "1",
+            "Opposite to user vote": "10",
+            "Same as user vote": "11"
+        }
+
+        self.reverse_votings_values_labels = {v: k for k, v in self.votings_values_labels.items()}
 
         for i, (key, value) in enumerate(self.data.items()):
             if key == "bots_nicks":
@@ -66,11 +100,18 @@ class TkinterWindow:
             if key == "bots_lobby_times_to_appear":
                 self.bots_lobby_times = value.split(";")
 
-        tk.Label(scrollable_frame, text="Edit values by double clicking on it. First bot will always be loaded before user.").pack(padx=10, pady=(10, 5))
+            if key == "bots_respect_exit_poll_real_time_votings":
+                self.bots_respect_votings = value.split(";")
+            
+            if key == "bots_nonrespect_exit_poll_real_time_votings":
+                self.bots_nonrespect_votings = value.split(";")
 
-        self.tree = ttk.Treeview(scrollable_frame, columns=("Nick", "Seconds to load to lobby"), show="headings")
+        self.tree = ttk.Treeview(scrollable_frame, columns=("Nick", "Seconds to load to lobby", "Respect exit poll votes", "Non respect exit poll votes"), show="headings")
         self.tree.heading("Nick", text="Nick")
         self.tree.heading("Seconds to load to lobby", text="Seconds to load to lobby")
+        self.tree.heading("Seconds to load to lobby", text="Seconds to load to lobby")
+        self.tree.heading("Respect exit poll votes", text="Respect exit poll votes")
+        self.tree.heading("Non respect exit poll votes", text="Non respect exit poll votes")
         self.tree.pack(fill="both", expand=True, padx=10, pady=10)
 
         self.tree.bind("<Double-1>", self.on_double_click)
@@ -87,12 +128,20 @@ class TkinterWindow:
 
     def refresh(self):
         self.tree.delete(*self.tree.get_children())
-        for t, n in zip(self.bots_names, self.bots_lobby_times):
-            self.tree.insert("", "end", values=(t, n))
+
+        for name, time, respect_vote, nonrespect_vote in zip(self.bots_names, self.bots_lobby_times, self.bots_respect_votings, self.bots_nonrespect_votings):
+            respect_vote = self.reverse_votings_values_labels[respect_vote]
+            nonrespect_vote = self.reverse_votings_values_labels[nonrespect_vote]
+
+            self.tree.insert("", "end", values=(name, time, respect_vote, nonrespect_vote))
+
+        self.auto_size_columns(self.tree)
 
     def add_item(self):
         self.bots_names.append("New bot nick")
         self.bots_lobby_times.append(0)
+        self.bots_respect_votings.append("No")
+        self.bots_nonrespect_votings.append("No")
         self.refresh()
 
     def remove_item(self):
@@ -104,6 +153,8 @@ class TkinterWindow:
         idx = self.tree.index(selected[0])
         del self.bots_names[idx]
         del self.bots_lobby_times[idx]
+        del self.bots_respect_votings[idx]
+        del self.bots_nonrespect_votings[idx]
         self.refresh()
 
     def on_double_click(self, event):
@@ -120,39 +171,74 @@ class TkinterWindow:
 
         value = self.tree.item(row_id)["values"][col_index]
 
-        entry = tk.Entry(self.tree)
-        entry.place(x=x, y=y, width=width, height=height)
-        entry.insert(0, value)
-        entry.focus()
+        if col_index == 2 or col_index == 3:
+            entry = ttk.Combobox(self.tree, state="readonly",
+                         values=list(self.votings_values_labels.keys()))
+            entry.place(x=x, y=y, width=width, height=height)
+
+            label = self.reverse_votings_values_labels.get(value)
+
+            if label:
+                entry.set(label)
+            else:
+                entry.current(0)
+
+            entry.focus()
+            self.root.after(10, lambda: entry.event_generate("<Button-1>"))
+
+        else:
+            entry = tk.Entry(self.tree)
+            entry.place(x=x, y=y, width=width, height=height)
+            entry.insert(0, value)
+            entry.focus()
 
         def save_edit(event=None):
             new_val = entry.get()
 
-            if col_index == 1:
+            if col_index == 0:
+                self.bots_names[item_index] = new_val
+            elif col_index == 1:
                 try:
                     new_val = int(new_val)
                 except ValueError:
                     messagebox.showerror("Error", "Number must be numeric")
                     return
                 self.bots_lobby_times[item_index] = new_val
-            else:
-                self.bots_names[item_index] = new_val
+            elif col_index == 2:
+                self.bots_respect_votings[item_index] = self.votings_values_labels[new_val]
+            elif col_index == 3:
+                self.bots_nonrespect_votings[item_index] = self.votings_values_labels[new_val]
 
             entry.destroy()
+            self.active_editor = None
+            self.active_editor_callback = None
             self.refresh()
 
         entry.bind("<Return>", save_edit)
-        entry.bind("<FocusOut>", save_edit)
-        entry.bind("<Control-a>", self.select_all)
-        entry.bind("<Control-A>", self.select_all)
-        entry.bind("<<Paste>>", self.custom_paste)
+
+        if not isinstance(entry, ttk.Combobox):
+            entry.bind("<FocusOut>", save_edit)
+            entry.bind("<Control-a>", self.select_all)
+            entry.bind("<Control-A>", self.select_all)
+            entry.bind("<<Paste>>", self.custom_paste)
+        else:
+            entry.bind("<<ComboboxSelected>>", save_edit)
+
+        self.active_editor = entry
+        self.active_editor_callback = save_edit
 
     def save_file(self, filepath):
+        if hasattr(self, "active_editor") and self.active_editor:
+            self.active_editor_callback()
+
         self.bots_lobby_times = list(map(int, self.bots_lobby_times))
         self.bots_lobby_times, self.bots_names = zip(*sorted(zip(self.bots_lobby_times, self.bots_names)))
 
         self.data["bots_nicks"] = ";".join(self.bots_names)
         self.data["bots_lobby_times_to_appear"] = ";".join(map(str, self.bots_lobby_times))
+
+        self.data["bots_respect_exit_poll_real_time_votings"] = ";".join(map(str, self.bots_respect_votings))
+        self.data["bots_nonrespect_exit_poll_real_time_votings"] = ";".join(map(str, self.bots_nonrespect_votings))
 
         try:
             with open(filepath, "w", encoding="utf-8") as f:

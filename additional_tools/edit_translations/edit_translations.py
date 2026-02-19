@@ -57,7 +57,7 @@ class TkinterWindow:
         self.entries = {}
 
         for i, (key, value) in enumerate(self.data.items()):
-            if key == "bots_nicks" or key == "bots_lobby_times_to_appear":
+            if key == "bots_nicks" or key == "bots_lobby_times_to_appear" or key == "bots_respect_exit_poll_real_time_votings" or key == "bots_nonrespect_exit_poll_real_time_votings":
                 continue
 
             tk.Label(scrollable_frame, text=key, anchor="w", width=30).grid(row=i, column=0, padx=5, pady=2, sticky="w")

@@ -7,6 +7,8 @@
     "and": "i",
     "bots_nicks": "tomek;Sara;pixelninja99;Protatoes;julia",
     "bots_lobby_times_to_appear": "0;3;4;7;13",
+    "bots_respect_exit_poll_real_time_votings": "1;10;1;1;10",
+    "bots_nonrespect_exit_poll_real_time_votings": "10;0;10;0;11",
     "yes": "Tak",
     "no": "Nie",
     "out_of": "z",

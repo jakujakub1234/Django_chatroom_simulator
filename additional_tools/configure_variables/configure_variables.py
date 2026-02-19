@@ -2,6 +2,11 @@ import tkinter as tk
 import json
 import os
 
+KEY_LABEL_MAP = {
+    "exit_poll_final_percentage_respect_condition": "percentage to end respect condition exit poll (only when exit_poll_real_time_voting is false)",
+    "exit_poll_final_percentage_nonrespect_condition": "percentage to end non respect condition exit poll (only when exit_poll_real_time_voting is false)"
+}
+
 class TkinterWindow:
     def __init__(self, parent):
         self.current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -20,8 +25,13 @@ class TkinterWindow:
         for i, (key, value) in enumerate(self.data.items()):
             if key == "supported_languages":
                 continue
+
+            key_label = key
+
+            if key in KEY_LABEL_MAP:
+                key_label = KEY_LABEL_MAP[key]
             
-            tk.Label(self.root, text=key, anchor="w").grid(row=i, column=0, padx=5, pady=5)
+            tk.Label(self.root, text=key_label, anchor="w").grid(row=i, column=0, padx=5, pady=5)
             
             if isinstance(value, bool):
                 var = tk.BooleanVar(value=value)

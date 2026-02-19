@@ -8,6 +8,8 @@
     "and": "and",
     "bots_nicks": "julz;Sara;pixelninja99;archi12;Tomek;Protatoes",
     "bots_lobby_times_to_appear": "0;3;4;5;7;13",
+    "bots_respect_exit_poll_real_time_votings": "1;10;1;1;1",
+    "bots_nonrespect_exit_poll_real_time_votings": "10;0;0;0;0",
     "yes": "Yes",
     "no": "No",
     "out_of": "out of",
