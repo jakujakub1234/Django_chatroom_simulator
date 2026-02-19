@@ -27,7 +27,7 @@ export class ExitPollManager
 
     handleExitPoll(poll_dialog_box)
     {
-        if (data_from_django.exitPollActive == 0) {
+        if (!chatroom_configuration.exit_poll_active) {
             this.exit_poll_after_vote_seconds = 99999;
 
             this.db_manager.sendReactionsAndInteractionsData(true, true);
@@ -40,7 +40,7 @@ export class ExitPollManager
             this.exit_poll_opened = true;
             poll_dialog_box.style.display = "block";
 
-            if (data_from_django.exitPollIsUserVotingFirst == 1) {
+            if (chatroom_configuration.exit_poll_is_user_voting_first) {
                 this.pollChangeUserAmount(0);
             }
             else {
@@ -54,7 +54,7 @@ export class ExitPollManager
         }
 
         if (this.exit_poll_user_vote_animation_finish && !this.exit_poll_animations_started) {
-            this.chatroomPollDialog();
+            this.handleChatroomPollDialogAnimation();
         }
     }
 
@@ -66,7 +66,7 @@ export class ExitPollManager
 
         this.removePollButtonsAndShowThanks();
        
-        if (data_from_django.exitPollIsUserVotingFirst == 1) {
+        if (chatroom_configuration.exit_poll_is_user_voting_first) {
             this.pollChangeUserAmount(1);
         }
         else {
@@ -81,16 +81,17 @@ export class ExitPollManager
                 is_yes: "True",
                 vote_seconds: this.exit_poll_votings_possible_seconds
             }, true);
-
-        // await this.chatroomPollBarMove(100);
-        } else {
+        }
+        else {
             this.db_manager.sendDataThroughAjax({
                 action: "exit_poll",
                 is_yes: "False",
                 vote_seconds: this.exit_poll_votings_possible_seconds
             }, true);
+        }
 
-        // await this.chatroomPollBarMove(0);
+        if (chatroom_configuration.exit_poll_real_time_voting) {
+            await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter)*100));
         }
 
         this.exit_poll_user_vote_animation_finish = true;
@@ -122,81 +123,87 @@ export class ExitPollManager
         document.getElementById("poll-users-amount").innerText = user_amount.toString() + " " + translations.out_of + " " + (bots_nicks.length + 1).toString() + " " + translations.chatroom_poll_users_amount;
     }
 
-    async chatroomPollDialog()
+    async handleChatroomPollDialogAnimation()
     {
         this.exit_poll_animations_started = true;
 
         logDebugMessage("Bots are voting now");
 
-        if (data_from_django.exitPollIsUserVotingFirst == 1) {
+        if (chatroom_configuration.exit_poll_is_user_voting_first) {
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
         
         this.pollChangeUserAmount(bots_nicks.length + 1);
 
         if (data_from_django.manipulationType == "RESPECT") {
-            await this.chatroomPollBarMove(Math.floor(data_from_django.exitPollFinalPercentageRespectCondition));
+            if (!chatroom_configuration.exit_poll_real_time_voting) {
+                await this.chatroomPollBarMove(Math.floor(chatroom_configuration.exit_poll_final_percentage_respect_condition));
+            }
+            else {
+                // TODO Dynamic changes
+                // FINAL 83
 
-            // TODO Dynamic changes
-            // FINAL 83
+                this.pollChangeUserAmount(1);
+                await new Promise(resolve => setTimeout(resolve, 0));
+                this.pollChangeUserAmount(2);
+                this.exit_poll_votes_yes_counter++;
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/2)*100));
 
-            // this.pollChangeUserAmount(1);
-            // await new Promise(resolve => setTimeout(resolve, 0));
-            // this.pollChangeUserAmount(2);
-            // this.exit_poll_votes_yes_counter++;
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/2)*100));
-
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(3);
-            // if (this.exit_poll_votes_yes_counter == 1) {
-            //     this.exit_poll_votes_yes_counter++;
-            // }
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/3)*100));
-            
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(4);
-            // this.exit_poll_votes_yes_counter++;
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/4)*100));
-            
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(5);
-            // this.exit_poll_votes_yes_counter++;
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/5)*100));
-            
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(6);
-            // this.exit_poll_votes_yes_counter++;
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/6)*100));
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(6);
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(3);
+                if (this.exit_poll_votes_yes_counter == 1) {
+                    this.exit_poll_votes_yes_counter++;
+                }
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/3)*100));
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(4);
+                this.exit_poll_votes_yes_counter++;
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/4)*100));
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(5);
+                this.exit_poll_votes_yes_counter++;
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/5)*100));
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(6);
+                this.exit_poll_votes_yes_counter++;
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/6)*100));
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(6);
+            }
         } else {
-            await this.chatroomPollBarMove(Math.floor(data_from_django.exitPollFinalPercentageNonrespectCondition));
+            if (!chatroom_configuration.exit_poll_real_time_voting) {
+                await this.chatroomPollBarMove(Math.floor(chatroom_configuration.exit_poll_final_percentage_nonrespect_condition));
+            }
+            else {
+                // FINAL 17
 
-            // FINAL 17
-
-            // this.pollChangeUserAmount(1);
-            // await new Promise(resolve => setTimeout(resolve, 0));
-            // this.pollChangeUserAmount(2);
-            // if (this.exit_poll_votes_yes_counter == 0) {
-            //     this.exit_poll_votes_yes_counter++;
-            // }
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/2)*100));
-            
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(3);
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/3)*100));
-            
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(4);
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/4)*100));
-            
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(5);
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/5)*100));
-            
-            // await new Promise(resolve => setTimeout(resolve, 800));
-            // this.pollChangeUserAmount(6);
-            // await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/6)*100));
+                this.pollChangeUserAmount(1);
+                await new Promise(resolve => setTimeout(resolve, 0));
+                this.pollChangeUserAmount(2);
+                if (this.exit_poll_votes_yes_counter == 0) {
+                    this.exit_poll_votes_yes_counter++;
+                }
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/2)*100));
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(3);
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/3)*100));
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(4);
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/4)*100));
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(5);
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/5)*100));
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                this.pollChangeUserAmount(6);
+                await this.chatroomPollBarMove(Math.round((this.exit_poll_votes_yes_counter/6)*100));
+            }
         }
 
         logDebugMessage("Bots finished voting");

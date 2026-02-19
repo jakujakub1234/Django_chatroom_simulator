@@ -1,6 +1,7 @@
 const data_from_django = document.getElementById('data-from-django').dataset;
 
 const translations = JSON.parse(data_from_django.translations.replaceAll("'",'"'));
+const chatroom_configuration = JSON.parse(data_from_django.chatroomConfiguration.replaceAll("'",'"').replaceAll(": True",': true').replaceAll(": False",': false'));
 const chatroom_time = parseInt(data_from_django.chatroomTime);
 const user_name = data_from_django.nick;
 const is_debug = data_from_django.isDebugModeHidden == 1;
