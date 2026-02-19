@@ -37,9 +37,9 @@ class TkinterWindow:
         for col in tree["columns"]:
             max_width = font.measure(tree.heading(col)["text"])
 
-            for row in tree.get_children():
-                value = str(tree.set(row, col))
-                max_width = max(max_width, font.measure(value))
+            # for row in tree.get_children():
+            #     value = str(tree.set(row, col))
+            #     max_width = max(max_width, font.measure(value))
 
             tree.column(col, width=max_width + 20)
 
@@ -48,7 +48,7 @@ class TkinterWindow:
         self.editor_win.geometry("1200x500")
         self.editor_win.title(f"Editing {lang.upper()}")
 
-        label = tk.Label(self.editor_win, font=("Helvetica", 15), text="Options \"Respect exit poll votes\" and \"Non respect exit poll votes\" works only when \nexit_poll_real_time_voting\n is set to true")
+        label = tk.Label(self.editor_win, font=("Segoe UI", 15), text="Options \"Respect exit poll votes\" and \"Non respect exit poll votes\" works only when \nexit_poll_real_time_voting\n is set to true")
         
         label.pack()
 
