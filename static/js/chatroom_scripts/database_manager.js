@@ -53,6 +53,7 @@ export class DatabaseManager
     ) {
         this.sendDataThroughAjax({
             action: "message",
+            qualtrics_key: data_from_django.qualtricsKey,
             message: message,
             prev_message: this.prev_message,
             prev_prev_message: this.prev_prev_message,
@@ -83,21 +84,25 @@ export class DatabaseManager
 
         this.sendDataThroughAjax({
             action: "like_reactions",
+            qualtrics_key: data_from_django.qualtricsKey,
             reactions: Array.from(this.reactions_manager.like_reactions_memory).join(' ')
         }, false, indexes[0]);
 
         this.sendDataThroughAjax({
             action: "heart_reactions",
+            qualtrics_key: data_from_django.qualtricsKey,
             reactions: Array.from(this.reactions_manager.heart_reactions_memory).join(' ')
         }, false, indexes[1]);
 
         this.sendDataThroughAjax({
             action: "angry_reactions",
+            qualtrics_key: data_from_django.qualtricsKey,
             reactions: Array.from(this.reactions_manager.angry_reactions_memory).join(' ')
         }, false, indexes[2]);
 
         this.sendDataThroughAjax({
             action: "interactions",
+            qualtrics_key: data_from_django.qualtricsKey,
             hesitation: this.interactions_manager.hesitation,
             mouse_movement_seconds: this.interactions_manager.mouse_movement_seconds,
             scroll_seconds: this.interactions_manager.scroll_seconds,

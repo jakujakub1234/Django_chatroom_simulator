@@ -18,6 +18,7 @@ export class ReportsManager
 
         this.db_manager.sendDataThroughAjax({
             action: "reports",
+            qualtrics_key: data_from_django.qualtricsKey,
             message_id: message_id,
             message_text: message_text,
             report_id, report_id

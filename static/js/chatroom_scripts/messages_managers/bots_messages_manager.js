@@ -28,7 +28,8 @@ export class BotsMessagesManager
                         csrfmiddlewaretoken: token,
                         message: user_message,
                         prev_message_id: draft_bots_message_id,
-                        message_timestamp: message_timestamp
+                        message_timestamp: message_timestamp,
+                        manipulation_type: data_from_django.manipulationType
                     },
                     success: function (data) {
                         callback(data.respond, data.respond_type, data.responding_bot);

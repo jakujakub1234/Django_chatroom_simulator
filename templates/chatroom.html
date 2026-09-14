@@ -3,6 +3,7 @@
 {% load static %}
 {% block content %}
 <article id="data-from-django"
+  data-qualtrics-key="{{ qualtrics_key }}"
 	data-nick="{{ nick }}"
 	data-token="{{ csrf_token }}"
 	data-end-url="{% url 'return_qualtrics_code' %}"

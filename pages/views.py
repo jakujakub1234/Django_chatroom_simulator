@@ -112,34 +112,36 @@ class ChatroomPageView(TemplateView):
             return f.read()
 
     def get(self, request):
-        if 'key' not in request.session or request.session['key'] == "":
-            form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
+        # if 'key' not in request.session or request.session['key'] == "":
+        #     form = HomeForm()
+        #     return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
 
-        if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
-            survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
+        # if 'start_timestamp' in request.session and request.session['start_timestamp'] != "":
+        #     survey_time = datetime.now().timestamp() - int(request.session['start_timestamp'])
 
-            if survey_time > lobby_time + chatroom_time:
-                return HttpResponseRedirect("../end_chat")
+        #     if survey_time > lobby_time + chatroom_time:
+        #         return HttpResponseRedirect("../end_chat")
 
-            #if survey_time > lobby_time:
-            #    return HttpResponseRedirect("../chatroom")
+        #     #if survey_time > lobby_time:
+        #     #    return HttpResponseRedirect("../chatroom")
 
-            if survey_time < lobby_time:
-                return HttpResponseRedirect("../lobby")
+        #     if survey_time < lobby_time:
+        #         return HttpResponseRedirect("../lobby")
 
         return super(ChatroomPageView, self).get(request)
 
     def get_context_data(self, *args, **kwargs):
         context = super(ChatroomPageView, self).get_context_data(*args,**kwargs)
-        context['nick'] = self.request.session['nick']
-        context['start_timestamp'] = self.request.session['start_timestamp'] + lobby_time
-        context['manipulation_type'] = self.request.session['manipulation_type']
+        context['qualtrics_key'] = self.request.GET.get("key", "00000")
+        context['nick'] = self.request.GET.get('nick', 'Uczestnik badania')
+        context['start_timestamp'] = datetime.now().timestamp()
+        manipulation_type = self.request.GET.get("manipulationtype", "RESPECT")
+        context['manipulation_type'] = manipulation_type
         context['translations'] = translations
         context['language_code'] = language_code
         context['is_debug_hidden'] = 1 if settings.DEBUG else 0
         context['chatroom_time'] = chatroom_time
-        context['bots_messages_json'] = self.loadJsonWithBotsMessages(self.request.session['manipulation_type'])
+        context['bots_messages_json'] = self.loadJsonWithBotsMessages(manipulation_type)
         context['chatroom_configuration'] = chatroom_configuration
 
         if settings.DEBUG:
@@ -149,7 +151,7 @@ class ChatroomPageView(TemplateView):
             context['no_user_interaction_hidden'] = self.request.session['no_user_interaction_hidden']
             context['instant_exit_poll_hidden'] = self.request.session['instant_exit_poll_hidden']
         else:
-            context['chat_speed_hidden'] = 1000
+            context['chat_speed_hidden'] = 1000 # / 20
             context['not_exit_chat_hidden'] = 0
             context['dont_scroll_chat_hidden'] = 0
             context['no_user_interaction_hidden'] = 0
@@ -161,10 +163,6 @@ class EndChatNoExitPollPageView(TemplateView):
     template_name = "end_chat_no_exitpoll.html"
 
     def get(self, request):
-        if 'key' not in request.session or request.session['key'] == "":
-            form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
-
         return super(EndChatNoExitPollPageView, self).get(request)
 
     def get_context_data(self, *args, **kwargs):
@@ -177,10 +175,6 @@ class EndChatPageView(TemplateView):
     template_name = "end_chat.html"
 
     def get(self, request):
-        if 'key' not in request.session or request.session['key'] == "":
-            form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
-
         return super(EndChatPageView, self).get(request)
 
     def get_context_data(self, *args, **kwargs):
@@ -193,10 +187,6 @@ class ReturnQualtricsCodePageView(TemplateView):
     template_name = "return_qualtrics_code.html"
 
     def get(self, request):
-        if 'key' not in request.session or request.session['key'] == "":
-            form = HomeForm()
-            return render(request, 'home.html', {'form':form, 'translations': translations, "debug_mode": settings.DEBUG})
-
         return super(ReturnQualtricsCodePageView, self).get(request)
 
     def get_context_data(self, *args, **kwargs):
@@ -210,13 +200,12 @@ class AjaxPageView(TemplateView):
 
     def post(self, request, **kwargs):
         form = HomeForm()
-                
         if request.POST.get('action') == "nick":
             self.chat_ai.setNick(request.POST.get('nick'))
             
             if settings.DATABASES_ACTIVE:
                 nick = Nicks(
-                    qualtrics_id=request.session['key'],
+                    qualtrics_id=request.POST.get('qualtrics_key'),
                     nick=request.session['nick'],
                     chatroom_start=datetime.now().timestamp(),
                     language_version=language_code,
@@ -228,7 +217,7 @@ class AjaxPageView(TemplateView):
         if request.POST.get('action') == "message":
             if settings.DATABASES_ACTIVE:
                 messages = Messages(
-                    qualtrics_id = request.session['key'],
+                    qualtrics_id = request.POST.get('qualtrics_key'),
                     message = request.POST.get('message'),
                     prev_message = request.POST.get('prev_message'),
                     prev_prev_message = request.POST.get('prev_prev_message'),
@@ -246,8 +235,8 @@ class AjaxPageView(TemplateView):
             if settings.DATABASES_ACTIVE:
                 for elem in request.POST.get('reactions').split():
                     reactions_array.append({
-                        "qualtrics_id": request.session['key'],
-                            "message_id": int(elem),
+                        "qualtrics_id": request.POST.get('qualtrics_key'),
+                        "message_id": int(elem),
                     })
 
                 django_list = [LikeReactions(**vals) for vals in reactions_array]
@@ -260,8 +249,8 @@ class AjaxPageView(TemplateView):
             if settings.DATABASES_ACTIVE:
                 for elem in request.POST.get('reactions').split():
                     reactions_array.append({
-                        "qualtrics_id": request.session['key'],
-                            "message_id": int(elem),
+                        "qualtrics_id": request.POST.get('qualtrics_key'),
+                        "message_id": int(elem),
                     })
 
                 django_list = [HeartReactions(**vals) for vals in reactions_array]
@@ -273,8 +262,8 @@ class AjaxPageView(TemplateView):
             if settings.DATABASES_ACTIVE:
                 for elem in request.POST.get('reactions').split():
                     reactions_array.append({
-                        "qualtrics_id": request.session['key'],
-                            "message_id": int(elem),
+                        "qualtrics_id": request.POST.get('qualtrics_key'),
+                        "message_id": int(elem),
                     })
 
                 django_list = [AngryReactions(**vals) for vals in reactions_array]
@@ -283,7 +272,7 @@ class AjaxPageView(TemplateView):
         if request.POST.get('action') == "interactions":
             if settings.DATABASES_ACTIVE:
                 interactions = Interactions(
-                    qualtrics_id = request.session['key'],
+                    qualtrics_id = request.POST.get('qualtrics_key'),
                     hesitation = request.POST.get('hesitation'),
                     mouse_movement_seconds = request.POST.get('mouse_movement_seconds'),
                     scroll_seconds = request.POST.get('scroll_seconds'),
@@ -297,7 +286,7 @@ class AjaxPageView(TemplateView):
         if request.POST.get('action') == "reports":
             if settings.DATABASES_ACTIVE:
                 reports = Reports(
-                    qualtrics_id = request.session['key'],
+                    qualtrics_id = request.POST.get('qualtrics_key'),
                     message_id = request.POST.get('message_id'),
                     message_text = request.POST.get('message_text'),
                     report_id = request.POST.get('report_id')
@@ -308,7 +297,7 @@ class AjaxPageView(TemplateView):
         if request.POST.get('action') == "exit_poll":
             if settings.DATABASES_ACTIVE:
                 exit_poll = ExitPoll(
-                    qualtrics_id = request.session['key'],
+                    qualtrics_id = request.POST.get('qualtrics_key'),
                     is_yes = request.POST.get('is_yes')=="True",
                     vote_seconds = request.POST.get('vote_seconds'),
                 )
@@ -322,7 +311,7 @@ class AjaxPageView(TemplateView):
             request.GET['message'],
             request.GET['prev_message_id'],
             request.GET['message_timestamp'],
-            request.session['manipulation_type']
+            request.GET['manipulation_type']
         )
 
         return JsonResponse({'respond': respond, "respond_type": respond_type, "responding_bot": responding_bot}, status=200, content_type="application/json")

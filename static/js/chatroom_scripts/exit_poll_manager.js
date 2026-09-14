@@ -84,6 +84,7 @@ export class ExitPollManager
 
             this.db_manager.sendDataThroughAjax({
                 action: "exit_poll",
+                qualtrics_key: data_from_django.qualtricsKey,
                 is_yes: "True",
                 vote_seconds: this.votings_possible_seconds
             }, true);
@@ -93,6 +94,7 @@ export class ExitPollManager
 
             this.db_manager.sendDataThroughAjax({
                 action: "exit_poll",
+                qualtrics_key: data_from_django.qualtricsKey,
                 is_yes: "False",
                 vote_seconds: this.votings_possible_seconds
             }, true);

@@ -25,6 +25,7 @@ with open(os.path.dirname(__file__) + "/../chatroom_configuration.json") as file
 DEBUG = chatroom_configuration["debug_mode"]
 LANGUAGE_CODE = chatroom_configuration["current_language"]
 DATABASES_ACTIVE = chatroom_configuration["active_database"]
+X_FRAME_OPTIONS = "ALLOWALL"
 
 with open('secrets.yaml', 'r') as file:
     yaml_file = yaml.safe_load(file)
@@ -64,7 +65,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    #"django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

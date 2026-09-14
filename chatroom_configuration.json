@@ -4,7 +4,7 @@
         "pl"
     ],
     "current_language": "pl",
-    "debug_mode": true,
+    "debug_mode": false,
     "active_database": false,
     "lobby_time": 14,
     "chatroom_time": 480,
