@@ -31,6 +31,7 @@ with open('secrets.yaml', 'r') as file:
     yaml_file = yaml.safe_load(file)
     secret_secret_key = yaml_file['SECRET_KEY']
     database_ip = yaml_file['DATABASE_IP']
+    database_host_app_engine = yaml_file['DATABASE_HOST_APP_ENGINE']
     database_user = yaml_file['DATABASE_USER']
     database_password = yaml_file['DATABASE_PASSWORD']
     database_name = yaml_file['DATABASE_NAME']
@@ -96,11 +97,16 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+if os.environ.get("GAE_ENV", "").startswith("standard"):
+    database_host = database_host_app_engine
+else:
+    database_host = database_ip
+
 if DATABASES_ACTIVE:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'HOST': database_ip,
+            'HOST': database_host,
             'USER': database_user,
             'PASSWORD': database_password,
             'NAME': database_name,

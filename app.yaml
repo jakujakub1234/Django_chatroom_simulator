@@ -2,7 +2,7 @@ runtime: python310
 entrypoint: gunicorn -b :$PORT django_project.wsgi --timeout 180
 
 beta_settings:
-    cloud_sql_instances: reliable-byte-428411-d8:us-central1:manipulationpretest
+    cloud_sql_instances: reliable-byte-428411-d8:europe-central2:doktorat-db
 
 runtime_config:
   python_version: 3
@@ -14,9 +14,6 @@ automatic_scaling:
   target_cpu_utilization: 0.8
   min_pending_latency: automatic
   max_pending_latency: automatic
-
-resources:
-  memory_gb: 4
 
 env_variables:
     APPENGINE_URL: https://reliable-byte-428411-d8.lm.r.appspot.com

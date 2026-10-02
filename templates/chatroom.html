@@ -68,6 +68,7 @@
     </div>
   </form>
 </div>
+<div id="fake_div_to_scroll"></div>
 
 <div class="bottom-bar">
 
@@ -77,9 +78,9 @@
       <option value="1">{{ translations.chatroom_font_medium }}</option>
       <option value="2">{{ translations.chatroom_font_large }}</option>
   </select>
-<button name="send" class="btn btn-success chatroom-btn" id="change-color-button" tabindex="1">{{ translations.chatroom_change_color_button }}</button>
+<button name="send" class="btn btn-success chatroom-btn change-color-btn" id="change-color-button" tabindex="1">{{ translations.chatroom_change_color_button }}</button>
 
-<span style="float: right; margin-right: 2%; padding-top: inherit;" id='seconds-counter'>{{ translations.chatroom_time_to_end }}</span>
+<span class="time-to-end-of-chat" id='seconds-counter'>{{ translations.chatroom_time_to_end }}</span>
 
 </div>
 

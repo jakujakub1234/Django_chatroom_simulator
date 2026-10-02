@@ -24,7 +24,7 @@ export class UserMessageManager
             .addEventListener("click", () => this.closeRespondToMessageModal());
     }
 
-    showRespondToMessageModal(message_dom) {
+    async showRespondToMessageModal(message_dom) {
         var message_div = message_dom.parentNode.parentNode.querySelector('.container');
 
         if (message_div == this.respond_message_div) {
@@ -51,7 +51,8 @@ export class UserMessageManager
             }
         }
 
-        document.getElementById("msg_field").focus();
+        const el = document.querySelector('#fake_div_to_scroll');
+        el.scrollIntoView({behavior: "smooth", block: "end"});
     }
 
     closeRespondToMessageModal() {

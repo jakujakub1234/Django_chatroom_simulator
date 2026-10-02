@@ -160,10 +160,14 @@ export class DomElementsMessagesManager
 
         if (!dont_scroll_chat_after_message) {
             if (message_id % 2 == 0 || true) { // Legacy code start and end
-                window.scroll({
-                    top: document.body.scrollHeight,
-                    behavior: 'smooth'
-                });
+                // window.scroll({
+                //     top: document.body.scrollHeight,
+                //     behavior: 'smooth'
+                // });
+
+                const el = document.querySelector('#fake_div_to_scroll');
+
+                el.scrollIntoView({behavior: "smooth", block: "end"});
             }
         }
 

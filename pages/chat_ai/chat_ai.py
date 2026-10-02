@@ -38,7 +38,7 @@ class ChatAI:
                 self.keywords_from_excel[str(i)] = keywords[str(i)]
 
         self.gemini_api_key = "error: secrets not found"
-        self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent"
+        self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent"
         
         self.previous_message_timestamp = -100
         self.previous_gibberish_message_timestamp = -1000

@@ -12,6 +12,7 @@ from .models import ExitPoll
 from .utils import lobby_time, chatroom_time, chatroom_configuration, load_translations
 from .chat_ai.chat_ai import ChatAI
 from django.conf import settings
+from django.db import connection
 
 from datetime import datetime
 
@@ -202,20 +203,20 @@ class AjaxPageView(TemplateView):
         form = HomeForm()
         if request.POST.get('action') == "nick":
             self.chat_ai.setNick(request.POST.get('nick'))
-            
+
             if settings.DATABASES_ACTIVE:
                 nick = Nicks(
                     qualtrics_id=request.POST.get('qualtrics_key'),
-                    nick=request.session['nick'],
+                    nick=request.POST.get('nick'),
                     chatroom_start=datetime.now().timestamp(),
                     language_version=language_code,
-                    manipulation_type=request.session['manipulation_type']
+                    manipulation_type=request.POST.get('manipulation_type')
                 )
             
-                nick.save()        
+                nick.save()   
 
         if request.POST.get('action') == "message":
-            if settings.DATABASES_ACTIVE:
+            if settings.DATABASES_ACTIVE:   
                 messages = Messages(
                     qualtrics_id = request.POST.get('qualtrics_key'),
                     message = request.POST.get('message'),
@@ -228,7 +229,7 @@ class AjaxPageView(TemplateView):
                 )
 
                 messages.save()
-        
+
         if request.POST.get('action') == "like_reactions":
             reactions_array = []
 

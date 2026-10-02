@@ -12,6 +12,8 @@ export class DatabaseManager
         
         this.prev_prev_message = "NONE";
         this.prev_message = "NONE";
+        
+        this.sendUserNick();
     }
 
     updateMessagesHistory(last_message)
@@ -22,7 +24,7 @@ export class DatabaseManager
 
     sendDataThroughAjax(data, is_exit_poll = false, reactions_and_interactions_index = -1)
     {
-        data.csrfmiddlewaretoken = this.token;        
+        data.csrfmiddlewaretoken = this.token;
 
         $.ajax({
             type: "POST",
@@ -41,6 +43,16 @@ export class DatabaseManager
                 return response;
             },
             timeout: 15000
+        });
+    }
+
+    sendUserNick()
+    {
+        this.sendDataThroughAjax({
+            action: "nick",
+            qualtrics_key: data_from_django.qualtricsKey,
+            manipulation_type: data_from_django.manipulationType,
+            nick: user_name
         });
     }
 

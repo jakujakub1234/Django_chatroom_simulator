@@ -34,6 +34,7 @@ $.ajax({
     data: {
         csrfmiddlewaretoken: data_from_django.token,
         action: "nick",
+        manipulation_type: "NOT_INCLUDED_AFTER_MOVE_TO_IFRAME",
         nick: data_from_django.nick
     },
     success: function (response) {
