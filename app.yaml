@@ -1,4 +1,4 @@
-runtime: python310
+runtime: python314
 entrypoint: gunicorn -b :$PORT django_project.wsgi --timeout 180
 
 beta_settings:
