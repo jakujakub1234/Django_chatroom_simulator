@@ -8,7 +8,7 @@ class CsvGenerator:
     def __init__(self, qulatrics_ids_filename, results_directory):
         current_directory = os.path.dirname(os.path.realpath(__file__))
 
-        self.users_qulatrics_ids = set((line.strip()) for line in open(qulatrics_ids_filename) if line.strip() != "")
+        self.users_qulatrics_ids = set(int((line.strip())) for line in open(qulatrics_ids_filename) if line.strip() != "")
 
         self.interactions_csv = pd.read_csv(f"{current_directory}/plain_csvs_from_database/interactions.csv")
         self.interactions_csv = self.interactions_csv.drop_duplicates(subset='qualtrics_id', keep="last")
